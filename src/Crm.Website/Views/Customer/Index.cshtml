@@ -1,0 +1,152 @@
+﻿@using Crm.Website;
+@using Crm.Website.Models;
+@using Crm.Api;
+@{
+    ViewBag.Title = "客户管理";
+    Layout = "~/Views/Customer/Layout.cshtml";
+    this.ViewBag.LeftMenu = CustomerLeftMenu.Index;
+}
+<div class="row-fluid">
+    <div class="span2">
+        <p class="lead">客户管理</p>
+    </div>
+    <div class="span10">
+        <a id="btnCreate" href="@this.Url.Action("Create")" class="btn"><i class="icon-plus"></i>创建</a>
+        <button id="btnDelete" disabled="disabled" data-loading-text="删除中..." class="btn"><i class="icon-trash"></i>删除</button> 
+        <button id="btnFavorite" disabled="disabled" data-loading-text="收藏中..." class="btn"><i class="icon-star"></i>收藏</button> 
+        <button id="btnRefresh" class="btn"><i class="icon-refresh"></i>刷新</button> 
+        <a id="btnViewSteup" href="@string.Format("{0}?viewType={1}&returnUrl={2}", this.Url.Action("ViewSetup"), GridViewType.CustomerManage, this.Request.Url)" class="btn"><i class="icon-th"></i>视图设置</a> 
+        <button id="btnExport" class="btn" data-loading-text="导出中..."><i class="icon-download"></i>导出Excel</button> 
+    </div>
+</div>
+
+<div id="customerGrid">
+                
+</div>
+        
+<div id="pager" class="pull-right" style="height: 30px">
+            
+</div>
+<script type="text/javascript" language="javascript">
+    var keyword = "@this.Html.Raw(this.Request["keyword"])";
+    var customerGrid = $("#customerGrid").datagrid({
+		columns: @this.Html.Raw(this.ViewBag.columnsJson),
+        height: "auto",
+		canSort: false,
+		singleSelect: false,
+		showNumberRow: true,
+        selectedRow: function(){
+            $("#btnDelete, #btnFavorite").prop("disabled", false);
+        },
+        unselectedRow: function(){
+            var rows = customerGrid.datagrid("getSelectedRows");
+            $("#btnDelete, #btnFavorite").prop("disabled", rows.length == 0);
+        }
+	});
+
+    var pager = $("#pager").pager({change: function(event, args){
+        loadCustomerGrid(_sousuoXinxi, args.start);
+    }});
+
+    var _sousuoXinxi;
+    function loadCustomerGrid(sousuoXinxi, start, cb){
+        _sousuoXinxi = sousuoXinxi;
+        var args = {start: start, size: 20};
+        if(_sousuoXinxi){
+            $.extend(args, _sousuoXinxi);
+        }
+        $.get("@this.Url.Action("Customers")", args, function(model){
+            if(cb){
+                cb();
+            }
+            if(model.result == 0){
+                $("#customerGrid").datagrid("option", "data", model.data.list);
+                $("#pager").pager("option", "pageInfo", {start: start, size: 20, count: model.data.count})
+                $("#btnDelete, #btnFavorite").prop("disabled", true);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+    }
+    if(keyword){
+        loadCustomerGrid({keyword: keyword}, 0);
+    }
+    else{
+        loadCustomerGrid(null, 0);
+    }
+
+    $("#btnKeywordSearch").click(function(){
+        var btn = $(this).button("loading");
+        var formValue = $(".navbar-form").getFormValue();
+        loadCustomerGrid(formValue, 0, function(){
+            btn.button("reset");
+        });
+        return false;
+    });
+
+    $("#btnRefresh").click(function(){
+        var pageInfo = pager.pager("option").pageInfo;
+        $("#btnRefresh").button("loading");
+        loadCustomerGrid(_sousuoXinxi, pageInfo.start, function(){
+            $("#btnRefresh").button("reset");
+        });
+        return false;
+    });
+    
+    $("#btnExport").click(function(){
+        $("#btnExport").button("loading");
+        $.get("@this.Url.Action("Export")", _sousuoXinxi, function(model){
+            $("#btnExport").button("reset");
+            if(model.result == 0){
+                open("@this.Url.Action("DownloadExportFile")" + "?fileName=" + model.data);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+
+    $("#btnDelete").click(function(){
+        if(!confirm("确实要删除吗?"))
+        {
+            return false;
+        }
+        var rows = $("#customerGrid").datagrid("getSelectedRows");
+        var customerIds = $.map(rows, function(row){
+            return row.datarow("option", "data").id;
+        })
+        $("#btnDelete").button("loading");
+        $.post("@this.Url.Action("Delete")", {customerIdsJson: $.toJSON(customerIds)}, function(model){
+            $("#btnDelete").button("reset");
+            if(model.result == 0){
+                var pageInfo = pager.pager("option").pageInfo;
+                loadCustomerGrid(_sousuoXinxi, pageInfo.start);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+    
+    $("#btnFavorite").click(function(){
+        var rows = $("#customerGrid").datagrid("getSelectedRows");
+        var customerIds = $.map(rows, function(row){
+            return row.datarow("option", "data").id;
+        })
+        $("#btnFavorite").button("loading");
+        $.post("@this.Url.Action("Favorite")", {customerIdsJson: $.toJSON(customerIds)}, function(model){
+            $("#btnFavorite").button("reset");
+            if(model.result == 0){
+                var pageInfo = pager.pager("option").pageInfo;
+                loadCustomerGrid(_sousuoXinxi, pageInfo.start);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+</script>

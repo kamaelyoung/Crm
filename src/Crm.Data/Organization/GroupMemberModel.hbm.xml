@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data.Organization" assembly="Crm.Data">
+    <class name="GroupMemberModel" table="org_groupMember">
+        <id name="ID" type="int" column="grm_id" unsaved-value="0">
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="GroupId" type="String" column="group_id"></property>
+        <property name="MemberId" type="String" column="member_id"></property>
+        <property name="MemberType" type="int" column="member_type"></property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,83 @@
+﻿@using Crm.Website;
+@using Crm.Website.Models;
+@using Crm.Api;
+@{
+    ViewBag.Title = "创建联系人";
+    Layout = "~/Views/Contact/Layout.cshtml";
+    this.ViewBag.LeftMenu = "Create";
+}
+
+<p class="lead">创建联系人</p>
+<form class="form-horizontal" id="createContactForm">
+    <div id="contactBaseInfo">
+        <div class="control-group">
+            <label class="control-label" >名称<font style="color: Red">*</font></label>
+            <div class="controls">
+                <input type="text" name="name" class="input-xlarge" data-required="true"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" >客户<font style="color: Red">*</font></label>
+            <div class="controls">
+                <input id="txtCustomerName" type="text" readonly="readonly" class="input-xlarge" name="customerName"/>
+                <input id="txtCustomerId" type="hidden" name="customerId"/>
+                <button id="btnSelectCustomer" class="btn">选择</button>
+            </div>
+        </div>
+    </div>
+    <div id="contactExtendInfo">
+        @{this.Html.RenderAction("Fields", "Extend", new { formType = FormType.Contact });}
+    </div>
+    <div class="control-group">
+    <div class="controls">
+        <button id="btnCreateContact" type="submit" class="btn btn-primary" data-loading-text="保存中...">创建</button>
+        <button id="btnCancelContact" type="button" class="btn">取消</button>
+    </div>
+    </div>
+</form>
+<div id="customerSelectDialog" >
+    @{this.Html.RenderAction("SelectDialog", "Customer");}
+</div>
+<script language="javascript" type="text/javascript">
+$("#createContactForm").validate({
+    sendForm : false,
+    onBlur: true,
+    onChange: true,
+	eachValidField : function() {
+		$(this).closest('.control-group').removeClass('error');
+        $(this).next('.help-inline').hide();
+	},
+	eachInvalidField : function() {
+		$(this).closest('.control-group').addClass('error');
+        $(this).next('.help-inline').show();
+	},
+    valid: function(){
+        var formValue = $("#contactBaseInfo").getFormValue();
+        formValue.extends = $("#contactExtendInfo").getFormValue();
+            
+        $("#btnCreateContact").button("loading");
+        $.post("@this.Url.Action("Create")", {json: $.toJSON(formValue)}, function(data){
+            $("#btnCreateContact").button("reset");
+            if(data.result == 0){
+                location = "@this.Url.Action("Index")";
+            }
+            else{
+                alert(data.message);
+            }
+        });
+    }
+});
+$("#btnCancelContact").click(function(){
+    location = "@this.Url.Action("Index")";
+});
+
+var customerSelectDialog = $("#customerSelectDialog").customerSelectDialog({baseUrl: "@this.Url.Content("~/")"});
+
+$("#btnSelectCustomer").click(function(){
+    customerSelectDialog.customerSelectDialog("select", function(args){
+        $("#txtCustomerId").val(args.id);
+        $("#txtCustomerName").val(args.name);
+    });
+    return false;
+});
+</script>

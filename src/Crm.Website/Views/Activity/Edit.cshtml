@@ -1,0 +1,60 @@
+﻿@using Crm.Website;
+@using Crm.Website.Models;
+@using Crm.Api;
+@{
+    ViewBag.Title = "编辑客户接触";
+    Layout = "~/Views/Activity/Layout.cshtml";
+}
+
+<p class="lead">编辑客户接触</p>
+<form class="form-horizontal" id="editActivityForm">
+   <div id="activityBaseInfo">
+        <input type="hidden" name="id"/>
+        <div class="control-group">
+            <label class="control-label" >主题<font style="color: Red">*</font></label>
+            <div class="controls">
+                <input type="text" name="subject" class="input-xlarge" data-required="true"/>
+            </div>
+        </div>
+    </div>
+    <div id="activityExtendInfo">
+        @{this.Html.RenderAction("Fields", "Extend", new { formType = FormType.Activity });}
+    </div>
+    <div class="control-group">
+    <div class="controls">
+        <button id="btnSave" type="submit" class="btn btn-primary" data-loading-text="保存中...">保存</button>
+    </div>
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+var activityInfo = @this.Html.Raw(this.ViewBag.activityInfoJson);
+$("#editActivityForm").validate({
+    sendForm : false,
+    onBlur: true,
+    onChange: true,
+	eachValidField : function() {
+		$(this).closest('.control-group').removeClass('error');
+        $(this).next('.help-inline').hide();
+	},
+	eachInvalidField : function() {
+		$(this).closest('.control-group').addClass('error');
+        $(this).next('.help-inline').show();
+	},
+    valid: function(){
+        var formValue = $("#activityBaseInfo").getFormValue();
+        formValue.extends = $("#activityExtendInfo").getFormValue();
+            
+        $("#btnSave").button("loading");
+        $.post("@this.Url.Action("EditPost")", {json: $.toJSON(formValue)}, function(data){
+            $("#btnSave").button("reset");
+            if(data.result == 0){
+                alert("保存成功");
+            }
+            else{
+                alert(data.message);
+            }
+        });
+    }
+})
+.setFormValue(activityInfo);
+</script>

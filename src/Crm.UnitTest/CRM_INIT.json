@@ -1,0 +1,83 @@
+﻿{
+	areas: ["安徽省","北京市","福建省","甘肃省","广东省","广西省","贵州省","海南省","河北省","河南省","黑龙江省","湖北省","湖南省","吉林省","江苏省","江西省","辽宁省","山东省","山西省","陕西省","上海市","四川省","台湾省","天津市","云南省","浙江省","重庆市"],
+	forms:[
+		{
+			type: "Customer",
+			name: "客户信息",
+			columns:[
+				{code: "name", name: "客户名称", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "area", name: "区域", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "salesUsers", name: "销售员", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "creator", name: "创建人", required: true, canImport: false, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "createTime", name: "创建时间", required: true, canImport: false, isSystem: true, index: 0, type: "String", config: ""},
+				{name: "地址", required: true, canImport: true, isSystem: false, index: 1, type: "String", config: ""},
+				{name: "电话", required: true, canImport: true, isSystem: false, index: 2, type: "String", config: ""},
+				{name: "产品需求", required: true, canImport: true, isSystem: false, index: 3, type: "CheckboxList", config: "{SelectList: ['产品1', '产品2', '产品3']}"},
+				{name: "客户级别", required: true, canImport: true, isSystem: false, index: 4, type: "DropdownList", config: "{SelectList: ['潜在', '机会', '重要', '放弃']}"},
+				{name: "网站", required: false, canImport: true, isSystem: false, index: 5, type: "String", config: ""},
+				{name: "客户来源", required: false, canImport: true, isSystem: false, index: 6, type: "DropdownList", config: "{SelectList: ['搜索引擎', '代理商']}"},
+				{name: "备注", required: false, canImport: true, isSystem: false, index: 7, type: "Text"}
+			]
+		},
+		{
+			type: "Contact",
+			name: "联系人信息",
+			columns:[
+				{code: "name", name: "姓名", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "customer", name: "客户", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "creator", name: "创建人", required: true, canImport: false, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "createTime", name: "创建时间", required: true, canImport: false, isSystem: true, index: 0, type: "String", config: ""},
+				{name: "职位", required: false, canImport: true, isSystem: false, index: 1, type: "String", config: ""},
+				{name: "部门", required: false, canImport: true, isSystem: false, index: 2, type: "String", config: ""},
+				{name: "性别", required: false, canImport: true, isSystem: false, index: 3, type: "RadioList", config: "{SelectList: ['男', '女']}"},
+				{name: "联系电话", required: false, canImport: true, isSystem: false, index: 4, type: "String", config: ""},
+				{name: "QQ", required: false, canImport: true, isSystem: false, index: 5, type: "String", config: ""},
+				{name: "邮件", required: false, canImport: true, isSystem: false, index: 6, type: "String", config: ""},
+				{name: "备注", required: false, canImport: true, isSystem: false, index: 7, type: "Text"}
+			]
+		},
+		{
+			type: "Activity",
+			name: "客户接触信息",
+			columns:[
+				{code: "subject", name: "主题", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "customer", name: "客户", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "creator", name: "创建人", required: true, canImport: false, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "createTime", name: "创建时间", required: true, canImport: false, isSystem: true, index: 0, type: "String", config: ""},
+				{code: "contact", name: "联系人", required: true, canImport: true, isSystem: true, index: 0, type: "String", config: ""},
+				{name: "联系方式", required: false, canImport: true, isSystem: false, index: 1, type: "RadioList", config: "{SelectList: ['电话', 'QQ', 'Email', '到现场']}"},
+				{name: "内容", required: false, canImport: true, isSystem: false, index: 2, type: "Text"}
+			]
+		}
+	],
+	gridviews: [
+		{
+			type: "CustomerManage",
+			formType: "Customer",
+			columns:[
+				{fieldCode: 'name', width: 180}, {fieldCode: 'area', width: 100}, {fieldCode: 'salesUsers', width: 100}
+			]
+		},
+		{
+			type: "CustomerFavorite",
+			formType: "Customer",
+			columns:[
+				{fieldCode: 'name', width: 180}, {fieldCode: 'area', width: 100}, {fieldCode: 'salesUsers', width: 100}
+			]
+		},
+		{
+			type: "ContactManage",
+			formType: "Contact",
+			columns:[
+				{fieldCode: 'name', width: 100}, {fieldCode: 'customer', width: 180}
+			]
+		},
+		{
+			type: "ActivityManage",
+			formType: "Activity",
+			columns:[
+				{fieldCode: 'subject', width: 180}, {fieldCode: 'customer', width: 180}, {fieldCode: 'contact', width: 100}, {fieldCode: 'creator', width: 100}, {fieldCode: 'createTime', width: 100}
+			]
+		}
+	]
+}

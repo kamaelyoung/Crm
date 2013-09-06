@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data.Organization" assembly="Crm.Data">
+    <class name="UserPositionModel" table="org_userPosition">
+        <id name="ID" type="int" column="grm_id" unsaved-value="0">
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="UserId" type="String" column="user_id"></property>
+        <property name="PositionId" type="String" column="position_id"></property>
+        <property name="Main" type="bool" column="usp_main"></property>
+    </class>
+</hibernate-mapping>

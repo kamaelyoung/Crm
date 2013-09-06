@@ -1,0 +1,38 @@
+﻿<div class="modal hide" style="width: 450px;" tabindex="-1" >
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3 >创建用户</h3>
+    </div>
+    <form class="form-horizontal">
+        <div class="modal-body"> 
+            <div class="control-group">
+                <label class="control-label" style="width: 100px" >帐号<font style="color: Red">*</font></label>
+                <div class="controls" style="margin-left: 120px">
+                    <input type="text" name="account" data-required="true"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" style="width: 100px" >姓名<font style="color: Red">*</font></label>
+                <div class="controls" style="margin-left: 120px">
+                    <input type="text" name="name" data-required="true"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" style="width: 100px" >Email<font style="color: Red">*</font></label>
+                <div class="controls" style="margin-left: 120px">
+                    <input type="text" name="email" data-required="true" data-pattern="@Html.Raw(@"^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$")"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" style="width: 100px" >密码<font style="color: Red">*</font></label>
+                <div class="controls" style="margin-left: 120px">
+                    <input type="text" name="password" data-required="true" />
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary btnOk" type="submit">确定</button>
+            <button class="btn" type="button" data-dismiss="modal" aria-hidden="true" >关闭</button>
+        </div>
+    </form>
+</div>

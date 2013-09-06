@@ -1,0 +1,78 @@
+﻿@using Crm.Website;
+@{
+    ViewBag.Title = "创建客户区域";
+    Layout = "~/Views/Setup/Layout.cshtml";
+}
+
+<p class="lead">创建客户区域</p>
+<form class="form-horizontal" id="createForm">
+    <div class="control-group">
+        <label class="control-label" >名称<font style="color: Red">*</font></label>
+        <div class="controls">
+            <input type="text" id="txtAreaName" name="name" class="input-xlarge" data-required="true"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >负责人</label>
+                
+        <div class="controls">
+            @this.Html.Raw(WebHelper.UsersCheckboxList("managerAccounts", false, false))
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button id="btnSaveAndContinue" type="submit" class="btn btn-primary" data-loading-text="保存中...">保存并继续</button>
+            <button id="btnSave" type="button" class="btn" data-loading-text="保存中...">保存</button>
+            <button id="btnCancel" type="button" class="btn">取消</button>
+        </div>
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+$("#createForm").validate({
+    sendForm : false,
+    onBlur: true,
+    onChange: true,
+	eachValidField : function() {
+		$(this).closest('.control-group').removeClass('error');
+        $(this).next('.help-inline').hide();
+	},
+	eachInvalidField : function() {
+		$(this).closest('.control-group').addClass('error');
+        $(this).next('.help-inline').show();
+	},
+    valid: function(){
+        var formValue = $("#createForm").getFormValue();
+            
+        $("#btnSaveAndContinue").button("loading");
+        $.post("@this.Url.Action("CreateCustomerArea")", {json: $.toJSON(formValue)}, function(data){
+            $("#btnSaveAndContinue").button("reset");
+            if(data.result == 0){
+                $("#createForm").setFormValue({name: "", managerAccounts: []});
+                alert("创建成功");
+                $("#txtAreaName").focus();
+            }
+            else{
+                alert(data.message);
+            }
+        });
+    }
+});
+$("#btnSave").click(function(){
+    var formValue = $("#createForm").getFormValue();
+            
+    $("#btnSave").button("loading");
+    $.post("@this.Url.Action("CreateCustomerArea")", {json: $.toJSON(formValue)}, function(data){
+        $("#btnSave").button("reset");
+        if(data.result == 0){
+            location = "@this.Url.Action("CustomerArea")";
+        }
+        else{
+            alert(data.message);
+        }
+    });
+    return false;
+});
+$("#btnCancel").click(function(){
+    location = "@this.Url.Action("CustomerArea")";
+});
+</script>

@@ -1,0 +1,58 @@
+﻿@using Crm.Api;
+@for (int count = 0; count < this.ViewBag.fields.Count; ++count)
+{
+    string dataRequiredAttr = "";
+    FieldInfo field = this.ViewBag.fields[count];
+<div class="control-group">
+    <label class="control-label">
+        @field.Name
+        @if (field.Required) { 
+            <font style="color: Red">*</font>
+        }
+    </label>
+    <div class="controls">
+    @if (field.Required) { 
+        dataRequiredAttr = "data-required = 'true'";
+    }
+    @switch (field.Type)
+    {
+        case FieldType.String:
+            <input type="text" data-property-type="String" class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr)/>
+            break;
+        case FieldType.Text:
+            <textarea class="input-xlarge" data-property-type="String" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) rows="3" ></textarea>
+            break;
+        case FieldType.DropdownList:
+            ListFieldConfigInfo dropdownFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            <select class="input-xlarge" data-property-type="String"  @this.Html.Raw(dataRequiredAttr) name="@string.Format("field{0}", field.ID)">
+                <option></option>
+                @foreach (string item in dropdownFieldInfo.SelectList)
+                {
+                    <option>@item</option> 
+                }
+            </select>
+            break;
+        case FieldType.RadioList:
+            ListFieldConfigInfo radioFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            foreach (string item in radioFieldInfo.SelectList)
+            {
+                <label class="radio">
+                    <input type="radio" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@item"/>
+                    @item
+                </label>
+            }
+            break;
+        case FieldType.CheckboxList:
+            CheckboxFieldConfigInfo checkFieldInfo = ((CheckboxFieldConfigInfo)field.ConfigInfo);
+            foreach (string item in checkFieldInfo.SelectList)
+            {
+                <label class="checkbox">
+                    <input type="checkbox" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@item"/>
+                    @item
+                </label>
+            }
+            break;
+    }
+    </div>
+</div>
+}

@@ -1,0 +1,77 @@
+﻿@using Crm.Website;
+@using Crm.Website.Models;
+@using Crm.Api;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Customer/Layout.cshtml";
+    this.ViewBag.LeftMenu = CustomerLeftMenu.Create;
+}
+
+<p class="lead">创建客户</p>
+<form class="form-horizontal" id="createCustomerForm">
+    <div id="customerBaseInfo">
+        <div class="control-group">
+            <label class="control-label" >名称<font style="color: Red">*</font></label>
+            <div class="controls">
+                <input type="text" name="name" class="input-xlarge" data-required="true"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" >区域<font style="color: Red">*</font></label>
+            <div class="controls">
+                <select name="area" class="input-xlarge" data-required="true">
+                @this.Html.Raw(WebHelper.CustomerAreaSelectOptions)
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" >销售员<font style="color: Red">*</font></label>
+                
+            <div class="controls">
+                @this.Html.Raw(WebHelper.UsersCheckboxList("salesAccounts", true, true))
+            </div>
+        </div>
+    </div>
+    <div id="customerExtendInfo">
+        @{this.Html.RenderAction("Fields", "Extend", new { formType = FormType.Customer });}
+    </div>
+    <div class="control-group">
+    <div class="controls">
+        <button id="btnCreateCustomer" type="submit" class="btn btn-primary" data-loading-text="保存中...">创建</button>
+        <button id="btnCancelCreate" type="button" class="btn">取消</button>
+    </div>
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+$("#createCustomerForm").validate({
+    sendForm : false,
+    onBlur: true,
+    onChange: true,
+	eachValidField : function() {
+		$(this).closest('.control-group').removeClass('error');
+        $(this).next('.help-inline').hide();
+	},
+	eachInvalidField : function() {
+		$(this).closest('.control-group').addClass('error');
+        $(this).next('.help-inline').show();
+	},
+    valid: function(){
+        var formValue = $("#customerBaseInfo").getFormValue();
+        formValue.extends = $("#customerExtendInfo").getFormValue();
+            
+        $("#btnCreateCustomer").button("loading");
+        $.post("@this.Url.Action("Create")", {json: $.toJSON(formValue)}, function(data){
+            $("#btnCreateCustomer").button("reset");
+            if(data.result == 0){
+                location = "@this.Url.Action("Index")";
+            }
+            else{
+                alert(data.message);
+            }
+        });
+    }
+});
+$("#btnCancelCreate").click(function(){
+    location = "@this.Url.Action("Index")";
+});
+</script>

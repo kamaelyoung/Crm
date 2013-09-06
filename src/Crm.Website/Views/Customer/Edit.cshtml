@@ -1,0 +1,75 @@
+﻿@using Crm.Website;
+@using Crm.Website.Models;
+@using Crm.Api;
+@{
+    ViewBag.Title = "编辑客户";
+    Layout = "~/Views/Customer/Layout.cshtml";
+}
+
+<p class="lead">编辑客户</p>
+<form class="form-horizontal" id="editCustomerForm">
+    <div id="customerBaseInfo">
+        <input type="hidden" name="id"/>
+        <div class="control-group">
+            <label class="control-label" >名称</label>
+            <div class="controls">
+                <input type="text" name="name" class="input-xlarge" data-required="true"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" >区域</label>
+            <div class="controls">
+                <select name="area" class="input-xlarge" data-required="true">
+                @this.Html.Raw(WebHelper.CustomerAreaSelectOptions)
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" >销售员</label>
+            <div class="controls">
+                @this.Html.Raw(WebHelper.UsersCheckboxList("salesAccounts", false, true))
+            </div>
+        </div>
+    </div>
+    <div id="customerExtendInfo">
+        @{this.Html.RenderAction("EditFields", "Extend", new { formType = FormType.Customer });}
+    </div>
+    <div class="control-group">
+    <div class="controls">
+        <button id="btnSave" type="submit" class="btn btn-primary" data-loading-text="保存中...">保存</button>
+    </div>
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+var returnUrl = "@this.Html.Raw(this.Request["returnUrl"])";
+var customerInfo = @this.Html.Raw(this.ViewBag.customerInfoJson);
+$("#editCustomerForm").validate({
+    sendForm : false,
+    onBlur: true,
+    onChange: true,
+	eachValidField : function() {
+		$(this).closest('.control-group').removeClass('error');
+        $(this).next('.help-inline').hide();
+	},
+	eachInvalidField : function() {
+		$(this).closest('.control-group').addClass('error');
+        $(this).next('.help-inline').show();
+	},
+    valid: function(){
+        var formValue = $("#customerBaseInfo").getFormValue();
+        formValue.extends = $("#customerExtendInfo").getFormValue();
+            
+        $("#btnSave").button("loading");
+        $.post("@this.Url.Action("EditPost")", {json: $.toJSON(formValue)}, function(data){
+            $("#btnSave").button("reset");
+            if(data.result == 0){
+                alert("保存成功");
+            }
+            else{
+                alert(data.message);
+            }
+        });
+    }
+})
+.setFormValue(customerInfo);
+</script>

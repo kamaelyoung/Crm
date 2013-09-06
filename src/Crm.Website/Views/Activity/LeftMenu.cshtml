@@ -1,0 +1,10 @@
+﻿@using Crm.Website.Models;
+<ul class="nav nav-list">
+    <li class="nav-header">客户接触</li>
+    @{
+        string indexMenuClass = this.ViewBag.LeftMenu == "Index" ? "class='active'" : "";
+        string createMenuClass = this.ViewBag.LeftMenu == "Create" ? "class='active'" : "";
+    }
+    <li @this.Html.Raw(indexMenuClass)><a href="@this.Url.Action("Index")">接触管理</a></li>
+    <li @this.Html.Raw(createMenuClass)><a href="@this.Url.Action("Create")">创建接触</a></li>
+</ul>

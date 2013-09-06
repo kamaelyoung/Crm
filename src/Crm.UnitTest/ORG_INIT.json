@@ -1,0 +1,34 @@
+﻿{
+	TopDepartment:{Name: "Macrowing", ManagerPositionName: "销售总监"},
+	Users:[
+		{Name: "Administrator", Account: "admin", Password: "123456", Gender: "Man", Role: "Administrator"}
+	],
+    Functions: [
+        {
+            ID: "func_code_organization", Name: "pi_admin_org_name", Sort: 1,
+                Children: [
+                    { ID: "func_code_organization_manage", Name: "pi_admin_org_name", Url: "~/Admin/Org", IconClass: "icon-org-manage", Sort: 1}, 
+                    { ID: "func_code_user_import", Name: "pi_admin_org_user_import_name", Url: "~/Admin/User/ImportFirst", IconClass: "icon-user-import",Sort: 2},
+                    { ID: "func_code_password_strategy", Name: "pi_admin_pwd_strategy_name", Url: "~/Admin/Setup", IconClass: "icon-password-strategy",Sort: 3 },
+                    { ID: "func_code_login_strategy", Name: "loginSetup", Url: "~/Admin/Setup/LoginStrategy", IconClass: "icon-login-strategy",Sort: 4 },
+                    { ID: "func_code_operation_log", Name: "operationLog", Url: "~/Admin/OperationLog", IconClass: "icon-opt-log",Sort: 5},
+                    { ID: "func_code_signin_log", Name: "signInLog", Url: "~/Admin/SignInLog", IconClass: "icon-login-log",Sort: 6},
+                    { ID: "func_code_function_setup", Name: "functionPerm", Url: "~/Admin/Function", IconClass: "icon-func-perm",Sort: 7},
+                    { ID: "func_code_logoffed_user", Name: "logoffedUser", Url: "~/Admin/User/LogoffedUsers", IconClass: "icon-logoff-user",Sort: 8},
+                    { ID: "func_code_online_user", Name: "pi_admin_online_userStatistics_name", Url: "~/Admin/User/OnlineUsers", IconClass: "icon-online-user",Sort: 9}
+                ]
+        }
+    ],
+    Groups: [
+        {
+            Name: "Everyone",
+            Type: "Everyone",
+			IsSystem: true
+        },
+        {
+            Name: "系统管理员",
+            Type: "System",
+            FunctionCategoryIds:["func_code_organization", "func_code_doc_manage", "func_code_log_manage", "func_code_fax_manage", "func_code_work_flow_manage", "func_code_portal_manage", "func_code_ocr_manage", "func_code_report_manage", "func_code_basic_setup"]
+        }
+    ]
+}

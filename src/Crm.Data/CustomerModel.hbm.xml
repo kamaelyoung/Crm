@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data" assembly="Crm.Data">
+    <class name="CustomerModel" table="crm_customer">
+        <id name="ID" type="string" column="cust_id">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="Name" type="String" column="cust_name"></property>
+        <property name="AreaId" type="int" column="area_id"></property>
+        <property name="SalesUserIds" type="String" length="1000" column="cust_salesUserIds"></property>
+        <property name="CreatorId" type="String" column="cust_creatorId"></property>
+        <property name="CreateTime" type="DateTime" column="cust_createTime"></property>
+        <property name="ModifiedUserId" type="String" column="cust_modifiedUserId"></property>
+        <property name="ModifiedTime" type="DateTime" column="cust_modifiedTime"></property>
+        <property name="MetadataId" type="int" column="metadata_id"></property>
+    </class>
+</hibernate-mapping>

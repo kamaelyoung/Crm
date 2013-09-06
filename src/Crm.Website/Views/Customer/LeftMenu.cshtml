@@ -1,0 +1,14 @@
+﻿@using Crm.Website.Models;
+<ul class="nav nav-list">
+    <li class="nav-header">客户</li>
+    @{
+        string indexMenuClass = this.ViewBag.LeftMenu == CustomerLeftMenu.Index ? "class='active'" : "";
+        string favoriteMenuClass = this.ViewBag.LeftMenu == CustomerLeftMenu.Favorite? "class='active'" : "";
+        string createMenuClass = this.ViewBag.LeftMenu == CustomerLeftMenu.Create ? "class='active'" : "";
+        string importMenuClass = this.ViewBag.LeftMenu == CustomerLeftMenu.Import ? "class='active'" : "";
+    }
+    <li @this.Html.Raw(indexMenuClass)><a href="@this.Url.Action("Index")">客户管理</a></li>
+    <li @this.Html.Raw(favoriteMenuClass)><a href="@this.Url.Action("Favorite")">收藏客户</a></li>
+    <li @this.Html.Raw(createMenuClass)><a href="@this.Url.Action("Create")">创建客户</a></li>
+    <li @this.Html.Raw(importMenuClass)><a href="@this.Url.Action("ImportFirst")">导入客户</a></li>
+</ul>

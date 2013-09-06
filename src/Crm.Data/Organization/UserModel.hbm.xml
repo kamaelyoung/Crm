@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data.Organization" assembly="Crm.Data">
+    <class name="UserModel" table="org_user">
+        <id name="ID" type="string" column="user_id">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="Name" type="String" column="user_name"></property>
+        <property name="Account" type="String" column="user_account"></property>
+        <property name="Password" type="String" column="user_password"></property>
+        <property name="Email" type="String" column="user_email"></property>
+        <property name="Gender" type="int" column="user_gender"></property>
+        <property name="Role" type="int" column="user_role"></property>
+        <property name="Status" type="int" column="user_status"></property>
+        <property name="LastLoginTime" type="DateTime" column="user_lastLoginTime"></property>
+        <property name="LastLoginIp" type="string" column="user_lastLoginIp"></property>
+        <property name="Remark" type="string" length="20000" column="user_remark"></property>
+    </class>
+</hibernate-mapping>

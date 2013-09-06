@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data" assembly="Crm.Data">
+    <class name="GridViewColumnModel" table="crm_gridViewColumn">
+        <id name="ID" type="int" column="column_id">
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="FieldId" type="int" column="field_id"></property>
+        <property name="ViewId" type="int" column="view_id"></property>
+        <property name="Width" type="int" column="column_width"></property>
+    </class>
+</hibernate-mapping>

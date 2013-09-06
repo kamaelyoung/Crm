@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data.Organization" assembly="Crm.Data">
+    <class name="FunctionModel" table="org_function">
+        <id name="ID" type="string" column="func_id">
+            <generator class="assigned">
+            </generator>
+        </id>
+        <property name="Name" type="String" column="func_name"></property>
+        <property name="Url" type="String" column="func_url"></property>
+        <property name="IconClass" type="String" column="func_iconClass"></property>
+        <property name="ParentId" type="String" column="func_parentId"></property>
+        <property name="Sort" type="int" column="func_sort"></property>
+    </class>
+</hibernate-mapping>

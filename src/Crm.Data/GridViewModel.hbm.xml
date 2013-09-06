@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data" assembly="Crm.Data">
+    <class name="GridViewModel" table="crm_gridView">
+        <id name="ID" type="int" column="view_id">
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="CreatorAccount" type="String" column="view_creatorAccount"></property>
+        <property name="IsSystem" type="bool" column="view_isSystem"></property>
+        <property name="Type" type="int" column="view_type"></property>
+    </class>
+</hibernate-mapping>

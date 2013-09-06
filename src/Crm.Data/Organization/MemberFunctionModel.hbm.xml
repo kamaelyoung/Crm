@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Crm.Data.Organization" assembly="Crm.Data">
+    <class name="MemberFunctionModel" table="org_memberFunction">
+        <id name="ID" type="int" column="mbf_id" unsaved-value="0">
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="FunctionId" type="String" column="function_id"></property>
+        <property name="MemberId" type="String" column="member_id"></property>
+        <property name="MemberType" type="int" column="member_type"></property>
+        <property name="HasPermission" type="bool" column="mbf_hasPermission"></property>
+    </class>
+</hibernate-mapping>

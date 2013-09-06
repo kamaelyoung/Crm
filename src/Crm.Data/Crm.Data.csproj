@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C0A43D4B-D7B2-43A8-A53C-9FC1F3A5A051}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Crm.Data</RootNamespace>
+    <AssemblyName>Crm.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ContactModel.cs" />
+    <Compile Include="ContractModel.cs" />
+    <Compile Include="ConfigModel.cs" />
+    <Compile Include="CustomerAreaModel.cs" />
+    <Compile Include="CustomerFavoriteModel.cs" />
+    <Compile Include="CustomerModel.cs" />
+    <Compile Include="EmailConfigModel.cs" />
+    <Compile Include="FieldModel.cs" />
+    <Compile Include="FormModel.cs" />
+    <Compile Include="GridViewColumnModel.cs" />
+    <Compile Include="GridViewModel.cs" />
+    <Compile Include="MetadataModel.cs" />
+    <Compile Include="MetadataPropertyModel.cs" />
+    <Compile Include="Organization\DepartmentModel.cs" />
+    <Compile Include="Organization\FunctionModel.cs" />
+    <Compile Include="Organization\GroupMemberModel.cs" />
+    <Compile Include="Organization\GroupModel.cs" />
+    <Compile Include="Organization\MemberFunctionModel.cs" />
+    <Compile Include="Organization\OperationLogModel.cs" />
+    <Compile Include="Organization\PositionModel.cs" />
+    <Compile Include="Organization\SignInLogModel.cs" />
+    <Compile Include="Organization\UserModel.cs" />
+    <Compile Include="Organization\UserPositionModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ActivityModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Organization\DepartmentModel.hbm.xml" />
+    <EmbeddedResource Include="Organization\FunctionModel.hbm.xml" />
+    <EmbeddedResource Include="Organization\GroupMemberModel.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Organization\GroupModel.hbm.xml" />
+    <EmbeddedResource Include="Organization\MemberFunctionModel.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Organization\OperationLogModel.hbm.xml" />
+    <EmbeddedResource Include="Organization\PositionModel.hbm.xml" />
+    <EmbeddedResource Include="Organization\SignInLogModel.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Organization\UserModel.hbm.xml" />
+    <EmbeddedResource Include="Organization\UserPositionModel.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MetadataModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CustomerModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CustomerAreaModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FieldModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GridViewModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GridViewColumnModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CustomerFavoriteModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ContactModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ActivityModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ContractModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ConfigModel.hbm.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

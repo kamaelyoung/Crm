@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{15FCF44C-B440-43E6-8212-AC1353CD5EE7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Crm.Core</RootNamespace>
+    <AssemblyName>Crm.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Aop">
+      <HintPath>..\..\lib\Spring.Aop.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\lib\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activity.cs" />
+    <Compile Include="ActivityService.cs" />
+    <Compile Include="Contact.cs" />
+    <Compile Include="ContactService.cs" />
+    <Compile Include="Contract.cs" />
+    <Compile Include="ContractEmailNotifyService.cs" />
+    <Compile Include="ContractManager.cs" />
+    <Compile Include="ContractSearcher.cs" />
+    <Compile Include="ContractService.cs" />
+    <Compile Include="CrmConfigManager.cs" />
+    <Compile Include="CrmConfigService.cs" />
+    <Compile Include="CrmInitModel.cs" />
+    <Compile Include="CrmManager.cs" />
+    <Compile Include="CustomerArea.cs" />
+    <Compile Include="Customer.cs" />
+    <Compile Include="CustomerAreaManager.cs" />
+    <Compile Include="CustomerAreaModifyInfo.cs" />
+    <Compile Include="CustomerAreaService.cs" />
+    <Compile Include="CustomerCreateInfo.cs" />
+    <Compile Include="CustomerFavoriteManager.cs" />
+    <Compile Include="CustomerModifyInfo.cs" />
+    <Compile Include="Extend\FieldModifyInfo.cs" />
+    <Compile Include="Extend\ListFieldConfigJsonModel.cs" />
+    <Compile Include="Extend\FieldConfig.cs" />
+    <Compile Include="Extend\CheckboxFieldConfig.cs" />
+    <Compile Include="Extend\CheckboxFieldConfigJsonModel.cs" />
+    <Compile Include="GridViewColumn.cs" />
+    <Compile Include="GridView.cs" />
+    <Compile Include="Extend\Field.cs" />
+    <Compile Include="Extend\Form.cs" />
+    <Compile Include="Extend\FormManager.cs" />
+    <Compile Include="Extend\StringFieldConfig.cs" />
+    <Compile Include="Extend\ListFieldConfig.cs" />
+    <Compile Include="FormService.cs" />
+    <Compile Include="CustomerManager.cs" />
+    <Compile Include="CustomerService.cs" />
+    <Compile Include="GridViewService.cs" />
+    <Compile Include="GridViewManager.cs" />
+    <Compile Include="Mail\ExchangeMailSender.cs" />
+    <Compile Include="Mail\IAttachment.cs" />
+    <Compile Include="Mail\MailSender.cs" />
+    <Compile Include="Mail\MailSendServerType.cs" />
+    <Compile Include="Mail\SmtpMailSender.cs" />
+    <Compile Include="Metadata.cs" />
+    <Compile Include="MetadataProperty.cs" />
+    <Compile Include="MetadataValue.cs" />
+    <Compile Include="NumberMetadataValue.cs" />
+    <Compile Include="CrmInitializer.cs" />
+    <Compile Include="RegexHelper.cs" />
+    <Compile Include="StringMetadataValue.cs" />
+    <Compile Include="ThrowingLogger.cs" />
+    <Compile Include="NHibernateHelper.cs" />
+    <Compile Include="Organization\AuthenticatedUser.cs" />
+    <Compile Include="Organization\AuthenticatedUserManagement.cs" />
+    <Compile Include="Organization\AuthenticationHelper.cs" />
+    <Compile Include="Organization\AuthenticationManagement.cs" />
+    <Compile Include="Organization\AuthenticationService.cs" />
+    <Compile Include="ChangeEventArgs.cs" />
+    <Compile Include="CreateEventArgs.cs" />
+    <Compile Include="Organization\Cryptography.cs" />
+    <Compile Include="Organization\Authenticator.cs" />
+    <Compile Include="DeleteEventArgs.cs" />
+    <Compile Include="Organization\Department.cs" />
+    <Compile Include="Organization\DepartmentManagement.cs" />
+    <Compile Include="Organization\DepartmentService.cs" />
+    <Compile Include="Organization\DepartmentUserSearcher.cs" />
+    <Compile Include="Organization\EveryoneGroup.cs" />
+    <Compile Include="Organization\Function.cs" />
+    <Compile Include="Organization\FunctionGroupPermission.cs" />
+    <Compile Include="Organization\FunctionManagement.cs" />
+    <Compile Include="Organization\FunctionService.cs" />
+    <Compile Include="Organization\FunctionUserPermission.cs" />
+    <Compile Include="Organization\Group.cs" />
+    <Compile Include="Organization\GroupManagement.cs" />
+    <Compile Include="Organization\GroupService.cs" />
+    <Compile Include="OperationEventArgs.cs" />
+    <Compile Include="Organization\OperationLogManagement.cs" />
+    <Compile Include="Organization\OrganizationChildInitializer.cs" />
+    <Compile Include="Organization\OrganizationInitializationModel.cs" />
+    <Compile Include="Organization\OrganizationInitializer.cs" />
+    <Compile Include="Organization\OrganizationManagement.cs" />
+    <Compile Include="Organization\PasswordComplexValidator.cs" />
+    <Compile Include="Organization\Position.cs" />
+    <Compile Include="Organization\PositionManagement.cs" />
+    <Compile Include="Organization\PositionService.cs" />
+    <Compile Include="Organization\PositionUserSearcher.cs" />
+    <Compile Include="Organization\SignInLogService.cs" />
+    <Compile Include="Organization\SystemGroup.cs" />
+    <Compile Include="TEventHanlder.cs" />
+    <Compile Include="Organization\User.cs" />
+    <Compile Include="Organization\UserManagement.cs" />
+    <Compile Include="Organization\UserPosition.cs" />
+    <Compile Include="Organization\UserPositionManagement.cs" />
+    <Compile Include="Organization\UserPositionOperationArgs.cs" />
+    <Compile Include="Organization\UserService.cs" />
+    <Compile Include="Organization\VirtualGroup.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ContactModifyInfo.cs" />
+    <Compile Include="ContactManager.cs" />
+    <Compile Include="ContactCreateInfo.cs" />
+    <Compile Include="ActivityCreateInfo.cs" />
+    <Compile Include="ActivityModifyInfo.cs" />
+    <Compile Include="ActivityManager.cs" />
+    <Compile Include="StringListMetadataValue.cs" />
+    <Compile Include="ContractModifyInfo.cs" />
+    <Compile Include="ContractCreateInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Crm.Api\Crm.Api.csproj">
+      <Project>{BA1B16DF-70B1-43F4-BEAF-BCA39F1D6832}</Project>
+      <Name>Crm.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Crm.Data\Crm.Data.csproj">
+      <Project>{C0A43D4B-D7B2-43A8-A53C-9FC1F3A5A051}</Project>
+      <Name>Crm.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="ADODB">
+      <Guid>{B691E011-1797-432E-907A-4D8C69339129}</Guid>
+      <VersionMajor>6</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CDO">
+      <Guid>{CD000000-8B95-11D1-82DB-00C04FB1625D}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

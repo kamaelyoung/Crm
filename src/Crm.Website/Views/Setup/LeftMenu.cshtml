@@ -1,0 +1,17 @@
+﻿@using Crm.Website.Models;
+@using Crm.Api;
+<ul class="nav nav-list">
+    <li class="nav-header">设置</li>
+    @{
+        string indexAreaMenuClass = this.ViewBag.LeftMenu == "Index" ? "class='active'" : "";
+        string customerAreaMenuClass = this.ViewBag.LeftMenu == "CustomerArea" ? "class='active'" : "";
+        string customerExtendMenuClass = this.ViewBag.formType == FormType.Customer ? "class='active'" : "";
+        string contactExtendMenuClass = this.ViewBag.formType == FormType.Contact ? "class='active'" : "";
+        string activityExtendMenuClass = this.ViewBag.formType == FormType.Activity ? "class='active'" : "";
+    }
+    <li @this.Html.Raw(indexAreaMenuClass)><a href="@this.Url.Action("Index")">基本设置</a></li>
+    <li @this.Html.Raw(customerAreaMenuClass)><a href="@this.Url.Action("CustomerArea")">客户区域配置</a></li>
+    <li @this.Html.Raw(customerExtendMenuClass)><a href="@this.Url.Action("Extend", new { formType = FormType.Customer })">客户信息扩展</a></li>
+    <li @this.Html.Raw(contactExtendMenuClass)><a href="@this.Url.Action("Extend", new { formType = FormType.Contact })">联系人信息扩展</a></li>
+    <li @this.Html.Raw(activityExtendMenuClass)><a href="@this.Url.Action("Extend", new { formType = FormType.Activity })">客户接触信息扩展</a></li>
+</ul>
