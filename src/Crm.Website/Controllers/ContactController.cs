@@ -151,7 +151,7 @@ namespace Crm.Website.Controllers
             try
             {
                 ContactCreateModel model = JsonConvert.DeserializeObject<ContactCreateModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.ContactService.Create(WebHelper.CurrentUserAccount, model.name, model.customerId, propertys);
             }
             catch (Exception ex)
@@ -180,7 +180,7 @@ namespace Crm.Website.Controllers
             try
             {
                 ContactEditPostModel model = JsonConvert.DeserializeObject<ContactEditPostModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.ContactService.Modify(WebHelper.CurrentUserAccount, model.id, model.name, propertys);
             }
             catch (Exception ex)

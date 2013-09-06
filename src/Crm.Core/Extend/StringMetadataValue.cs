@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Crm.Api;
 
-namespace Crm.Core
+namespace Crm.Core.Extend
 {
     public class StringMetadataValue : MetadataValue
     {
@@ -45,6 +45,25 @@ namespace Crm.Core
         public override dynamic EditValue
         {
             get { return this.Value; }
+        }
+
+        public override bool InCondition(PropetySearchCondition condition)
+        {
+            StringPropertySearchCondition stringCondition = condition as StringPropertySearchCondition;
+            if (stringCondition == null)
+            {
+                throw new ArgumentException("condition");
+            }
+
+            if (string.IsNullOrEmpty(stringCondition.Keyword))
+            {
+                return true;
+            }
+            if (this.ShowValue == null)
+            {
+                return false;
+            }
+            return this.ShowValue.Contains(stringCondition.Keyword);
         }
     }
 }

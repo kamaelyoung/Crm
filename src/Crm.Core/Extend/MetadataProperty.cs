@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using Crm.Api;
 
-namespace Crm.Core
+namespace Crm.Core.Extend
 {
     public class MetadataProperty
     {
-        public MetadataProperty(string code, MetadataValue value)
+        public MetadataProperty(Field field, MetadataValue value)
         {
-            this.Code = code;
+            this.Field = field;
             this.Value = value;
         }
 
-        public string Code { private set; get; }
+        public Field Field { private set; get; }
 
         public MetadataValue Value { private set; get; }
 
@@ -22,7 +22,7 @@ namespace Crm.Core
         {
             return new PropertyInfo
             {
-                Code = this.Code,
+                Code = this.Field.Code,
                 Value = this.Value.ShowValue,
                 EditValue = this.Value.EditValue
             };

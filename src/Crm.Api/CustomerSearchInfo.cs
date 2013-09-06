@@ -6,12 +6,9 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class ContractSearchInfo
+    public class CustomerSearchInfo
     {
         public List<string> Keywords { set; get; }
-        public DateRange StartDateRange { set; get; }
-        public DateRange EndDateRange { set; get; }
-        public FloagRange ValueRange { set; get; }
         public List<PropertySearchInfo> PropertySearchInfos {set;get;}
     }
 }

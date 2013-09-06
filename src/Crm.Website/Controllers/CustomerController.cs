@@ -183,7 +183,7 @@ namespace Crm.Website.Controllers
             try
             {
                 CustomerCreateModel model = JsonConvert.DeserializeObject<CustomerCreateModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.CustomerService.Create(WebHelper.CurrentUserAccount, model.name, model.area, model.salesAccounts, propertys);
             }
             catch (Exception ex)
@@ -212,7 +212,7 @@ namespace Crm.Website.Controllers
             try
             {
                 CustomerEditPostModel model = JsonConvert.DeserializeObject<CustomerEditPostModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.CustomerService.Modify(WebHelper.CurrentUserAccount, model.id, model.name, model.area, model.salesAccounts, propertys);
             }
             catch (Exception ex)
@@ -278,22 +278,22 @@ namespace Crm.Website.Controllers
             return Json(resultModel, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Customers(string keyword, int start, int size)
+        public ActionResult Customers(string searchInfoJson, int start, int size)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
                 int totalCount;
                 List<CustomerInfo> customerInfos = null;
-                if (string.IsNullOrEmpty(keyword))
+                if (string.IsNullOrEmpty(searchInfoJson))
                 {
                     customerInfos = WebHelper.CustomerService.GetCustomers(WebHelper.CurrentUserAccount, start, size, out totalCount);
                 }
                 else
                 {
-                    Regex regex = new Regex("\\s*");
-                    keyword = regex.Replace(keyword, " ");
-                    customerInfos = WebHelper.CustomerService.Search(WebHelper.CurrentUserAccount, keyword.Split(' ').ToList(), start, size, out  totalCount);
+                    CustomerSearchModel searchModel = JsonConvert.DeserializeObject<CustomerSearchModel>(searchInfoJson);
+                    CustomerSearchInfo serachInfo = searchModel.Map();
+                    customerInfos = WebHelper.CustomerService.Search(WebHelper.CurrentUserAccount, serachInfo, start, size, out  totalCount);
                 }
                 List<CustomerInfo> favorites = WebHelper.CustomerService.GetFavorites(WebHelper.CurrentUserAccount);
                 List<CustomerGridJObjectModel> models = customerInfos.Select(x => new CustomerGridJObjectModel(x, favorites.ToDictionary(f => f.ID), this)).ToList();
@@ -321,9 +321,9 @@ namespace Crm.Website.Controllers
                 }
                 else
                 {
-                    Regex regex = new Regex("\\s*");
-                    keyword = regex.Replace(keyword, " ");
-                    customerInfos = WebHelper.CustomerService.Search(WebHelper.CurrentUserAccount, keyword.Split(' ').ToList(), start, size, out  totalCount);
+                    CustomerSearchModel searchModel = new CustomerSearchModel();
+                    searchModel.keyword = keyword;
+                    customerInfos = WebHelper.CustomerService.Search(WebHelper.CurrentUserAccount, searchModel.Map(), start, size, out  totalCount);
                 }
                 List<CustomerGridJObjectModel> models = customerInfos.Select(x => new CustomerGridJObjectModel(x)).ToList();
                 resultModel.data = new DatagridModel { count = totalCount, list = models };
@@ -367,9 +367,9 @@ namespace Crm.Website.Controllers
                 }
                 else
                 {
-                    Regex regex = new Regex("\\s*");
-                    keyword = regex.Replace(keyword, " ");
-                    customerInfos = WebHelper.CustomerService.Search(WebHelper.CurrentUserAccount, keyword.Split(' ').ToList());
+                    CustomerSearchModel searchModel = new CustomerSearchModel();
+                    searchModel.keyword = keyword;
+                    customerInfos = WebHelper.CustomerService.Search(WebHelper.CurrentUserAccount, searchModel.Map());
                 }
                 List<JObject> models = customerInfos.Select(x => new CustomerGridJObjectModel(x) as JObject).ToList();
                 string tempPath = ImportExportHelper.Export(models, FormType.Customer);

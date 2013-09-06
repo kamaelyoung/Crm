@@ -79,6 +79,7 @@
     <Compile Include="CustomerCreateInfo.cs" />
     <Compile Include="CustomerFavoriteManager.cs" />
     <Compile Include="CustomerModifyInfo.cs" />
+    <Compile Include="CustomerSearcher.cs" />
     <Compile Include="Extend\FieldModifyInfo.cs" />
     <Compile Include="Extend\ListFieldConfigJsonModel.cs" />
     <Compile Include="Extend\FieldConfig.cs" />
@@ -101,13 +102,14 @@
     <Compile Include="Mail\MailSender.cs" />
     <Compile Include="Mail\MailSendServerType.cs" />
     <Compile Include="Mail\SmtpMailSender.cs" />
-    <Compile Include="Metadata.cs" />
-    <Compile Include="MetadataProperty.cs" />
-    <Compile Include="MetadataValue.cs" />
-    <Compile Include="NumberMetadataValue.cs" />
+    <Compile Include="Extend\Metadata.cs" />
+    <Compile Include="Extend\MetadataProperty.cs" />
+    <Compile Include="Extend\MetadataValue.cs" />
+    <Compile Include="Extend\NumberMetadataValue.cs" />
     <Compile Include="CrmInitializer.cs" />
+    <Compile Include="Extend\MetadataSearcher.cs" />
     <Compile Include="RegexHelper.cs" />
-    <Compile Include="StringMetadataValue.cs" />
+    <Compile Include="Extend\StringMetadataValue.cs" />
     <Compile Include="ThrowingLogger.cs" />
     <Compile Include="NHibernateHelper.cs" />
     <Compile Include="Organization\AuthenticatedUser.cs" />
@@ -161,7 +163,7 @@
     <Compile Include="ActivityCreateInfo.cs" />
     <Compile Include="ActivityModifyInfo.cs" />
     <Compile Include="ActivityManager.cs" />
-    <Compile Include="StringListMetadataValue.cs" />
+    <Compile Include="Extend\StringListMetadataValue.cs" />
     <Compile Include="ContractModifyInfo.cs" />
     <Compile Include="ContractCreateInfo.cs" />
   </ItemGroup>

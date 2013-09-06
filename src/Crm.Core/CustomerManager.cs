@@ -244,18 +244,12 @@ namespace Crm.Core
             }
         }
 
-        public List<Customer> Search(User user, List<string> keywords, int skipCount, int takeCount, out int totalCount)
+        public List<Customer> Search(User user, CustomerSearcher seracher, int skipCount, int takeCount, out int totalCount)
         {
             this._lock.AcquireReaderLock();
             try
             {
-                if (keywords == null || keywords.Count == 0)
-                {
-                    return this.GetCustomers(user, skipCount, takeCount, out totalCount);
-                }
-
-                List<Regex> regexs = keywords.Select(x => new Regex(x.ToLower())).ToList();
-                var searchCustomers = this._customerList.Where(x => regexs.All(regex => regex.IsMatch(x.Content))).Where(x => x.CanPreview(user)).ToList();
+                var searchCustomers = this._customerList.Where(x => x.CanPreview(user) && seracher.Accord(x)).ToList();
                 totalCount = searchCustomers.Count;
                 return searchCustomers.Skip(skipCount).Take(takeCount).ToList();
             }
@@ -265,18 +259,12 @@ namespace Crm.Core
             }
         }
 
-        public List<Customer> Search(User user, List<string> keywords)
+        public List<Customer> Search(User user, CustomerSearcher seracher)
         {
             this._lock.AcquireReaderLock();
             try
             {
-                if (keywords == null || keywords.Count == 0)
-                {
-                    return this.GetCustomers(user);
-                }
-
-                List<Regex> regexs = keywords.Select(x => new Regex(x.ToLower())).ToList();
-                return this._customerList.Where(x => regexs.All(regex => regex.IsMatch(x.Content))).Where(x => x.CanPreview(user)).ToList();
+                return this._customerList.Where(x => x.CanPreview(user) && seracher.Accord(x)).ToList();
             }
             finally
             {

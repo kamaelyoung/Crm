@@ -221,6 +221,20 @@ jQuery.fn.extend({
         
         return valueArray;
     },
+    getExtendSearchValue: function () {
+        var valueArray = this.find(".condition")
+		.map(function (i, elem) {
+            var value = $(this).getFormValue();
+            var fieldCode = $(this).data("fieldCode");
+            var conditionType = $(this).data("conditionType");
+            value.code = fieldCode;
+            value.conditionType = conditionType;
+		    return value;
+					
+		}).get();
+        
+        return valueArray;
+    },
     getFormValue: function () {
         var valueArray = this.find(":input")
 		.filter(function () {

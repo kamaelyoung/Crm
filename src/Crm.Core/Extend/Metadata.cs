@@ -8,22 +8,21 @@ using Newtonsoft.Json.Linq;
 using Crm.Api;
 using Crm.Data;
 using Crm.Api.Exceptions;
-using Crm.Core.Extend;
 
-namespace Crm.Core
+namespace Crm.Core.Extend
 {
     public class Metadata
     {
-        Form _form;
-
         public Metadata(int id, List<MetadataProperty> propertys, Form form)
         {
             this.ID = id;
-            this._propertys = propertys.ToDictionary(x => x.Code);
-            this._form = form;
+            this._propertys = propertys.ToDictionary(x => x.Field.Code);
+            this.Form = form;
         }
 
         public int ID { private set; get; }
+
+        public Form Form { private set; get; }
 
         private Dictionary<string, MetadataProperty> _propertys;
 
@@ -32,20 +31,21 @@ namespace Crm.Core
             List<MetadataProperty> propertys = new List<MetadataProperty>();
             foreach (PropertyOperationInfo propertyInfo in propertyInfos)
             {
-                MetadataValue metadataValue = Metadata.CreateMetadataValue(propertyInfo.Code, propertyInfo.Value, this._form);
+                Field field = this.Form.GetFieldByCode(propertyInfo.Code);
+                MetadataValue metadataValue = Metadata.CreateMetadataValue(field, propertyInfo.Value);
                 if (metadataValue != null)
                 {
-                    propertys.Add(new MetadataProperty(propertyInfo.Code, metadataValue));
+                    propertys.Add(new MetadataProperty(field, metadataValue));
                 }
             }
 
             MetadataModel model = NHibernateHelper.CurrentSession.Get<MetadataModel>(this.ID);
-            List<MetadataPropertyModel> propertyModels = propertyInfos.Select(x => new MetadataPropertyModel { Code = x.Code, Value = x.Value }).ToList();
+            List<MetadataPropertyModel> propertyModels = propertys.Select(x => new MetadataPropertyModel { FieldId = x.Field.ID, Value = x.Value.PersistenceValue }).ToList();
             model.PropertysJson = JsonConvert.SerializeObject(propertyModels);
 
             NHibernateHelper.CurrentSession.Update(model);
 
-            this._propertys = propertys.ToDictionary(x => x.Code);
+            this._propertys = propertys.ToDictionary(x => x.Field.Code);
         }
 
         public List<MetadataProperty> GetPropertys()
@@ -79,13 +79,8 @@ namespace Crm.Core
             };
         }
 
-        public static MetadataValue CreateMetadataValue(string fieldCode, string value, Form form)
+        public static MetadataValue CreateMetadataValue(Field field, string value)
         {
-            Field field = form.GetFieldByCode(fieldCode);
-            if (field == null)
-            {
-                return null;
-            }
             switch (field.ValueType)
             {
                 case PropertyValueType.Number:
@@ -124,10 +119,11 @@ namespace Crm.Core
             List<MetadataProperty> propertys = new List<MetadataProperty>();
             foreach (MetadataPropertyModel propertyModel in propertyModels)
             {
-                MetadataValue metadataValue = Metadata.CreateMetadataValue(propertyModel.Code, propertyModel.Value, form);
-                if (metadataValue != null)
+                Field field = form.GetFieldById(propertyModel.FieldId);
+                if (field != null)
                 {
-                    propertys.Add(new MetadataProperty(propertyModel.Code, metadataValue));
+                    MetadataValue metadataValue = Metadata.CreateMetadataValue(field, propertyModel.Value);
+                    propertys.Add(new MetadataProperty(field, metadataValue));
                 }
             }
             Metadata metadata = new Metadata(model.ID, propertys, form);
@@ -138,23 +134,13 @@ namespace Crm.Core
         public static Metadata CreateMetadata(List<PropertyOperationInfo> propertyInfos, Form form)
         {
             MetadataModel model = new MetadataModel();
-            List<MetadataPropertyModel> propertyModels = propertyInfos.Select(x => new MetadataPropertyModel { Code = x.Code, Value = x.Value }).ToList();
-            model.PropertysJson = JsonConvert.SerializeObject(propertyModels);
 
             model.ID = (int)NHibernateHelper.CurrentSession.Save(model);
             NHibernateHelper.CurrentSession.Flush();
 
-            List<MetadataProperty> propertys = new List<MetadataProperty>();
-            foreach (PropertyOperationInfo propertyInfo in propertyInfos)
-            {
-                MetadataValue metadataValue = Metadata.CreateMetadataValue(propertyInfo.Code, propertyInfo.Value, form);
-                if (metadataValue != null)
-                {
-                    propertys.Add(new MetadataProperty(propertyInfo.Code, metadataValue));
-                }
-            }
-            Metadata metadata = new Metadata(model.ID, propertys, form);
+            Metadata metadata = new Metadata(model.ID, new List<MetadataProperty>(), form);
 
+            metadata.SetPropertys(propertyInfos);
             return metadata;
         }
     }

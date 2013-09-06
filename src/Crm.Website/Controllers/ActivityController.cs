@@ -46,7 +46,7 @@ namespace Crm.Website.Controllers
             try
             {
                 ActivityCreateModel model = JsonConvert.DeserializeObject<ActivityCreateModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.ActivityService.Create(WebHelper.CurrentUserAccount, model.subject, model.contactId, propertys);
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace Crm.Website.Controllers
             try
             {
                 ActivityEditPostModel model = JsonConvert.DeserializeObject<ActivityEditPostModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.ActivityService.Modify(WebHelper.CurrentUserAccount, model.id, model.subject, propertys);
             }
             catch (Exception ex)

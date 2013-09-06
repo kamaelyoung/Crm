@@ -7,7 +7,7 @@ namespace Crm.Data
 {
     public class MetadataPropertyModel
     {
-        public virtual string Code { set; get; }
+        public virtual int FieldId { set; get; }
 
         public virtual string Value { set; get; }
     }

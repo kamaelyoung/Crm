@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Crm.Api;
 
-namespace Crm.Core
+namespace Crm.Core.Extend
 {
     public abstract class MetadataValue 
     {
@@ -22,6 +22,8 @@ namespace Crm.Core
         public abstract string ShowValue { get; }
 
         public abstract dynamic EditValue { get; }
+
+        public abstract bool InCondition(PropetySearchCondition condition);
 
         public abstract PropertyValueType Type { get; }
     }

@@ -13,6 +13,8 @@ namespace Crm.Website.Controllers
 
         public ActionResult Index()
         {
+            string token = WebHelper.AuthenticationService.SignIn("admin", "123456", "1270.0.0.1");
+            WebHelper.SetCurrentUserToken(token, false);
             return this.RedirectToAction("Index", "Customer");
         }
 

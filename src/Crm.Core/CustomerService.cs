@@ -92,17 +92,17 @@ namespace Crm.Core
             }
         }
 
-        public List<CustomerInfo> Search(string account, List<string> keywords, int skipCount, int takeCount, out int totalCount)
+        public List<CustomerInfo> Search(string account, CustomerSearchInfo serachInfo, int skipCount, int takeCount, out int totalCount)
         {
             User user = this._crmManager.OrgManager.UserManager.GetUserByAccount(account);
-            List<Customer> customers = this._crmManager.CustomerManager.Search(user, keywords, skipCount, takeCount, out totalCount);
+            List<Customer> customers = this._crmManager.CustomerManager.Search(user, new CustomerSearcher(serachInfo), skipCount, takeCount, out totalCount);
             return customers.Select(x => x.Map()).ToList();
         }
 
-        public List<CustomerInfo> Search(string account, List<string> keywords)
+        public List<CustomerInfo> Search(string account, CustomerSearchInfo serachInfo)
         {
             User user = this._crmManager.OrgManager.UserManager.GetUserByAccount(account);
-            List<Customer> customers = this._crmManager.CustomerManager.Search(user, keywords);
+            List<Customer> customers = this._crmManager.CustomerManager.Search(user, new CustomerSearcher(serachInfo));
             return customers.Select(x => x.Map()).ToList();
         }
 

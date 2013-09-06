@@ -6,6 +6,7 @@ using Crm.Core.Organization;
 using Crm.Data;
 using Crm.Api.Exceptions;
 using Crm.Api;
+using Crm.Core.Extend;
 
 namespace Crm.Core
 {

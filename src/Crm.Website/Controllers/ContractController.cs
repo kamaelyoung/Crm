@@ -213,7 +213,7 @@ namespace Crm.Website.Controllers
             try
             {
                 ContractCreateModel model = JsonConvert.DeserializeObject<ContractCreateModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.ContractService.Create(WebHelper.CurrentUserAccount, model.name, model.customerId, model.startDate, 
                     model.endDate, model.expiredComputeDays, model.value, model.owners, propertys);
             }
@@ -243,7 +243,7 @@ namespace Crm.Website.Controllers
             try
             {
                 ContractEditPostModel model = JsonConvert.DeserializeObject<ContractEditPostModel>(json);
-                List<PropertyOperationInfo> propertys = MetadataHelper.MapPropertyOperationInfos(model.extends);
+                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
                 WebHelper.ContractService.Modify(WebHelper.CurrentUserAccount, model.id, model.name, model.startDate, model.endDate,
                     model.expiredComputeDays, model.value, model.owners, propertys);
             }

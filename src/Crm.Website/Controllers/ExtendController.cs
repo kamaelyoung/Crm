@@ -53,6 +53,14 @@ namespace Crm.Website.Controllers
         }
 
         [HttpGet]
+        public ActionResult SearchFields(FormType formType)
+        {
+            List<FieldInfo> fields = WebHelper.FormService.GetFields(formType);
+            this.ViewBag.fields = fields.Where(x => !x.CanModify).ToList();
+            return PartialView();
+        }
+
+        [HttpGet]
         public ActionResult Fields(FormType formType)
         {
             List<FieldInfo> fields = WebHelper.FormService.GetFields(formType);

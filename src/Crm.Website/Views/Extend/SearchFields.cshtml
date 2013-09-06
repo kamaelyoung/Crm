@@ -1,0 +1,51 @@
+﻿@using Crm.Api;
+<table>
+@for (int count = 0; count < this.ViewBag.fields.Count; ++count)
+{
+    if (count % 2 == 0)
+    {
+        @this.Html.Raw("<tr>");
+    } 
+    FieldInfo field = this.ViewBag.fields[count];
+<td>
+<div class="control-group">
+    <label class="control-label" style="width: 80px" >
+        @field.Name
+        @if (field.Required) { 
+            <font style="color: Red">*</font>
+        }
+    </label>
+    <div style="margin-left: 120px;" class="controls condition" data-field-code="@field.Code" data-condition-type="String">
+    @switch (field.Type)
+    {
+        case FieldType.String:
+        case FieldType.Text:
+            StringFieldConfigInfo stringField = ((StringFieldConfigInfo)field.ConfigInfo);
+            <input type="text" name="value" />
+            break;
+        case FieldType.RadioList:
+        case FieldType.CheckboxList:
+        case FieldType.DropdownList:
+            ListFieldConfigInfo dropdownFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            <select name="value">
+                <option></option>
+                @foreach (string item in dropdownFieldInfo.SelectList)
+                {
+                    <option>@item</option>
+                }
+            </select>
+            break;
+    }
+    </div>
+</div>
+</td>
+    if(count % 2 == 1)
+    {
+        @this.Html.Raw("</tr>");
+    }
+    else if(count == this.ViewBag.fields.Count - 1)
+    {
+        @this.Html.Raw("<td></td></tr>");
+    }
+}
+</table>

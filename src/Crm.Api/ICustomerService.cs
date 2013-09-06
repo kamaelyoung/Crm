@@ -27,8 +27,8 @@ namespace Crm.Api
 
         CustomerInfo GetCustomerById(string id);
 
-        List<CustomerInfo> Search(string account, List<string> keywords, int skipCount, int takeCount, out int totalCount);
+        List<CustomerInfo> Search(string account, CustomerSearchInfo serachInfo, int skipCount, int takeCount, out int totalCount);
 
-        List<CustomerInfo> Search(string account, List<string> keywords);
+        List<CustomerInfo> Search(string account, CustomerSearchInfo serachInfo);
     }
 }
