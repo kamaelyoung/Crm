@@ -34,5 +34,13 @@
             <td><a href="@string.Format("{0}?formType={1}&returnUrl={2}", this.Url.Action("CreateRadioboxListField"), this.Request["formType"], this.Request["returnUrl"])"">单选框</a></td>
             <td>允许用户从定义的选择框中选择单个值。</td>
         </tr>
+        <tr>
+            <td><a href="@string.Format("{0}?formType={1}&returnUrl={2}", this.Url.Action("CreateDateField"), this.Request["formType"], this.Request["returnUrl"])"">日期</a></td>
+            <td>允许用户输入日期。</td>
+        </tr>
+        <tr>
+            <td><a href="@string.Format("{0}?formType={1}&returnUrl={2}", this.Url.Action("CreateNumberField"), this.Request["formType"], this.Request["returnUrl"])"">数字</a></td>
+            <td>允许用户输入数字。</td>
+        </tr>
     </tbody>
 </table>

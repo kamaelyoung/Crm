@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Crm.Core.Extend
+namespace Crm.Data
 {
-    public class CheckboxFieldConfigJsonModel
+    public class CheckboxFieldConfigModel
     {
         public List<string> DefaultValues { set; get; }
 

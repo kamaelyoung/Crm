@@ -81,10 +81,11 @@
     <Compile Include="CustomerModifyInfo.cs" />
     <Compile Include="CustomerSearcher.cs" />
     <Compile Include="Extend\FieldModifyInfo.cs" />
-    <Compile Include="Extend\ListFieldConfigJsonModel.cs" />
     <Compile Include="Extend\FieldConfig.cs" />
     <Compile Include="Extend\CheckboxFieldConfig.cs" />
-    <Compile Include="Extend\CheckboxFieldConfigJsonModel.cs" />
+    <Compile Include="Extend\DateMetadataValue.cs" />
+    <Compile Include="Extend\NumberFieldConfig.cs" />
+    <Compile Include="Extend\DateFieldConfig.cs" />
     <Compile Include="GridViewColumn.cs" />
     <Compile Include="GridView.cs" />
     <Compile Include="Extend\Field.cs" />

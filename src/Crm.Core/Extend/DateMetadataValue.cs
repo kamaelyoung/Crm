@@ -6,15 +6,15 @@ using Crm.Api;
 
 namespace Crm.Core.Extend
 {
-    public class NumberMetadataValue : MetadataValue
+    public class DateMetadataValue : MetadataValue
     {
-        public NumberMetadataValue(decimal? value)
+        public DateMetadataValue(DateTime? value)
             : base(value)
         {
 
         }
 
-        public decimal? Number
+        public DateTime? Date
         {
             get
             {
@@ -24,7 +24,7 @@ namespace Crm.Core.Extend
 
         public override PropertyValueType Type
         {
-            get { return PropertyValueType.Number; }
+            get { return PropertyValueType.Date; }
         }
 
         public override string PersistenceValue
@@ -39,9 +39,9 @@ namespace Crm.Core.Extend
         {
             get 
             {
-                if (this.Number.HasValue)
+                if (this.Date.HasValue)
                 {
-                    return this.Number.ToString(); 
+                    return this.Date.Value.ToString("yyyy-MM-dd"); 
                 }
                 return "";
             }
@@ -49,23 +49,23 @@ namespace Crm.Core.Extend
 
         public override dynamic OrderValue
         {
-            get { return this.Number; }
+            get { return this.Date; }
         }
 
         public override dynamic EditValue
         {
-            get { return this.Value; }
+            get { return this.ShowValue; }
         }
 
         public override bool InCondition(IPropetySearchCondition condition)
         {
-            NumberRange numberCondition = condition as NumberRange;
-            if (numberCondition == null)
+            DateRange dateCondition = condition as DateRange;
+            if (dateCondition == null)
             {
                 throw new ArgumentException("condition");
             }
 
-            return numberCondition.InRange(this.Number);
+            return dateCondition.InRange(this.Date);
         }
     }
 }

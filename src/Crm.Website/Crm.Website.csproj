@@ -122,6 +122,8 @@
     <Compile Include="Models\ContractEditModel.cs" />
     <Compile Include="Models\ContractEditPostModel.cs" />
     <Compile Include="Models\CustomerSearchModel.cs" />
+    <Compile Include="Models\DateFieldEditModel.cs" />
+    <Compile Include="Models\NumberFieldEditModel.cs" />
     <Compile Include="NewtonJsonResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebHelper.cs" />
@@ -333,6 +335,7 @@
     <Content Include="Views\Org\PositionSelectDialog.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Extend\SearchFields.cshtml" />
+    <Content Include="Views\Setup\CreateDateField.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

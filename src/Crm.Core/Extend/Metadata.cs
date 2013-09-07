@@ -32,7 +32,7 @@ namespace Crm.Core.Extend
             foreach (PropertyOperationInfo propertyInfo in propertyInfos)
             {
                 Field field = this.Form.GetFieldByCode(propertyInfo.Code);
-                MetadataValue metadataValue = Metadata.CreateMetadataValue(field, propertyInfo.Value);
+                MetadataValue metadataValue = MetadataValue.Create(field.ValueType, propertyInfo.Value);
                 if (metadataValue != null)
                 {
                     propertys.Add(new MetadataProperty(field, metadataValue));
@@ -79,38 +79,6 @@ namespace Crm.Core.Extend
             };
         }
 
-        public static MetadataValue CreateMetadataValue(Field field, string value)
-        {
-            switch (field.ValueType)
-            {
-                case PropertyValueType.Number:
-                    if (string.IsNullOrEmpty(value))
-                    {
-                        return new NumberMetadataValue(null);
-                    }
-                    decimal number;
-                    if (decimal.TryParse(value, out number))
-                    {
-                        return new NumberMetadataValue(number);
-                    }
-                    else
-                    {
-                        throw new CrmException("创建NumberMetadataValue出错,value:" + value);
-                    }
-                case PropertyValueType.String:
-                    return new StringMetadataValue(value);
-                case PropertyValueType.StringList:
-                    List<string> stringList = new List<string>();
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        stringList = value.Split(',').ToList();
-                    }
-                    return new StringListMetadataValue(stringList);
-            }
-
-            throw new CrmException("创建NumberMetadataValue出错,找不到符合的valuetype:" + field.ValueType);
-        }
-
         public static Metadata LoadMetadata(int metadataId, Form form)
         {
             MetadataModel model = NHibernateHelper.CurrentSession
@@ -122,7 +90,7 @@ namespace Crm.Core.Extend
                 Field field = form.GetFieldById(propertyModel.FieldId);
                 if (field != null)
                 {
-                    MetadataValue metadataValue = Metadata.CreateMetadataValue(field, propertyModel.Value);
+                    MetadataValue metadataValue = MetadataValue.Create(field.ValueType, propertyModel.Value);
                     propertys.Add(new MetadataProperty(field, metadataValue));
                 }
             }

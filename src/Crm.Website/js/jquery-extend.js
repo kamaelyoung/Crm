@@ -226,9 +226,9 @@ jQuery.fn.extend({
 		.map(function (i, elem) {
             var value = $(this).getFormValue();
             var fieldCode = $(this).data("fieldCode");
-            var conditionType = $(this).data("conditionType");
-            value.code = fieldCode;
-            value.conditionType = conditionType;
+            var valueType = $(this).data("valueType");
+            value.fieldCode = fieldCode;
+            value.valueType = valueType;
 		    return value;
 					
 		}).get();

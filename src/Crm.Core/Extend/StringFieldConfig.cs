@@ -22,17 +22,6 @@ namespace Crm.Core.Extend
             get { return PropertyValueType.String; }
         }
 
-        public void Modify(string defautlValue)
-        {
-            FieldModel model = NHibernateHelper.CurrentSession.Get<FieldModel>(this.Field.ID);
-            model.Config = defautlValue;
-
-            NHibernateHelper.CurrentSession.Update(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            this.DefaultValue = defautlValue;
-        }
-
         public override FieldConfigInfo Map()
         {
             StringFieldConfigInfo info = new StringFieldConfigInfo

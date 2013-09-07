@@ -47,9 +47,9 @@ namespace Crm.Core.Extend
             get { return this.Value; }
         }
 
-        public override bool InCondition(PropetySearchCondition condition)
+        public override bool InCondition(IPropetySearchCondition condition)
         {
-            StringPropertySearchCondition stringCondition = condition as StringPropertySearchCondition;
+            KeywordSearchCondition stringCondition = condition as KeywordSearchCondition;
             if (stringCondition == null)
             {
                 throw new ArgumentException("condition");

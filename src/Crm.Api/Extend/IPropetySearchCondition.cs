@@ -5,8 +5,7 @@ using System.Text;
 
 namespace Crm.Api
 {
-    [Serializable]
-    public class PropetySearchCondition
+    public interface IPropetySearchCondition
     {
 
     }

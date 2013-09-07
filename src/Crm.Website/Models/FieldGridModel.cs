@@ -53,6 +53,20 @@ namespace Crm.Website.Models
                         fieldInfo.ID,
                         controller.Url.Action("Extend", new { formType = fieldInfo.FormType }));
                     break;
+                case FieldType.Number:
+                    this.editLink = string.Format("{0}?formType={1}&fieldId={2}&returnUrl={3}",
+                        controller.Url.Action("EditNumberField"),
+                        fieldInfo.FormType,
+                        fieldInfo.ID,
+                        controller.Url.Action("Extend", new { formType = fieldInfo.FormType }));
+                    break;
+                case FieldType.Date:
+                    this.editLink = string.Format("{0}?formType={1}&fieldId={2}&returnUrl={3}",
+                        controller.Url.Action("EditDateField"),
+                        fieldInfo.FormType,
+                        fieldInfo.ID,
+                        controller.Url.Action("Extend", new { formType = fieldInfo.FormType }));
+                    break;
                 default:
                     throw new ArgumentException("fieldInfo.Type");
             }
@@ -72,6 +86,10 @@ namespace Crm.Website.Models
                     return "短文本";
                 case FieldType.Text:
                     return "长文本";
+                case FieldType.Date:
+                    return "日期";
+                case FieldType.Number:
+                    return "数字";
                     
             }
             return "";

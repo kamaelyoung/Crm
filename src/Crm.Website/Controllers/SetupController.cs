@@ -229,6 +229,62 @@ namespace Crm.Website.Controllers
         }
 
         [HttpGet]
+        public ActionResult CreateDateField(FormType formType)
+        {
+            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formType) + 1;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateDateField(FormType formType, string name, bool? required, bool defaultValueIsToday, int index)
+        {
+            ControllerResultModel resultModel = new ControllerResultModel();
+            try
+            {
+                if (!required.HasValue)
+                {
+                    required = false;
+                }
+                WebHelper.FormService.CreateDateField(formType, name, required.Value, defaultValueIsToday, index);
+            }
+            catch (Exception ex)
+            {
+                resultModel.result = ControllerResult.Error;
+                resultModel.message = ex.Message;
+                WebHelper.Logger.Error(ex.Message, ex);
+            }
+            return Json(resultModel, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult CreateNumberField(FormType formType)
+        {
+            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formType) + 1;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateNumberField(FormType formType, string name, bool? required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        {
+            ControllerResultModel resultModel = new ControllerResultModel();
+            try
+            {
+                if (!required.HasValue)
+                {
+                    required = false;
+                }
+                WebHelper.FormService.CreateNumberField(formType, name, required.Value, defaultValue, max, min, precision, index);
+            }
+            catch (Exception ex)
+            {
+                resultModel.result = ControllerResult.Error;
+                resultModel.message = ex.Message;
+                WebHelper.Logger.Error(ex.Message, ex);
+            }
+            return Json(resultModel, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public ActionResult EditStringField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
@@ -248,6 +304,66 @@ namespace Crm.Website.Controllers
                     required = false;
                 }
                 WebHelper.FormService.ModifyStringField(fieldId, name, required.Value, defaultValue, index);
+            }
+            catch (Exception ex)
+            {
+                resultModel.result = ControllerResult.Error;
+                resultModel.message = ex.Message;
+                WebHelper.Logger.Error(ex.Message, ex);
+            }
+            return Json(resultModel, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult EditDateField(int fieldId)
+        {
+            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            DateFieldConfigInfo config = field.ConfigInfo as DateFieldConfigInfo;
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new DateFieldEditModel(field, config));
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditDateField(FormType formType, int fieldId, string name, bool? required, bool defaultValueIsToday, int index)
+        {
+            ControllerResultModel resultModel = new ControllerResultModel();
+            try
+            {
+                if (!required.HasValue)
+                {
+                    required = false;
+                }
+                WebHelper.FormService.ModifyDateField(fieldId, name, required.Value, defaultValueIsToday, index);
+            }
+            catch (Exception ex)
+            {
+                resultModel.result = ControllerResult.Error;
+                resultModel.message = ex.Message;
+                WebHelper.Logger.Error(ex.Message, ex);
+            }
+            return Json(resultModel, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult EditNumberField(int fieldId)
+        {
+            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            NumberFieldConfigInfo config = field.ConfigInfo as NumberFieldConfigInfo;
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new NumberFieldEditModel(field, config));
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditNumberField(FormType formType, int fieldId, string name, bool? required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        {
+            ControllerResultModel resultModel = new ControllerResultModel();
+            try
+            {
+                if (!required.HasValue)
+                {
+                    required = false;
+                }
+                WebHelper.FormService.ModifyNumberField(fieldId, name, required.Value, defaultValue, max, min, precision, index);
             }
             catch (Exception ex)
             {

@@ -18,15 +18,15 @@
     {
         case FieldType.String:
             StringFieldConfigInfo stringField = ((StringFieldConfigInfo)field.ConfigInfo);
-            <input type="text" data-property-type="String" class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@stringField.DefaultValue"/>
+            <input type="text" class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@stringField.DefaultValue"/>
             break;
         case FieldType.Text:
             StringFieldConfigInfo textField = ((StringFieldConfigInfo)field.ConfigInfo);
-            <textarea class="input-xlarge" data-property-type="String" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) rows="3" >@textField.DefaultValue</textarea>
+            <textarea class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) rows="3" >@textField.DefaultValue</textarea>
             break;
         case FieldType.DropdownList:
             ListFieldConfigInfo dropdownFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
-            <select class="input-xlarge" data-property-type="String"  @this.Html.Raw(dataRequiredAttr) name="@string.Format("field{0}", field.ID)">
+            <select class="input-xlarge"  @this.Html.Raw(dataRequiredAttr) name="@string.Format("field{0}", field.ID)">
                 <option></option>
                 @foreach (string item in dropdownFieldInfo.SelectList)
                 {
@@ -74,6 +74,14 @@
                     @item
                 </label>
             }
+            break;
+        case FieldType.Number:
+            NumberFieldConfigInfo numberFieldInfo = ((NumberFieldConfigInfo)field.ConfigInfo);
+            <input type="text" class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@numberFieldInfo.DefaultValue"/>
+            break;
+        case FieldType.Date:
+            DateFieldConfigInfo dateFieldInfo = ((DateFieldConfigInfo)field.ConfigInfo);
+            <input type="text" class="date input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@dateFieldInfo.DefaultValue"/>
             break;
     }
     </div>

@@ -38,8 +38,43 @@ namespace Crm.Website
             foreach (JObject serachModel in extendSearchs)
             {
                 PropertySearchInfo serachInfo = new PropertySearchInfo();
-                serachInfo.FieldCode = serachModel["code"].ToString();
-                serachInfo.Condition = new StringPropertySearchCondition { Keyword = serachModel["value"].ToString() };
+                serachInfo.FieldCode = serachModel["fieldCode"].ToString();
+                PropertyValueType valueType = (PropertyValueType)Enum.Parse(typeof(PropertyValueType), serachModel["valueType"].ToString());
+                switch (valueType)
+                {
+                    case PropertyValueType.String:
+                    case PropertyValueType.StringList:
+                        serachInfo.Condition = PropertySearchConditionHelper.CreateKeywordCondition(serachModel["value"].ToString());
+                        break;
+                    case PropertyValueType.Number:
+                        decimal? max = null;
+                        decimal? min = null;
+                        decimal decimalOutput;
+                        if(decimal.TryParse(serachModel["max"].ToString(), out decimalOutput))
+                        {
+                            max = decimalOutput;
+                        }
+                        if(decimal.TryParse(serachModel["min"].ToString(), out decimalOutput))
+                        {
+                            min = decimalOutput;
+                        }
+                        serachInfo.Condition = PropertySearchConditionHelper.CreateNumberCondition(min, max);
+                        break;
+                    case PropertyValueType.Date:
+                        DateTime? start = null;
+                        DateTime? end = null;
+                        DateTime dateOutput;
+                        if (DateTime.TryParse(serachModel["start"].ToString(), out dateOutput))
+                        {
+                            start = dateOutput;
+                        }
+                        if (DateTime.TryParse(serachModel["end"].ToString(), out dateOutput))
+                        {
+                            end = dateOutput;
+                        }
+                        serachInfo.Condition = PropertySearchConditionHelper.CreateDateCondition(start, end);
+                        break;
+                }
                 propertys.Add(serachInfo);
             }
 

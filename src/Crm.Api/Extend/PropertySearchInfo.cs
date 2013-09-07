@@ -10,6 +10,6 @@ namespace Crm.Api
     {
         public string FieldCode { set; get; }
 
-        public PropetySearchCondition Condition { set; get; }
+        public IPropetySearchCondition Condition { set; get; }
     }
 }

@@ -19,6 +19,10 @@ namespace Crm.Api
 
         FieldInfo CreateStringField(FormType type, string name, bool required, string defaultValue, int index);
 
+        FieldInfo CreateDateField(FormType type, string name, bool required, bool defaultValueIsToday, int index);
+
+        FieldInfo CreateNumberField(FormType type, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index);
+
         FieldInfo CreateTextField(FormType type, string name, bool required, string defaultValue, int index);
 
         FieldInfo CreateDropdownField(FormType type, string name, bool required, string defaultValue, List<string> selectList, int index);
@@ -28,6 +32,10 @@ namespace Crm.Api
         FieldInfo CreateCheckboxListField(FormType type, string name, bool required, List<string> defaultValues, List<string> selectList, int index);
 
         void ModifyStringField(int fieldId, string name, bool required, string defaultValue, int index);
+
+        void ModifyDateField(int fieldId, string name, bool required, bool defaultValueIsToday, int index);
+
+        void ModifyNumberField(int fieldId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index);
 
         void ModifyTextField(int fieldId, string name, bool required, string defaultValue, int index);
 

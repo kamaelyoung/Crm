@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Crm.Api;
 using Newtonsoft.Json;
+using Crm.Data;
 
 namespace Crm.Core.Extend
 {
@@ -46,7 +47,7 @@ namespace Crm.Core.Extend
         {
             get 
             {
-                CheckboxFieldConfigJsonModel model = new CheckboxFieldConfigJsonModel { DefaultValues = this.DefaultValues, SelectList = this.SelectList };
+                CheckboxFieldConfigModel model = new CheckboxFieldConfigModel { DefaultValues = this.DefaultValues, SelectList = this.SelectList };
                 return JsonConvert.SerializeObject(model); 
             }
         }

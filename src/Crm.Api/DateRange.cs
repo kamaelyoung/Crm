@@ -6,7 +6,7 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class DateRange
+    public class DateRange : IPropetySearchCondition
     {
         public DateTime? StartDate { set; get; }
 

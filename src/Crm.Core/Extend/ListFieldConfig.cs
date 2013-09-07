@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Crm.Api;
 using Newtonsoft.Json;
+using Crm.Data;
 
 namespace Crm.Core.Extend
 {
@@ -42,7 +43,7 @@ namespace Crm.Core.Extend
         {
             get 
             {
-                ListFieldConfigJsonModel model = new ListFieldConfigJsonModel { DefaultValue = this.DefaultValue, SelectList = this.SelectList };
+                ListFieldConfigModel model = new ListFieldConfigModel { DefaultValue = this.DefaultValue, SelectList = this.SelectList };
                 return JsonConvert.SerializeObject(model); 
             }
         }

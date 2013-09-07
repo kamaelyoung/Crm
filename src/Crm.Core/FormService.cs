@@ -134,5 +134,31 @@ namespace Crm.Core
             }
             return 0;
         }
+
+        public FieldInfo CreateDateField(FormType type, string name, bool required, bool defaultValueIsToday, int index)
+        {
+            Form form = this._crmManager.FormManager.GetForm(type);
+            Field field = form.CreateField(null, name, required, false, true, index, FieldType.Date, new DateFieldConfig(defaultValueIsToday));
+            return field.Map();
+        }
+
+        public FieldInfo CreateNumberField(FormType type, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        {
+            Form form = this._crmManager.FormManager.GetForm(type);
+            Field field = form.CreateField(null, name, required, false, true, index, FieldType.Number, new NumberFieldConfig(defaultValue, max, min, precision));
+            return field.Map();
+        }
+
+        public void ModifyDateField(int fieldId, string name, bool required, bool defaultValueIsToday, int index)
+        {
+            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
+            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new DateFieldConfig(defaultValueIsToday) });
+        }
+
+        public void ModifyNumberField(int fieldId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        {
+            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
+            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new NumberFieldConfig(defaultValue, max, min, precision) });
+        }
     }
 }

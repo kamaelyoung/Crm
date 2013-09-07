@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PropertySearchConditionType.cs" />
+    <Compile Include="Extend\PropertySearchConditionHelper.cs" />
+    <Compile Include="Extend\PropertySearchConditionType.cs" />
     <Compile Include="ContactInfo.cs" />
     <Compile Include="ContractInfo.cs" />
     <Compile Include="ContractSearchInfo.cs" />
@@ -52,19 +53,21 @@
     <Compile Include="Exceptions\FieldNameRepeatException.cs" />
     <Compile Include="Exceptions\FieldCodeRepeatException.cs" />
     <Compile Include="Exceptions\CustomerAreaDeleteException.cs" />
-    <Compile Include="FieldConfigInfo.cs" />
+    <Compile Include="Extend\FieldConfigInfo.cs" />
+    <Compile Include="Extend\NumberFieldConfigInfo.cs" />
+    <Compile Include="Extend\DateFieldConfigInfo.cs" />
     <Compile Include="FloagRange.cs" />
     <Compile Include="ICrmConfigService.cs" />
-    <Compile Include="ListFieldConfigInfo.cs" />
+    <Compile Include="Extend\ListFieldConfigInfo.cs" />
     <Compile Include="Exceptions\CrmException.cs" />
     <Compile Include="Exceptions\CustomerNameRepeatException.cs" />
     <Compile Include="Exceptions\CustomerSalesUserNullException.cs" />
     <Compile Include="Exceptions\ContactCustomerNullException.cs" />
     <Compile Include="Exceptions\ActivityContactNullException.cs" />
-    <Compile Include="FieldInfo.cs" />
-    <Compile Include="FieldType.cs" />
-    <Compile Include="FormInfo.cs" />
-    <Compile Include="FormType.cs" />
+    <Compile Include="Extend\FieldInfo.cs" />
+    <Compile Include="Extend\FieldType.cs" />
+    <Compile Include="Extend\FormInfo.cs" />
+    <Compile Include="Extend\FormType.cs" />
     <Compile Include="GridViewColumnInfo.cs" />
     <Compile Include="GridViewColumnSetupInfo.cs" />
     <Compile Include="GridViewInfo.cs" />
@@ -73,9 +76,9 @@
     <Compile Include="ICustomerService.cs" />
     <Compile Include="IFormService.cs" />
     <Compile Include="IGridViewService.cs" />
-    <Compile Include="MetadataFieldInfo.cs" />
-    <Compile Include="MetadataInfo.cs" />
-    <Compile Include="NumberPropertySearchCondition.cs" />
+    <Compile Include="Extend\MetadataFieldInfo.cs" />
+    <Compile Include="Extend\MetadataInfo.cs" />
+    <Compile Include="NumberRange.cs" />
     <Compile Include="Organization\Exceptions\AccountEmptyException.cs" />
     <Compile Include="Organization\Exceptions\AccountExpiredException.cs" />
     <Compile Include="Organization\Exceptions\AccountLockedException.cs" />
@@ -132,10 +135,10 @@
     <Compile Include="Organization\Exceptions\UserNameEmptyException.cs" />
     <Compile Include="Organization\Exceptions\UserNeedMainPositionException.cs" />
     <Compile Include="Organization\Exceptions\PositionDeleteException.cs" />
-    <Compile Include="PropertyInfo.cs" />
-    <Compile Include="PropertyOperationInfo.cs" />
-    <Compile Include="PropertySearchInfo.cs" />
-    <Compile Include="PropertyValueType.cs" />
+    <Compile Include="Extend\PropertyInfo.cs" />
+    <Compile Include="Extend\PropertyOperationInfo.cs" />
+    <Compile Include="Extend\PropertySearchInfo.cs" />
+    <Compile Include="Extend\PropertyValueType.cs" />
     <Compile Include="Organization\AuthenticatedUserInfo.cs" />
     <Compile Include="Organization\DepartmentChangeInfo.cs" />
     <Compile Include="Organization\DepartmentCreateInfo.cs" />
@@ -182,14 +185,14 @@
     <Compile Include="Organization\UserSignInChangeInfo.cs" />
     <Compile Include="Organization\UserStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropetySearchCondition.cs" />
-    <Compile Include="StringFieldConfigInfo.cs" />
+    <Compile Include="Extend\IPropetySearchCondition.cs" />
+    <Compile Include="Extend\StringFieldConfigInfo.cs" />
     <Compile Include="IContactService.cs" />
     <Compile Include="ActivityInfo.cs" />
     <Compile Include="IActivityService.cs" />
-    <Compile Include="CheckboxFieldConfigInfo.cs" />
+    <Compile Include="Extend\CheckboxFieldConfigInfo.cs" />
     <Compile Include="IContractService.cs" />
-    <Compile Include="StringPropertySearchCondition.cs" />
+    <Compile Include="Extend\KeywordSearchCondition.cs" />
     <Compile Include="CustomerSearchInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

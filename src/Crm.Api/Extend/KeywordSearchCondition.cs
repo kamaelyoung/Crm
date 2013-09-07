@@ -6,7 +6,7 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class StringPropertySearchCondition : PropetySearchCondition
+    public class KeywordSearchCondition : IPropetySearchCondition
     {
         public string Keyword { set; get; }
     }

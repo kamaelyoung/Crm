@@ -9,6 +9,7 @@ namespace Crm.Api
     {
         Number,
         String,
-        StringList
+        StringList,
+        Date
     }
 }

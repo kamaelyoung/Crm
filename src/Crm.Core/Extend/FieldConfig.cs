@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Crm.Api;
 using Newtonsoft.Json;
+using Crm.Data;
 
 namespace Crm.Core.Extend
 {
@@ -25,11 +26,17 @@ namespace Crm.Core.Extend
                     return new StringFieldConfig(config);
                 case FieldType.DropdownList:
                 case FieldType.RadioList:
-                    ListFieldConfigJsonModel listFieldConfig = JsonConvert.DeserializeObject<ListFieldConfigJsonModel>(config);
+                    ListFieldConfigModel listFieldConfig = JsonConvert.DeserializeObject<ListFieldConfigModel>(config);
                     return new ListFieldConfig(listFieldConfig.DefaultValue, listFieldConfig.SelectList);
                 case FieldType.CheckboxList:
-                    CheckboxFieldConfigJsonModel checkboxFieldConfig = JsonConvert.DeserializeObject<CheckboxFieldConfigJsonModel>(config);
+                    CheckboxFieldConfigModel checkboxFieldConfig = JsonConvert.DeserializeObject<CheckboxFieldConfigModel>(config);
                     return new CheckboxFieldConfig(checkboxFieldConfig.DefaultValues, checkboxFieldConfig.SelectList);
+                case FieldType.Number:
+                    NumberFieldConfigModel numberFieldConfigModel = JsonConvert.DeserializeObject<NumberFieldConfigModel>(config);
+                    return new NumberFieldConfig(numberFieldConfigModel.DefaultValue, numberFieldConfigModel.Max, numberFieldConfigModel.Min, numberFieldConfigModel.Precision);
+                case FieldType.Date:
+                    DateFieldConfigModel dateFieldConfigModel = JsonConvert.DeserializeObject<DateFieldConfigModel>(config);
+                    return new DateFieldConfig(dateFieldConfigModel.DefaultValueIsToday);
             }
             throw new ArgumentException("type");
         }

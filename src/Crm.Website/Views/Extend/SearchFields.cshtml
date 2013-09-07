@@ -15,12 +15,11 @@
             <font style="color: Red">*</font>
         }
     </label>
-    <div style="margin-left: 120px;" class="controls condition" data-field-code="@field.Code" data-condition-type="String">
+    <div style="margin-left: 120px;" class="controls condition" data-field-code="@field.Code" data-value-type="@field.ValueType">
     @switch (field.Type)
     {
         case FieldType.String:
         case FieldType.Text:
-            StringFieldConfigInfo stringField = ((StringFieldConfigInfo)field.ConfigInfo);
             <input type="text" name="value" />
             break;
         case FieldType.RadioList:
@@ -34,6 +33,16 @@
                     <option>@item</option>
                 }
             </select>
+            break;
+        case FieldType.Number:
+            <input type="text" name="min" class="input-small"/> 
+            <span>到</span>
+            <input type="text" name="max" class="input-small"/>
+            break;
+        case FieldType.Date:
+            <input type="text" name="start" class="date input-small"/> 
+            <span>到</span>
+            <input type="text" name="end" class="date input-small"/>
             break;
     }
     </div>

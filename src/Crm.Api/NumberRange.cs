@@ -6,7 +6,7 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class NumberPropertySearchCondition : PropetySearchCondition
+    public class NumberRange : IPropetySearchCondition
     {
         public decimal? Max { set; get; }
 

@@ -12,6 +12,8 @@ namespace Crm.Api
         Text,
         DropdownList,
         RadioList,
-        CheckboxList
+        CheckboxList,
+        Number,
+        Date
     }
 }
