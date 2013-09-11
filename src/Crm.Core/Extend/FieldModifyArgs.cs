@@ -5,11 +5,10 @@ using System.Text;
 
 namespace Crm.Core.Extend
 {
-    public class FieldModifyInfo
+    public class FieldModifyArgs
     {
         public string Name{set;get;} 
         public bool Required{set;get;} 
         public int Index{set;get;}
-        public FieldConfig Config { set; get; } 
     }
 }

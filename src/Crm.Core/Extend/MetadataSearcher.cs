@@ -19,7 +19,7 @@ namespace Crm.Core.Extend
             foreach (PropertySearchInfo serachInfo in this._searchInfos)
             {
                 MetadataProperty property = metadata.GetProperty(serachInfo.FieldCode);
-                if (!property.Value.InCondition(serachInfo.Condition))
+                if (property == null || !property.Value.InCondition(serachInfo.Condition))
                 {
                     return false;
                 }

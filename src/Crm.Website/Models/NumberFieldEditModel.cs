@@ -8,15 +8,15 @@ namespace Crm.Website.Models
 {
     public class NumberFieldEditModel
     {
-        public NumberFieldEditModel(FieldInfo field, NumberFieldConfigInfo configInfo)
+        public NumberFieldEditModel(NumberFieldInfo field)
         {
             this.id = field.ID;
             this.name = field.Name;
             this.required = field.Required;
-            this.defaultValue = configInfo.DefaultValue;
-            this.max = configInfo.Max;
-            this.min = configInfo.Min;
-            this.precision = configInfo.Precision;
+            this.defaultValue = field.DefaultValue;
+            this.max = field.Max;
+            this.min = field.Min;
+            this.precision = field.Precision;
             this.index = field.Index;
         }
 

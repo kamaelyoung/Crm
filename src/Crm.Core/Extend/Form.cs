@@ -33,10 +33,50 @@ namespace Crm.Core.Extend
 
         public Field CreateSystemField(string code, string name, bool required, bool canImport, int index)
         {
-            return this.CreateField(code, name, required, true, canImport, index, FieldType.System, FieldConfig.CreateFieldConfig(FieldType.System, ""));
+            return this.CreateField(code, name, required, true, canImport, index, FieldType.System, "");
         }
 
-        public Field CreateField(string code, string name, bool required, bool isSystem, bool canImport, int index, FieldType type, FieldConfig config)
+        public Field CreateStringField(string code, string name, bool required, bool isSystem, bool canImport, int index, string defaultValue)
+        {
+            return this.CreateField(code, name, required, isSystem, canImport, index, FieldType.String, defaultValue);
+        }
+
+        public Field CreateTextField(string code, string name, bool required, bool isSystem, bool canImport, int index, string defaultValue)
+        {
+            return this.CreateField(code, name, required, isSystem, canImport, index, FieldType.Text, defaultValue);
+        }
+
+        public Field CreateDateField(string code, string name, bool required, bool isSystem, bool canImport, int index, bool defaultValueIsToday)
+        {
+            DateFieldConfigModel configModel = new DateFieldConfigModel { DefaultValueIsToday = defaultValueIsToday };
+            return this.CreateField(code, name, required, isSystem, canImport, index, FieldType.Date, JsonConvert.SerializeObject(configModel));
+        }
+
+        public Field CreateNumberField(string code, string name, bool required, bool isSystem, bool canImport, int index, decimal? defaultValue, decimal? max, decimal? min, int precision)
+        {
+            NumberFieldConfigModel configModel = new NumberFieldConfigModel { DefaultValue = defaultValue, Max = max, Min = min, Precision = precision };
+            return this.CreateField(code, name, required, isSystem, canImport, index, FieldType.Number, JsonConvert.SerializeObject(configModel));
+        }
+
+        public Field CreateCheckboxListField(string code, string name, bool required, bool isSystem, bool canImport, int index, List<string> defaultValues, List<string> selectList)
+        {
+            CheckboxFieldConfigModel configModel = new CheckboxFieldConfigModel { DefaultValues = defaultValues, SelectList = selectList };
+            return this.CreateField(code, name, required, isSystem, canImport, index, FieldType.CheckboxList, JsonConvert.SerializeObject(configModel));
+        }
+
+        public Field CreateRadioListField(string code, string name, bool required, bool isSystem, bool canImport, int index, string defaultValue, List<string> selectList)
+        {
+            ListFieldConfigModel configModel = new ListFieldConfigModel { DefaultValue = defaultValue, SelectList = selectList };
+            return this.CreateField(code, name, required, isSystem, canImport, index, FieldType.RadioList, JsonConvert.SerializeObject(configModel));
+        }
+
+        public Field CreateDropdownField(string code, string name, bool required, bool isSystem, bool canImport, int index, string defaultValue, List<string> selectList)
+        {
+            ListFieldConfigModel configModel = new ListFieldConfigModel { DefaultValue = defaultValue, SelectList = selectList };
+            return this.CreateField(code, name, required, isSystem, canImport, index, FieldType.DropdownList, JsonConvert.SerializeObject(configModel));
+        }
+
+        private Field CreateField(string code, string name, bool required, bool isSystem, bool canImport, int index, FieldType type, string config)
         {
             this._lock.AcquireWriterLock();
             try
@@ -61,12 +101,12 @@ namespace Crm.Core.Extend
                     CanModify = isSystem,
                     CanImport = canImport,
                     Index = index,
-                    Config = config.PersistenceValue
+                    Config = config
                 };
                 model.ID = (int)NHibernateHelper.CurrentSession.Save(model);
                 NHibernateHelper.CurrentSession.Flush();
 
-                Field field = new Field(model.ID, model.Code, model.Name, model.Required, model.CanModify, type, model.CanImport, model.Index, config, this);
+                Field field = Field.CreateField(new FieldNewInfo(model.ID, model.Code, model.Name, model.Required, model.CanModify, type, model.CanImport, model.Index, this), model.Config);
                 this.BindEvent(field);
                 this._fields.Add(field);
                 this._fields = this._fields.OrderBy(x => x.Index).ToList();
@@ -93,11 +133,11 @@ namespace Crm.Core.Extend
 
         private void BindEvent(Field field)
         {
-            field.Modifying += new TEventHanlder<Field, FieldModifyInfo>(Field_Modifying);
+            field.Modifying += new TEventHanlder<Field, FieldModifyArgs>(Field_Modifying);
             field.Deleted += new TEventHanlder<Field, User>(Field_Deleted);
         }
 
-        void Field_Modifying(Field sender, FieldModifyInfo args)
+        void Field_Modifying(Field sender, FieldModifyArgs args)
         {
             if (sender.Name != args.Name && this._fields.Any(x => x.Name == args.Name))
             {
@@ -173,8 +213,7 @@ namespace Crm.Core.Extend
             foreach (FieldModel model in models)
             {
                 FieldType type = (FieldType)model.Type;
-                FieldConfig config = FieldConfig.CreateFieldConfig(type, model.Config);
-                Field field = new Field(model.ID, model.Code, model.Name, model.Required, model.CanModify, type, model.CanImport, model.Index, config, this);
+                Field field = Field.CreateField(new FieldNewInfo(model.ID, model.Code, model.Name, model.Required, model.CanModify, type, model.CanImport, model.Index, this), model.Config);
                 this.BindEvent(field);
                 this._fields.Add(field);
             }

@@ -8,24 +8,24 @@ namespace Crm.Website.Models
 {
     public class ListFieldEditModel
     {
-        public ListFieldEditModel(FieldInfo field, ListFieldConfigInfo configInfo)
+        public ListFieldEditModel(ListFieldInfo field)
         {
             this.id = field.ID;
             this.name = field.Name;
             this.required = field.Required;
-            this.defaultValue = configInfo.DefaultValue;
+            this.defaultValue = field.DefaultValue;
             this.index = field.Index;
-            this.selectList = string.Join(",", configInfo.SelectList);
+            this.selectList = string.Join(",", field.SelectList);
         }
 
-        public ListFieldEditModel(FieldInfo field, CheckboxFieldConfigInfo configInfo)
+        public ListFieldEditModel(CheckboxFieldInfo field)
         {
             this.id = field.ID;
             this.name = field.Name;
             this.required = field.Required;
-            this.defaultValue = string.Join(",", configInfo.DefaultValues);
+            this.defaultValue = string.Join(",", field.DefaultValues);
             this.index = field.Index;
-            this.selectList = string.Join(",", configInfo.SelectList);
+            this.selectList = string.Join(",", field.SelectList);
         }
 
         public int id;

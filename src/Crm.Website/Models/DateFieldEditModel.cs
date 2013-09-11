@@ -8,12 +8,12 @@ namespace Crm.Website.Models
 {
     public class DateFieldEditModel
     {
-        public DateFieldEditModel(FieldInfo field, DateFieldConfigInfo configInfo)
+        public DateFieldEditModel(DateFieldInfo field)
         {
             this.id = field.ID;
             this.name = field.Name;
             this.required = field.Required;
-            this.defaultValueIsToday = configInfo.DefaultValueIsToday;
+            this.defaultValueIsToday = field.DefaultValueIsToday;
             this.index = field.Index;
         }
 

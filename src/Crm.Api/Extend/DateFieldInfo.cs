@@ -6,7 +6,7 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class DateFieldConfigInfo : FieldConfigInfo
+    public class DateFieldInfo : FieldInfo
     {
         public bool DefaultValueIsToday { set; get; }
 

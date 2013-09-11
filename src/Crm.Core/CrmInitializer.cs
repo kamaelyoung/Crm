@@ -67,14 +67,12 @@ namespace Crm.Core
             Field salesUsersField = form.CreateSystemField("salesUsers", "销售员", true, true, 0);
             Field creatorField = form.CreateSystemField("creator", "创建人", true, false, 0);
             Field createTimeField = form.CreateSystemField("createTime", "创建时间", true, false, 0);
-            Field addressField = form.CreateField(null, "地址", false, false, false, 1, FieldType.String, new StringFieldConfig(""));
-            Field phoneField = form.CreateField(null, "电话", false, false, true, 2, FieldType.String, new StringFieldConfig(""));
-            ListFieldConfig stateListFieldConfig = new ListFieldConfig(null, new List<string> { "潜在", "机会", "重要", "放弃" });
-            Field stateField = form.CreateField(null, "客户级别", false, false, true, 3, FieldType.DropdownList, stateListFieldConfig);
-            Field websiteField = form.CreateField(null, "网站", false, false, true, 4, FieldType.String, new StringFieldConfig(""));
-            ListFieldConfig souceListFieldConfig = new ListFieldConfig(null, new List<string> { "搜索引擎", "代理商"});
-            Field souceField = form.CreateField(null, "客户来源", false, false, true, 5, FieldType.DropdownList, stateListFieldConfig);
-            Field remarkField = form.CreateField(null, "备注", false, false, true, 6, FieldType.Text, new StringFieldConfig(""));
+            Field addressField = form.CreateStringField(null, "地址", false, false, false, 1, "");
+            Field phoneField = form.CreateStringField(null, "电话", false, false, true, 2, "");
+            Field stateField = form.CreateDropdownField(null, "客户级别", false, false, true, 3, null, new List<string> { "潜在", "机会", "重要", "放弃" });
+            Field websiteField = form.CreateStringField(null, "网站", false, false, true, 4, "");
+            Field souceField = form.CreateDropdownField(null, "客户来源", false, false, true, 5, null, new List<string> { "搜索引擎", "代理商" });
+            Field remarkField = form.CreateTextField(null, "备注", false, false, true, 6, "");
 
             GridView manageView = this._crmManager.GridViewManager.CreateSystemGridView(this._admin, GridViewType.CustomerManage);
             manageView.CreateColumn(nameField, 180);
@@ -105,14 +103,13 @@ namespace Crm.Core
             Field customerField = form.CreateSystemField("customer", "客户", true, true, 0);
             Field creatorField = form.CreateSystemField("creator", "创建人", true, false, 0);
             Field createTimeField = form.CreateSystemField("createTime", "创建时间", true, false, 0);
-            Field positionField = form.CreateField(null, "职位", false, false, true, 1, FieldType.String, new StringFieldConfig(""));
-            Field deptField = form.CreateField(null, "部门", false, false, true, 2, FieldType.String, new StringFieldConfig(""));
-            ListFieldConfig sexListFieldConfig = new ListFieldConfig(null, new List<string> { "男", "女" });
-            Field sexField = form.CreateField(null, "性别", false, false, true, 3, FieldType.DropdownList, sexListFieldConfig);
-            Field phoneField = form.CreateField(null, "联系电话", false, false, true, 4, FieldType.String, new StringFieldConfig(""));
-            Field qqField = form.CreateField(null, "QQ", false, false, true, 5, FieldType.String, new StringFieldConfig(""));
-            Field emailField = form.CreateField(null, "邮件", false, false, true, 6, FieldType.String, new StringFieldConfig(""));
-            Field remarkField = form.CreateField(null, "备注", false, false, true, 7, FieldType.Text, new StringFieldConfig(""));
+            Field positionField = form.CreateStringField(null, "职位", false, false, true, 1, "");
+            Field deptField = form.CreateStringField(null, "部门", false, false, true, 2, "");
+            Field sexField = form.CreateDropdownField(null, "性别", false, false, true, 3, null, new List<string> { "男", "女" });
+            Field phoneField = form.CreateStringField(null, "联系电话", false, false, true, 4, "");
+            Field qqField = form.CreateStringField(null, "QQ", false, false, true, 5, "");
+            Field emailField = form.CreateStringField(null, "邮件", false, false, true, 6, "");
+            Field remarkField = form.CreateTextField(null, "备注", false, false, true, 7, "");
 
             GridView contactManageview = this._crmManager.GridViewManager.CreateSystemGridView(this._admin, GridViewType.ContactManage);
             contactManageview.CreateColumn(nameField, 100);
@@ -133,9 +130,8 @@ namespace Crm.Core
             Field contactField = form.CreateSystemField("contact", "联系人", true, true, 0);
             Field creatorField = form.CreateSystemField("creator", "创建人", true, false, 0);
             Field createTimeField = form.CreateSystemField("createTime", "创建时间", true, false, 0);
-            ListFieldConfig wayListFieldConfig = new ListFieldConfig(null, new List<string> { "电话", "QQ", "Email", "到现场" });
-            Field wayField = form.CreateField(null, "联系方式", false, false, true, 1, FieldType.DropdownList, wayListFieldConfig);
-            Field contentField = form.CreateField(null, "内容", false, false, true, 2, FieldType.Text, new StringFieldConfig(""));
+            Field wayField = form.CreateDropdownField(null, "联系方式", false, false, true, 1, null, new List<string> { "电话", "QQ", "Email", "到现场" });
+            Field contentField = form.CreateTextField(null, "内容", false, false, true, 2, "");
 
             GridView manageView = this._crmManager.GridViewManager.CreateSystemGridView(this._admin, GridViewType.ActivityManage);
             manageView.CreateColumn(subjectField, 100);
@@ -160,8 +156,8 @@ namespace Crm.Core
             Field expiredNotifyDaysField = form.CreateSystemField("expiredComputeDays", "到期计算天数", true, true, 0);
             Field creatorField = form.CreateSystemField("creator", "创建人", true, false, 0);
             Field createTimeField = form.CreateSystemField("createTime", "创建时间", true, false, 0);
-            Field clauseField = form.CreateField(null, "特别条款", false, false, true, 1, FieldType.String, new StringFieldConfig(""));
-            Field contentField = form.CreateField(null, "备注", false, false, true, 2, FieldType.Text, new StringFieldConfig(""));
+            Field clauseField = form.CreateStringField(null, "特别条款", false, false, true, 1, "");
+            Field contentField = form.CreateTextField(null, "备注", false, false, true, 2, "");
 
             GridView manageView = this._crmManager.GridViewManager.CreateSystemGridView(this._admin, GridViewType.ContractManage);
             manageView.CreateColumn(nameField, 100);

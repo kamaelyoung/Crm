@@ -288,8 +288,7 @@ namespace Crm.Website.Controllers
         public ActionResult EditStringField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
-            StringFieldConfigInfo config = field.ConfigInfo as StringFieldConfigInfo;
-            this.ViewBag.modelJson = JsonConvert.SerializeObject(new StringFieldEditModel(field, config));
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new StringFieldEditModel(field as StringFieldInfo));
             return View();
         }
 
@@ -318,8 +317,7 @@ namespace Crm.Website.Controllers
         public ActionResult EditDateField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
-            DateFieldConfigInfo config = field.ConfigInfo as DateFieldConfigInfo;
-            this.ViewBag.modelJson = JsonConvert.SerializeObject(new DateFieldEditModel(field, config));
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new DateFieldEditModel(field as DateFieldInfo));
             return View();
         }
 
@@ -348,8 +346,7 @@ namespace Crm.Website.Controllers
         public ActionResult EditNumberField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
-            NumberFieldConfigInfo config = field.ConfigInfo as NumberFieldConfigInfo;
-            this.ViewBag.modelJson = JsonConvert.SerializeObject(new NumberFieldEditModel(field, config));
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new NumberFieldEditModel(field as NumberFieldInfo));
             return View();
         }
 
@@ -406,8 +403,7 @@ namespace Crm.Website.Controllers
         public ActionResult EditTextField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
-            StringFieldConfigInfo config = field.ConfigInfo as StringFieldConfigInfo;
-            this.ViewBag.modelJson = JsonConvert.SerializeObject(new StringFieldEditModel(field, config));
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new StringFieldEditModel(field as StringFieldInfo));
             return View();
         }
 
@@ -466,8 +462,7 @@ namespace Crm.Website.Controllers
         public ActionResult EditDropdownListField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
-            ListFieldConfigInfo config = field.ConfigInfo as ListFieldConfigInfo;
-            this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field, config));
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field as ListFieldInfo));
             return View();
         }
 
@@ -527,8 +522,7 @@ namespace Crm.Website.Controllers
         public ActionResult EditRadioboxListField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
-            ListFieldConfigInfo config = field.ConfigInfo as ListFieldConfigInfo;
-            this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field, config));
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field as ListFieldInfo));
             return View();
         }
 
@@ -593,8 +587,7 @@ namespace Crm.Website.Controllers
         public ActionResult EditCheckboxListField(int fieldId)
         {
             FieldInfo field = WebHelper.FormService.GetField(fieldId);
-            CheckboxFieldConfigInfo config = field.ConfigInfo as CheckboxFieldConfigInfo;
-            this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field, config));
+            this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field as CheckboxFieldInfo));
             return View();
         }
 

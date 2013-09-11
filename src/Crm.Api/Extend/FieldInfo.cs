@@ -27,7 +27,5 @@ namespace Crm.Api
         public int Index { set; get; }
 
         public PropertyValueType ValueType { set; get; }
-
-        public FieldConfigInfo ConfigInfo { set; get; }
     }
 }

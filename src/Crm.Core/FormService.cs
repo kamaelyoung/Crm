@@ -40,69 +40,81 @@ namespace Crm.Core
         public FieldInfo CreateStringField(FormType type, string name, bool required, string defaultValue, int index)
         {
             Form form = this._crmManager.FormManager.GetForm(type);
-            Field field = form.CreateField(null, name, required, false, true, index, FieldType.String, new StringFieldConfig(defaultValue));
+            Field field = form.CreateStringField(null, name, required, false, true, index, defaultValue);
             return field.Map();
         }
 
         public FieldInfo CreateTextField(FormType type, string name, bool required, string defaultValue, int index)
         {
             Form form = this._crmManager.FormManager.GetForm(type);
-            Field field = form.CreateField(null, name, required, false, true, index, FieldType.Text, new StringFieldConfig(defaultValue));
+            Field field = form.CreateTextField(null, name, required, false, true, index, defaultValue);
             return field.Map();
         }
 
         public FieldInfo CreateDropdownField(FormType type, string name, bool required, string defaultValue, List<string> selectList, int index)
         {
             Form form = this._crmManager.FormManager.GetForm(type);
-            ListFieldConfig config = new ListFieldConfig(defaultValue, selectList);
-            Field field = form.CreateField(null, name, required, false, true, index, FieldType.DropdownList, config);
+            Field field = form.CreateDropdownField(null, name, required, false, true, index, defaultValue, selectList);
             return field.Map();
         }
 
         public FieldInfo CreateRadioListField(FormType type, string name, bool required, string defaultValue, List<string> selectList, int index)
         {
             Form form = this._crmManager.FormManager.GetForm(type);
-            ListFieldConfig config = new ListFieldConfig(defaultValue, selectList);
-            Field field = form.CreateField(null, name, required, false, true, index, FieldType.RadioList, config);
+            Field field = form.CreateRadioListField(null, name, required, false, true, index, defaultValue, selectList);
             return field.Map();
         }
 
         public FieldInfo CreateCheckboxListField(FormType type, string name, bool required, List<string> defaultValues, List<string> selectList, int index)
         {
             Form form = this._crmManager.FormManager.GetForm(type);
-            CheckboxFieldConfig config = new CheckboxFieldConfig(defaultValues, selectList);
-            Field field = form.CreateField(null, name, required, false, true, index, FieldType.CheckboxList, config);
+            Field field = form.CreateCheckboxListField(null, name, required, false, true, index, defaultValues, selectList);
             return field.Map();
         }
 
         public void ModifyStringField(int fieldId, string name, bool required, string defaultValue, int index)
         {
-            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
-            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new StringFieldConfig(defaultValue) });
+            StringField field = this._crmManager.FormManager.GetFieldById(fieldId) as StringField;
+            if (field != null)
+            {
+                field.Modify(name, required, defaultValue, index);
+            }
         }
 
         public void ModifyTextField(int fieldId, string name, bool required, string defaultValue, int index)
         {
-            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
-            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new StringFieldConfig(defaultValue) });
+            TextField field = this._crmManager.FormManager.GetFieldById(fieldId) as TextField;
+            if (field != null)
+            {
+                field.Modify(name, required, defaultValue, index);
+            }
         }
 
         public void ModifyDropdownField(int fieldId, string name, bool required, string defaultValue, List<string> selectList, int index)
         {
-            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
-            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new ListFieldConfig(defaultValue, selectList) });
+            DropdownField field = this._crmManager.FormManager.GetFieldById(fieldId) as DropdownField;
+            if (field != null)
+            {
+                field.Modify(name, required, defaultValue, selectList, index);
+            }
         }
 
         public void ModifyRadioListField(int fieldId, string name, bool required, string defaultValue, List<string> selectList, int index)
         {
-            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
-            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new ListFieldConfig(defaultValue, selectList) });
+            RadioListField field = this._crmManager.FormManager.GetFieldById(fieldId) as RadioListField;
+            if (field != null)
+            {
+                field.Modify(name, required, defaultValue, selectList, index);
+            }
         }
 
         public void ModifyCheckboxListField(int fieldId, string name, bool required, List<string> defaultValues, List<string> selectList, int index)
         {
-            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
-            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new CheckboxFieldConfig(defaultValues, selectList) });
+            CheckboxListField field = this._crmManager.FormManager.GetFieldById(fieldId) as CheckboxListField;
+            if (field != null)
+            {
+                field.Modify(name, required, defaultValues, selectList, index);
+            }
         }
 
         public FieldInfo GetField(int fieldId)
@@ -138,27 +150,33 @@ namespace Crm.Core
         public FieldInfo CreateDateField(FormType type, string name, bool required, bool defaultValueIsToday, int index)
         {
             Form form = this._crmManager.FormManager.GetForm(type);
-            Field field = form.CreateField(null, name, required, false, true, index, FieldType.Date, new DateFieldConfig(defaultValueIsToday));
+            Field field = form.CreateDateField(null, name, required, false, true, index, defaultValueIsToday);
             return field.Map();
         }
 
         public FieldInfo CreateNumberField(FormType type, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
         {
             Form form = this._crmManager.FormManager.GetForm(type);
-            Field field = form.CreateField(null, name, required, false, true, index, FieldType.Number, new NumberFieldConfig(defaultValue, max, min, precision));
+            Field field = form.CreateNumberField(null, name, required, false, true, index, defaultValue, max, min, precision);
             return field.Map();
         }
 
         public void ModifyDateField(int fieldId, string name, bool required, bool defaultValueIsToday, int index)
         {
-            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
-            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new DateFieldConfig(defaultValueIsToday) });
+            DateField field = this._crmManager.FormManager.GetFieldById(fieldId) as DateField;
+            if(field != null)
+            {
+                field.Modify(name, required, defaultValueIsToday, index);
+            }
         }
 
         public void ModifyNumberField(int fieldId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
         {
-            Field field = this._crmManager.FormManager.GetFieldById(fieldId);
-            field.Modify(new FieldModifyInfo { Name = name, Required = required, Index = index, Config = new NumberFieldConfig(defaultValue, max, min, precision) });
+            NumberField field = this._crmManager.FormManager.GetFieldById(fieldId) as NumberField;
+            if (field != null)
+            {
+                field.Modify(name, required, defaultValue, max, min, precision, index);
+            }
         }
     }
 }

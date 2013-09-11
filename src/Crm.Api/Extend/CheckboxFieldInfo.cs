@@ -6,7 +6,7 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class CheckboxFieldConfigInfo : FieldConfigInfo
+    public class CheckboxFieldInfo : FieldInfo
     {
         public List<string> DefaultValues { set; get; }
 

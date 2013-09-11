@@ -25,7 +25,7 @@
         case FieldType.RadioList:
         case FieldType.CheckboxList:
         case FieldType.DropdownList:
-            ListFieldConfigInfo dropdownFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            ListFieldInfo dropdownFieldInfo = ((ListFieldInfo)field);
             <select name="value">
                 <option></option>
                 @foreach (string item in dropdownFieldInfo.SelectList)

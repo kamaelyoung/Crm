@@ -6,7 +6,7 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class NumberFieldConfigInfo : FieldConfigInfo
+    public class NumberFieldInfo : FieldInfo
     {
         public decimal? DefaultValue { set; get; }
 

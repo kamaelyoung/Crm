@@ -17,15 +17,15 @@
     @switch (field.Type)
     {
         case FieldType.String:
-            StringFieldConfigInfo stringField = ((StringFieldConfigInfo)field.ConfigInfo);
+            StringFieldInfo stringField = ((StringFieldInfo)field);
             <input type="text" class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@stringField.DefaultValue"/>
             break;
         case FieldType.Text:
-            StringFieldConfigInfo textField = ((StringFieldConfigInfo)field.ConfigInfo);
+            StringFieldInfo textField = ((StringFieldInfo)field);
             <textarea class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) rows="3" >@textField.DefaultValue</textarea>
             break;
         case FieldType.DropdownList:
-            ListFieldConfigInfo dropdownFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            ListFieldInfo dropdownFieldInfo = ((ListFieldInfo)field);
             <select class="input-xlarge"  @this.Html.Raw(dataRequiredAttr) name="@string.Format("field{0}", field.ID)">
                 <option></option>
                 @foreach (string item in dropdownFieldInfo.SelectList)
@@ -42,7 +42,7 @@
             </select>
             break;
         case FieldType.RadioList:
-            ListFieldConfigInfo radioFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            ListFieldInfo radioFieldInfo = ((ListFieldInfo)field);
             foreach (string item in radioFieldInfo.SelectList)
             {
                 <label class="radio">
@@ -59,7 +59,7 @@
             }
             break;
         case FieldType.CheckboxList:
-            CheckboxFieldConfigInfo checkFieldInfo = ((CheckboxFieldConfigInfo)field.ConfigInfo);
+            CheckboxFieldInfo checkFieldInfo = ((CheckboxFieldInfo)field);
             foreach (string item in checkFieldInfo.SelectList)
             {
                 <label class="checkbox">
@@ -76,13 +76,15 @@
             }
             break;
         case FieldType.Number:
-            NumberFieldConfigInfo numberFieldInfo = ((NumberFieldConfigInfo)field.ConfigInfo);
+            NumberFieldInfo numberFieldInfo = ((NumberFieldInfo)field);
             <input type="text" class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@numberFieldInfo.DefaultValue"/>
             break;
         case FieldType.Date:
-            DateFieldConfigInfo dateFieldInfo = ((DateFieldConfigInfo)field.ConfigInfo);
+            DateFieldInfo dateFieldInfo = ((DateFieldInfo)field);
             <input type="text" class="date input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@dateFieldInfo.DefaultValue"/>
             break;
+        default:
+            throw new ArgumentException("field.Type:" + field.Type.ToString());
     }
     </div>
 </div>

@@ -8,12 +8,12 @@ namespace Crm.Website.Models
 {
     public class StringFieldEditModel
     {
-        public StringFieldEditModel(FieldInfo field, StringFieldConfigInfo configInfo)
+        public StringFieldEditModel(StringFieldInfo field)
         {
             this.id = field.ID;
             this.name = field.Name;
             this.required = field.Required;
-            this.defaultValue = configInfo.DefaultValue;
+            this.defaultValue = field.DefaultValue;
             this.index = field.Index;
         }
 

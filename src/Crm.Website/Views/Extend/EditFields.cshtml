@@ -23,7 +23,7 @@
             <textarea class="input-xlarge" data-property-type="String" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) rows="3" ></textarea>
             break;
         case FieldType.DropdownList:
-            ListFieldConfigInfo dropdownFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            ListFieldInfo dropdownFieldInfo = ((ListFieldInfo)field);
             <select class="input-xlarge" data-property-type="String"  @this.Html.Raw(dataRequiredAttr) name="@string.Format("field{0}", field.ID)">
                 <option></option>
                 @foreach (string item in dropdownFieldInfo.SelectList)
@@ -33,7 +33,7 @@
             </select>
             break;
         case FieldType.RadioList:
-            ListFieldConfigInfo radioFieldInfo = ((ListFieldConfigInfo)field.ConfigInfo);
+            ListFieldInfo radioFieldInfo = ((ListFieldInfo)field);
             foreach (string item in radioFieldInfo.SelectList)
             {
                 <label class="radio">
@@ -43,7 +43,7 @@
             }
             break;
         case FieldType.CheckboxList:
-            CheckboxFieldConfigInfo checkFieldInfo = ((CheckboxFieldConfigInfo)field.ConfigInfo);
+            CheckboxFieldInfo checkFieldInfo = ((CheckboxFieldInfo)field);
             foreach (string item in checkFieldInfo.SelectList)
             {
                 <label class="checkbox">
@@ -52,6 +52,16 @@
                 </label>
             }
             break;
+        case FieldType.Number:
+            NumberFieldInfo numberFieldInfo = ((NumberFieldInfo)field);
+            <input type="text" class="input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@numberFieldInfo.DefaultValue"/>
+            break;
+        case FieldType.Date:
+            DateFieldInfo dateFieldInfo = ((DateFieldInfo)field);
+            <input type="text" class="date input-xlarge" name="@string.Format("field{0}", field.ID)" @this.Html.Raw(dataRequiredAttr) value="@dateFieldInfo.DefaultValue"/>
+            break;
+        default:
+            throw new ArgumentException("field.Type:" + field.Type.ToString());
     }
     </div>
 </div>

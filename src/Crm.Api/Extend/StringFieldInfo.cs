@@ -6,10 +6,8 @@ using System.Text;
 namespace Crm.Api
 {
     [Serializable]
-    public class ListFieldConfigInfo: FieldConfigInfo
+    public class StringFieldInfo : FieldInfo
     {
         public string DefaultValue { set; get; }
-
-        public List<string> SelectList { set; get; }
     }
 }

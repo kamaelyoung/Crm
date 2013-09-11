@@ -9,22 +9,19 @@ using Crm.Data;
 
 namespace Crm.Core.Extend
 {
-    public class Field
+    public abstract class Field
     {
-        public Field(int id, string code, string name, bool required, bool canModify, 
-            FieldType type, bool canImport, int index, FieldConfig config, Form form)
+        public Field(FieldNewInfo info)
         {
-            this.ID = id;
-            this.Name = name;
-            this.Required = required;
-            this.CanModify = canModify;
-            this._code = code;
-            this.CanImport = canImport;
-            this.Index = index;
-            this.Type = type;
-            this.Config = config;
-            this.Form = form;
-            this.Config.Field = this;
+            this.ID = info.ID;
+            this.Name = info.Name;
+            this.Required = info.Required;
+            this.CanModify = info.CanModify;
+            this._code = info.Code;
+            this.CanImport = info.CanImport;
+            this.Index = info.Index;
+            this.Type = info.Type;
+            this.Form = info.Form;
         }
 
         public int ID { set; get; }
@@ -58,42 +55,23 @@ namespace Crm.Core.Extend
 
         public FieldType Type { set; get; }
 
-        public FieldConfig Config { set; get; }
+        public abstract PropertyValueType ValueType { get; }
 
         public Form Form { private set; get; }
 
-        public PropertyValueType ValueType
-        {
-            get
-            {
-                return this.Config.ValueType;
-            }
-        }
+        public event TEventHanlder<Field, FieldModifyArgs> Modifying;
+        public event TEventHanlder<Field, FieldModifyArgs> Modified;
 
-        public event TEventHanlder<Field, FieldModifyInfo> Modifying;
-        public event TEventHanlder<Field, FieldModifyInfo> Modified;
-
-        public void Modify(FieldModifyInfo modifyInfo)
+        protected void OnModifying(FieldModifyArgs modifyInfo)
         {
             if (this.Modifying != null)
             {
                 this.Modifying(this, modifyInfo);
             }
+        }
 
-            FieldModel model = NHibernateHelper.CurrentSession.Get<FieldModel>(this.ID);
-            model.Name = modifyInfo.Name;
-            model.Required = modifyInfo.Required;
-            model.Index = modifyInfo.Index;
-            model.Config = modifyInfo.Config.PersistenceValue;
-
-            NHibernateHelper.CurrentSession.Update(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            this.Name = modifyInfo.Name;
-            this.Index = modifyInfo.Index;
-            this.Required = modifyInfo.Required;
-            this.Config = modifyInfo.Config;
-
+        protected void OnModifyed(FieldModifyArgs modifyInfo)
+        {
             if (this.Modified != null)
             {
                 this.Modified(this, modifyInfo);
@@ -121,9 +99,10 @@ namespace Crm.Core.Extend
             }
         }
 
-        public FieldInfo Map()
+        public abstract FieldInfo Map();
+
+        public void Fill(FieldInfo info)
         {
-            FieldInfo info = new FieldInfo();
             info.Code = this.Code;
             info.FormType = this.Form.Type;
             info.ID = this.ID;
@@ -133,9 +112,32 @@ namespace Crm.Core.Extend
             info.Type = this.Type;
             info.CanImport = this.CanImport;
             info.Index = this.Index;
-            info.ValueType = this.Config.ValueType;
-            info.ConfigInfo = this.Config.Map();
-            return info;
+            info.ValueType = this.ValueType;
+        }
+
+        public static Field CreateField(FieldNewInfo newInfo, string config)
+        {
+            switch (newInfo.Type)
+            {
+                case FieldType.String:
+                case FieldType.Text:
+                case FieldType.System:
+                    return new StringField(newInfo, config);
+                case FieldType.DropdownList:
+                case FieldType.RadioList:
+                    ListFieldConfigModel listFieldConfig = JsonConvert.DeserializeObject<ListFieldConfigModel>(config);
+                    return new ListField(newInfo, listFieldConfig.DefaultValue, listFieldConfig.SelectList);
+                case FieldType.CheckboxList:
+                    CheckboxFieldConfigModel checkboxFieldConfig = JsonConvert.DeserializeObject<CheckboxFieldConfigModel>(config);
+                    return new CheckboxListField(newInfo, checkboxFieldConfig.DefaultValues, checkboxFieldConfig.SelectList);
+                case FieldType.Number:
+                    NumberFieldConfigModel numberFieldConfigModel = JsonConvert.DeserializeObject<NumberFieldConfigModel>(config);
+                    return new NumberField(newInfo, numberFieldConfigModel.DefaultValue, numberFieldConfigModel.Max, numberFieldConfigModel.Min, numberFieldConfigModel.Precision);
+                case FieldType.Date:
+                    DateFieldConfigModel dateFieldConfigModel = JsonConvert.DeserializeObject<DateFieldConfigModel>(config);
+                    return new DateField(newInfo, dateFieldConfigModel.DefaultValueIsToday);
+            }
+            throw new ArgumentException("type");
         }
     }
 }
