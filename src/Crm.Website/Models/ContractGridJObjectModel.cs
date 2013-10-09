@@ -28,7 +28,7 @@ namespace Crm.Website.Models
             this.Add("modifiedTime", contract.ModifiedTime.ToString("yyyy-MM-dd"));
             foreach (PropertyInfo propertyInfo in contract.Metadata.Propertys)
             {
-                this.Add(propertyInfo.Code, propertyInfo.Value);
+                this.Add(propertyInfo.Code, propertyInfo.ShowValue);
             }
         }
         public ContractGridJObjectModel(ContractInfo contract)
@@ -47,7 +47,7 @@ namespace Crm.Website.Models
             this.Add("modifiedTime", contract.ModifiedTime.ToString("yyyy-MM-dd"));
             foreach (PropertyInfo propertyInfo in contract.Metadata.Propertys)
             {
-                this.Add(propertyInfo.Code, propertyInfo.Value);
+                this.Add(propertyInfo.Code, propertyInfo.ShowValue);
             }
         }
     }

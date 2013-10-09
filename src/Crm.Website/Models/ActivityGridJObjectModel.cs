@@ -24,7 +24,7 @@ namespace Crm.Website.Models
             this.Add("modifiedTime", activity.ModifiedTime.ToString("yyyy-MM-dd"));
             foreach (PropertyInfo propertyInfo in activity.Metadata.Propertys)
             {
-                this.Add(propertyInfo.Code, propertyInfo.Value);
+                this.Add(propertyInfo.Code, propertyInfo.ShowValue);
             }
         }
     }

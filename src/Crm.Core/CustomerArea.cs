@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Crm.Api;
-using Crm.Core.Organization;
 using Crm.Data;
 using Crm.Api.Exceptions;
+using Coldew.Core.Organization;
+using Coldew.Core;
 
 namespace Crm.Core
 {
@@ -24,8 +25,8 @@ namespace Crm.Core
 
         public List<User> ManagerUsers { private set; get; }
 
-        public event TEventHanlder<CustomerArea, CustomerAreaModifyInfo> Modifying;
-        public event TEventHanlder<CustomerArea, CustomerAreaModifyInfo> Modified;
+        public event TEventHandler<CustomerArea, CustomerAreaModifyInfo> Modifying;
+        public event TEventHandler<CustomerArea, CustomerAreaModifyInfo> Modified;
 
         public void Modify(CustomerAreaModifyInfo info)
         {
@@ -49,8 +50,8 @@ namespace Crm.Core
             }
         }
 
-        public event TEventHanlder<CustomerArea> Deleting;
-        public event TEventHanlder<CustomerArea> Deleted;
+        public event TEventHandler<CustomerArea> Deleting;
+        public event TEventHandler<CustomerArea> Deleted;
 
         public void Delete()
         {

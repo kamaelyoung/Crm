@@ -2,53 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Crm.Core.Organization;
+using Coldew.Core.Organization;
 using Crm.Data;
-using Crm.Api.Exceptions;
 using Crm.Api;
-using Crm.Core.Extend;
+using Crm.Api.Exceptions;
+using Newtonsoft.Json;
+using Coldew.Core;
 
 namespace Crm.Core
 {
-    public class Contract
+    public class Contract : Metadata
     {
-        public Contract(string id, string name, Customer customer, DateTime startDate, DateTime endDate, int expiredComputeDays, float value,
-            List<User> owners, bool emailNotified, User creator, DateTime createTime, User modifiedUser, DateTime modifiedTime, Metadata metadata)
+        public Contract(string id, MetadataPropertyList propertys, Form form)
+            :base(id, propertys, form)
         {
-            this.ID = id;
-            this.Name = name;
-            this.StartDate = startDate;
-            this.EndDate = endDate;
-            this.ExpiredComputeDays = expiredComputeDays;
-            this.Value = value;
-            this.EmailNotified = emailNotified;
-            this.Owners = owners;
-            this.Customer = customer;
-            this.Creator = creator;
-            this.CreateTime = createTime;
-            this.ModifiedUser = modifiedUser;
-            this.ModifiedTime = modifiedTime;
-            this.Metadata = metadata;
-            this.Customer.Deleted += new TEventHanlder<Customer, User>(Customer_Deleted);
-            this.BuildContent();
+
         }
-
-        void Customer_Deleted(Customer args, User opUser)
-        {
-            this._Delete(opUser);
-        }
-
-        public string ID { private set; get; }
-
-        public string Name { private set; get; }
-
-        public Customer Customer { private set; get; }
-
-        public DateTime StartDate { private set; get; }
-
-        public DateTime EndDate { private set; get; }
-
-        public int ExpiredComputeDays { private set; get; }
 
         public bool Expiring
         {
@@ -105,8 +74,8 @@ namespace Crm.Core
             this.Content = sb.ToString();
         }
 
-        public event TEventHanlder<Contract, ContractModifyInfo> Modifying;
-        public event TEventHanlder<Contract, ContractModifyInfo> Modified;
+        public event TEventHandler<Contract, ContractModifyInfo> Modifying;
+        public event TEventHandler<Contract, ContractModifyInfo> Modified;
 
         public void Modify(ContractModifyInfo info)
         {
@@ -165,8 +134,8 @@ namespace Crm.Core
             this.EmailNotified = notified;
         }
 
-        public event TEventHanlder<Contract, User> Deleting;
-        public event TEventHanlder<Contract, User> Deleted;
+        public event TEventHandler<Contract, User> Deleting;
+        public event TEventHandler<Contract, User> Deleted;
 
         public void Delete(User opUser)
         {
@@ -255,7 +224,7 @@ namespace Crm.Core
                 CustomerName = this.Customer.Name,
                 CustomerId = this.Customer.ID,
                 Value = this.Value,
-                Metadata = this.Metadata.MapMetadataInfo()
+                Metadata = this.Metadata.Map()
             };
         }
     }

@@ -6,12 +6,6 @@
             <generator class="uuid.hex">
             </generator>
         </id>
-        <property name="Subject" type="String" column="activity_subject"></property>
-        <property name="ContactId" type="string" column="contact_id"></property>
-        <property name="CreatorId" type="String" column="activity_creatorId"></property>
-        <property name="CreateTime" type="DateTime" column="activity_createTime"></property>
-        <property name="ModifiedUserId" type="String" column="activity_modifiedUserId"></property>
-        <property name="ModifiedTime" type="DateTime" column="activity_modifiedTime"></property>
-        <property name="MetadataId" type="int" column="metadata_id"></property>
+        <property name="PropertysJson" type="String" length="20000" column="metedata_propertysJson"></property>
     </class>
 </hibernate-mapping>

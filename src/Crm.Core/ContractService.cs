@@ -54,7 +54,7 @@ namespace Crm.Core
         public ContractInfo Create(string opUserAccount, string name, string customerId, DateTime startDate, DateTime endDate, int expiredComputeDays, float value, List<string> ownerAccounts, List<PropertyOperationInfo> propertys)
         {
             User opUser = this._crmManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
-            Customer customer = this._crmManager.CustomerManager.GetCustomerById(customerId);
+            Customer customer = this._crmManager.CustomerManager.GetById(customerId) as Customer;
             List<User> owners = ownerAccounts.Select(x => this._crmManager.OrgManager.UserManager.GetUserByAccount(x)).ToList();
             Contract contract = this._crmManager.ContractManager.Create(new ContractCreateInfo { 
                 OpUser = opUser, 

@@ -3,72 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Crm.Data;
-using Crm.Core.Organization;
 using log4net;
-using Crm.Core.Extend;
+using Crm.Api;
+using Coldew.Core;
 
 namespace Crm.Core
 {
-    public class CrmManager
+    public class CrmManager : ColdewManager
     {
         public CrmManager()
         {
-            log4net.Config.XmlConfigurator.Configure();
-            this.Logger = log4net.LogManager.GetLogger("logger");
-
-            this.OrgManager = new OrganizationManagement();
-            this.AreaManager = new CustomerAreaManager(this.OrgManager);
-            this.FormManager = new FormManager();
-            this.GridViewManager = new GridViewManager(this.OrgManager, this.FormManager);
-            this.CustomerManager = new CustomerManager(this.AreaManager, this.OrgManager, this.FormManager);
-            this.ContactManager = new ContactManager(this.CustomerManager, this.OrgManager, this.FormManager);
-            this.ActivityManager = new ActivityManager(this.ContactManager, this.OrgManager, this.FormManager);
-            this.ContractManager = new ContractManager(this.CustomerManager, this.OrgManager, this.FormManager);
-            this.FavoriteManager = new CustomerFavoriteManager(this.CustomerManager, this.OrgManager);
-            this.ConfigManager = new CrmConfigManager(this);
-            this.ContractEmailNotifyService = new ContractEmailNotifyService(this);
-            this.ContractEmailNotifyService.Start();
         }
 
-        public CustomerManager CustomerManager { set; get; }
+        protected override void Init()
+        {
+            base.Init();
+            this.AreaManager = new CustomerAreaManager(this.OrgManager, this.FormManager);
+        }
 
-        public ContactManager ContactManager { set; get; }
-
-        public ContractManager ContractManager { set; get; }
-
-        public ActivityManager ActivityManager { set; get; }
-
-        public CustomerFavoriteManager FavoriteManager { set; get; }
+        protected override void Load()
+        {
+            this.AreaManager.Load();
+            base.Load();
+        }
 
         public CustomerAreaManager AreaManager { set; get; }
 
-        public FormManager FormManager { set; get; }
-
-        public GridViewManager GridViewManager { set; get; }
-
-        public OrganizationManagement OrgManager { set; get; }
-
-        public CrmConfigManager ConfigManager { set; get; }
-
-        public MailSender MailSender { set; get; }
-
-        public ContractEmailNotifyService ContractEmailNotifyService { set; get; }
-
-        ILog _logger;
-        public ILog Logger
+        protected override FormManager CreateFormManager()
         {
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-                _logger = value;
-            }
-            get
-            {
-                return _logger;
-            }
+            return new CrmFormManager(this);
         }
     }
 }

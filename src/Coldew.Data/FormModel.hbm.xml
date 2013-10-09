@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Coldew.Data" assembly="Coldew.Data">
+    <class name="FormModel" table="crm_form">
+        <id name="ID" type="string" column="form_id">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="Code" type="string" column="form_code"></property>
+        <property name="Name" type="string" column="form_name"></property>
+    </class>
+</hibernate-mapping>

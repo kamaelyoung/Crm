@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Coldew.Api;
 
 namespace Crm.Api
 {
@@ -12,6 +13,5 @@ namespace Crm.Api
         public DateRange StartDateRange { set; get; }
         public DateRange EndDateRange { set; get; }
         public FloagRange ValueRange { set; get; }
-        public List<PropertySearchInfo> PropertySearchInfos {set;get;}
     }
 }

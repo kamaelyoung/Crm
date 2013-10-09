@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3CDFF38F-CF14-42F6-9E0C-66907C1D08CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Coldew.Api</RootNamespace>
+    <AssemblyName>Coldew.Api</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DateRange.cs" />
+    <Compile Include="CheckboxFieldInfo.cs" />
+    <Compile Include="DateFieldInfo.cs" />
+    <Compile Include="EmailConfigInfo.cs" />
+    <Compile Include="Exceptions\ColdewException.cs" />
+    <Compile Include="Exceptions\FieldCodeRepeatException.cs" />
+    <Compile Include="Exceptions\FieldNameRepeatException.cs" />
+    <Compile Include="FieldInfo.cs" />
+    <Compile Include="FieldType.cs" />
+    <Compile Include="FormConstCode.cs" />
+    <Compile Include="FormInfo.cs" />
+    <Compile Include="GridViewColumnInfo.cs" />
+    <Compile Include="GridViewColumnSetupInfo.cs" />
+    <Compile Include="GridViewInfo.cs" />
+    <Compile Include="GridViewType.cs" />
+    <Compile Include="ICrmConfigService.cs" />
+    <Compile Include="IFormService.cs" />
+    <Compile Include="IGridViewService.cs" />
+    <Compile Include="IMetadataService.cs" />
+    <Compile Include="ListFieldInfo.cs" />
+    <Compile Include="MetadataFieldInfo.cs" />
+    <Compile Include="MetadataInfo.cs" />
+    <Compile Include="NumberFieldInfo.cs" />
+    <Compile Include="PropertyInfo.cs" />
+    <Compile Include="PropertySettingDictionary.cs" />
+    <Compile Include="StringFieldInfo.cs" />
+    <Compile Include="UserFieldInfo.cs" />
+    <Compile Include="UserListFieldInfo.cs" />
+    <Compile Include="FloagRange.cs" />
+    <Compile Include="NumberRange.cs" />
+    <Compile Include="Organization\AuthenticatedUserInfo.cs" />
+    <Compile Include="Organization\DepartmentChangeInfo.cs" />
+    <Compile Include="Organization\DepartmentCreateInfo.cs" />
+    <Compile Include="Organization\DepartmentInfo.cs" />
+    <Compile Include="Organization\DepartmentStatus.cs" />
+    <Compile Include="Organization\Exceptions\AccountEmptyException.cs" />
+    <Compile Include="Organization\Exceptions\AccountExpiredException.cs" />
+    <Compile Include="Organization\Exceptions\AccountLockedException.cs" />
+    <Compile Include="Organization\Exceptions\AccountLogoffException.cs" />
+    <Compile Include="Organization\Exceptions\AccountNotFoundException.cs" />
+    <Compile Include="Organization\Exceptions\AccountOrPasswordWrongException.cs" />
+    <Compile Include="Organization\Exceptions\AccountReapeatException.cs" />
+    <Compile Include="Organization\Exceptions\AccountSignedException.cs" />
+    <Compile Include="Organization\Exceptions\ADConnectException.cs" />
+    <Compile Include="Organization\Exceptions\CannotAddMemberToVirtualGroupException.cs" />
+    <Compile Include="Organization\Exceptions\CannotChangeSystemGroupCodeException.cs" />
+    <Compile Include="Organization\Exceptions\CodeEqualsNameException.cs" />
+    <Compile Include="Organization\Exceptions\CodeRepeatException.cs" />
+    <Compile Include="Organization\Exceptions\ContainsCircleGroupException.cs" />
+    <Compile Include="Organization\Exceptions\ContainsContactException.cs" />
+    <Compile Include="Organization\Exceptions\ContainsDepartmentException.cs" />
+    <Compile Include="Organization\Exceptions\ContainsGroupException.cs" />
+    <Compile Include="Organization\Exceptions\ContainsPositionException.cs" />
+    <Compile Include="Organization\Exceptions\ContainsSelfGroupException.cs" />
+    <Compile Include="Organization\Exceptions\ContainsUserException.cs" />
+    <Compile Include="Organization\Exceptions\DepartmentHasLogoffUserDeleteException.cs" />
+    <Compile Include="Organization\Exceptions\DepartmentHasUserDeleteException.cs" />
+    <Compile Include="Organization\Exceptions\DepartmentNameReapeatException.cs" />
+    <Compile Include="Organization\Exceptions\GroupNameReapeatException.cs" />
+    <Compile Include="Organization\Exceptions\InvalidTokenException.cs" />
+    <Compile Include="Organization\Exceptions\IPDenyExpcetion.cs" />
+    <Compile Include="Organization\Exceptions\IPFormatException.cs" />
+    <Compile Include="Organization\Exceptions\LeaderPositionCannotSelfException.cs" />
+    <Compile Include="Organization\Exceptions\LeaderPositionCannotSuperiorException.cs" />
+    <Compile Include="Organization\Exceptions\LeaderPositionCannotUnderlingException.cs" />
+    <Compile Include="Organization\Exceptions\LeaderPositionRepeatException.cs" />
+    <Compile Include="Organization\Exceptions\LicenseException.cs" />
+    <Compile Include="Organization\Exceptions\LicenseExpiredException.cs" />
+    <Compile Include="Organization\Exceptions\LicenseNullExpcetion.cs" />
+    <Compile Include="Organization\Exceptions\LicenseUserMaxedException.cs" />
+    <Compile Include="Organization\Exceptions\NameEqualsCodeExceptioncs.cs" />
+    <Compile Include="Organization\Exceptions\NeedModifyDefaultPasswordException.cs" />
+    <Compile Include="Organization\Exceptions\NotDownRmoveException.cs" />
+    <Compile Include="Organization\Exceptions\NotUpRemoveException.cs" />
+    <Compile Include="Organization\Exceptions\OldPasswordWrongException.cs" />
+    <Compile Include="Organization\Exceptions\OrganizationException.cs" />
+    <Compile Include="Organization\Exceptions\PasswordComplexInvalidException.cs" />
+    <Compile Include="Organization\Exceptions\PasswordExpiredException.cs" />
+    <Compile Include="Organization\Exceptions\PasswordLengthInvalidException.cs" />
+    <Compile Include="Organization\Exceptions\PasswordWrongException.cs" />
+    <Compile Include="Organization\Exceptions\PositionChildHasLogoffUserDeleteException.cs" />
+    <Compile Include="Organization\Exceptions\PositionChildHasUserDeleteException.cs" />
+    <Compile Include="Organization\Exceptions\PositionDeleteException.cs" />
+    <Compile Include="Organization\Exceptions\PositionHasLogoffUserDeleteException.cs" />
+    <Compile Include="Organization\Exceptions\PositionHasUserDeleteException.cs" />
+    <Compile Include="Organization\Exceptions\PositionNameReapeatException.cs" />
+    <Compile Include="Organization\Exceptions\PositionParentCannotSelfException.cs" />
+    <Compile Include="Organization\Exceptions\PositionUserExistsException.cs" />
+    <Compile Include="Organization\Exceptions\SystemGroupCannotModifyException.cs" />
+    <Compile Include="Organization\Exceptions\UserNameEmptyException.cs" />
+    <Compile Include="Organization\Exceptions\UserNeedMainPositionException.cs" />
+    <Compile Include="Organization\FunctionCreateInfo.cs" />
+    <Compile Include="Organization\FunctionInfo.cs" />
+    <Compile Include="Organization\GroupChangeInfo.cs" />
+    <Compile Include="Organization\GroupCreateInfo.cs" />
+    <Compile Include="Organization\GroupInfo.cs" />
+    <Compile Include="Organization\GroupMemberInfo.cs" />
+    <Compile Include="Organization\GroupType.cs" />
+    <Compile Include="Organization\IAuthenticationService.cs" />
+    <Compile Include="Organization\IDepartmentService.cs" />
+    <Compile Include="Organization\IFunctionService.cs" />
+    <Compile Include="Organization\IGroupService.cs" />
+    <Compile Include="Organization\IPositionService.cs" />
+    <Compile Include="Organization\ISignInLogService.cs" />
+    <Compile Include="Organization\IStringResouceProvider.cs" />
+    <Compile Include="Organization\IUserService.cs" />
+    <Compile Include="Organization\MemberFunctionInfo.cs" />
+    <Compile Include="Organization\MemberType.cs" />
+    <Compile Include="Organization\OperationLogInfo.cs" />
+    <Compile Include="Organization\OperationLogSearchInfo.cs" />
+    <Compile Include="Organization\OperationType.cs" />
+    <Compile Include="Organization\OrganizationInfo.cs" />
+    <Compile Include="Organization\OrganizationType.cs" />
+    <Compile Include="Organization\PagingHelper.cs" />
+    <Compile Include="Organization\PositionChangeInfo.cs" />
+    <Compile Include="Organization\PositionCreateInfo.cs" />
+    <Compile Include="Organization\PositionInfo.cs" />
+    <Compile Include="Organization\SignInLog.cs" />
+    <Compile Include="Organization\SignInLogSearchInfo.cs" />
+    <Compile Include="Organization\SignInRepeatStrgtegy.cs" />
+    <Compile Include="Organization\SignInResult.cs" />
+    <Compile Include="Organization\SortDirection.cs" />
+    <Compile Include="Organization\UserChangeInfo.cs" />
+    <Compile Include="Organization\UserCreateInfo.cs" />
+    <Compile Include="Organization\UserFilterInfo.cs" />
+    <Compile Include="Organization\UserGender.cs" />
+    <Compile Include="Organization\UserInfo.cs" />
+    <Compile Include="Organization\UserPositionInfo.cs" />
+    <Compile Include="Organization\UserRole.cs" />
+    <Compile Include="Organization\UserSignInChangeInfo.cs" />
+    <Compile Include="Organization\UserStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

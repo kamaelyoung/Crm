@@ -5,8 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using log4net;
 using System.IO;
-using Crm.Core.Organization;
-using Crm.Api.Organization;
+using Coldew.Core.Organization;
+using Coldew.Api.Organization;
 using Crm.Core;
 
 namespace Crm.UnitTest
@@ -31,7 +31,6 @@ namespace Crm.UnitTest
 
             this.Admin = this.Org.UserManager.GetUserByAccount("admin");
 
-            this.CustomerManager = this.CrmManager.CustomerManager;
 
         }
 

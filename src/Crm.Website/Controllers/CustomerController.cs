@@ -68,50 +68,20 @@ namespace Crm.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                Dictionary<string, CustomerAreaInfo> areaDic = WebHelper.CustomerAreaService.GetAllArea().ToDictionary(x => x.Name);
-                IList<UserInfo> userList = WebHelper.UserService.GetAllUser();
-                Dictionary<string, UserInfo> userAccountDic = userList.ToDictionary(x => x.Account);
-                Dictionary<string, UserInfo> userNameDic = userList.ToDictionary(x => x.Name);
-
                 string tempFilePath = Path.Combine(Server.MapPath("~/Temp"), tempFileName);
                 List<JObject> importModels = JsonConvert.DeserializeObject<List<JObject>>(System.IO.File.ReadAllText(tempFilePath));
 
                 foreach (JObject model in importModels)
                 {
-                    string customerName = model["name"].ToString();
-                    int areaId = 0;
-                    string area = model["area"].ToString();
-                    if (areaDic.ContainsKey(area))
-                    {
-                        areaId = areaDic[area].ID;
-                    }
-                    else
-                    {
-                        model["importResult"] = false;
-                        model["importMessage"] = "导入失败，区域不正确";
-                        continue;
-                    }
-                    List<string> salesUserAccounts = null;
-                    try
-                    {
-                        string[] salesUsers = model["salesUsers"].ToString().Split(',');
-                        salesUserAccounts = ImportExportHelper.GetUserAccounts(salesUsers, userAccountDic, userNameDic);
-                    }
-                    catch(Exception ex)
-                    {
-                        model["importMessage"] = "导入失败," + ex.Message;
-                        model["importResult"] = false;
-                        continue;
-                    }
-                    List<PropertyOperationInfo> propertys = new List<PropertyOperationInfo>();
-                    List<FieldInfo> fieldInfos = WebHelper.FormService.GetFields(FormType.Customer).Where(x => !x.CanModify && x.CanImport).ToList();
+                    PropertySettingDictionary propertys = new PropertySettingDictionary();
+                    List<FieldInfo> fieldInfos = WebHelper.FormService.GetFields(FormType.Customer).Where(x => x.CanInput).ToList();
                     foreach (FieldInfo filed in fieldInfos)
                     {
-                        propertys.Add(new PropertyOperationInfo { Code = filed.Code, Value = model[filed.Code].ToString() });
+                        propertys.Add(filed.Code, model[filed.Code].ToString());
                     }
                     try
                     {
-                        WebHelper.CustomerService.Create(WebHelper.CurrentUserAccount, customerName, areaId, salesUserAccounts, propertys);
+                        WebHelper.CustomerService.Create(WebHelper.CurrentUserAccount, propertys);
 
                         model["importResult"] = true;
                         model["importMessage"] = "导入成功";
@@ -182,9 +152,9 @@ namespace Crm.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                CustomerCreateModel model = JsonConvert.DeserializeObject<CustomerCreateModel>(json);
-                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
-                WebHelper.CustomerService.Create(WebHelper.CurrentUserAccount, model.name, model.area, model.salesAccounts, propertys);
+                JObject model = JsonConvert.DeserializeObject<JObject>(json);
+                PropertySettingDictionary propertys = ExtendHelper.MapPropertySettingDictionary(model);
+                WebHelper.CustomerService.Create(WebHelper.CurrentUserAccount, propertys);
             }
             catch (Exception ex)
             {
@@ -198,7 +168,7 @@ namespace Crm.Website.Controllers
         [HttpGet]
         public ActionResult Edit(string customerId)
         {
-            CustomerInfo customerInfo = WebHelper.CustomerService.GetCustomerById(customerId);
+            MetadataInfo customerInfo = WebHelper.CustomerService.GetCustomerById(customerId);
             CustomerEditModel editModel = new CustomerEditModel(customerInfo);
             this.ViewBag.customerInfoJson = JsonConvert.SerializeObject(editModel);
 
@@ -211,9 +181,11 @@ namespace Crm.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                CustomerEditPostModel model = JsonConvert.DeserializeObject<CustomerEditPostModel>(json);
-                List<PropertyOperationInfo> propertys = ExtendHelper.MapPropertyOperationInfos(model.extends);
-                WebHelper.CustomerService.Modify(WebHelper.CurrentUserAccount, model.id, model.name, model.area, model.salesAccounts, propertys);
+                JObject model = JsonConvert.DeserializeObject<JObject>(json);
+                PropertySettingDictionary propertys = ExtendHelper.MapPropertySettingDictionary(model);
+                string id = propertys["id"];
+                propertys.Remove("id");
+                WebHelper.CustomerService.Modify(WebHelper.CurrentUserAccount, id, propertys);
             }
             catch (Exception ex)
             {
@@ -284,7 +256,7 @@ namespace Crm.Website.Controllers
             try
             {
                 int totalCount;
-                List<CustomerInfo> customerInfos = null;
+                List<MetadataInfo> customerInfos = null;
                 if (string.IsNullOrEmpty(searchInfoJson))
                 {
                     customerInfos = WebHelper.CustomerService.GetCustomers(WebHelper.CurrentUserAccount, start, size, out totalCount);
@@ -292,10 +264,10 @@ namespace Crm.Website.Controllers
                 else
                 {
                     CustomerSearchModel searchModel = JsonConvert.DeserializeObject<CustomerSearchModel>(searchInfoJson);
-                    CustomerSearchInfo serachInfo = searchModel.Map();
+                    MetadataSearchInfo serachInfo = searchModel.Map();
                     customerInfos = WebHelper.CustomerService.Search(WebHelper.CurrentUserAccount, serachInfo, start, size, out  totalCount);
                 }
-                List<CustomerInfo> favorites = WebHelper.CustomerService.GetFavorites(WebHelper.CurrentUserAccount);
+                List<MetadataInfo> favorites = WebHelper.CustomerService.GetFavorites(WebHelper.CurrentUserAccount);
                 List<CustomerGridJObjectModel> models = customerInfos.Select(x => new CustomerGridJObjectModel(x, favorites.ToDictionary(f => f.ID), this)).ToList();
                 resultModel.data = new DatagridModel { count = totalCount, list = models };
             }
@@ -314,7 +286,7 @@ namespace Crm.Website.Controllers
             try
             {
                 int totalCount;
-                List<CustomerInfo> customerInfos = null;
+                List<MetadataInfo> customerInfos = null;
                 if (string.IsNullOrEmpty(keyword))
                 {
                     customerInfos = WebHelper.CustomerService.GetCustomers(WebHelper.CurrentUserAccount, start, size, out totalCount);
@@ -342,7 +314,7 @@ namespace Crm.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                List<CustomerInfo> favorites = WebHelper.CustomerService.GetFavorites(WebHelper.CurrentUserAccount);
+                List<MetadataInfo> favorites = WebHelper.CustomerService.GetFavorites(WebHelper.CurrentUserAccount);
                 List<CustomerGridJObjectModel> models = favorites.Skip(start).Take(size).Select(x => new CustomerGridJObjectModel(x, this)).ToList();
                 resultModel.data = new DatagridModel { count = favorites.Count, list = models };
             }
@@ -360,7 +332,7 @@ namespace Crm.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                List<CustomerInfo> customerInfos = null;
+                List<MetadataInfo> customerInfos = null;
                 if (string.IsNullOrEmpty(keyword))
                 {
                     customerInfos = WebHelper.CustomerService.GetCustomers(WebHelper.CurrentUserAccount);

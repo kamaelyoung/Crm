@@ -1,5 +1,9 @@
 ﻿@using Crm.Website;
 @using Crm.Website.Models;
+@using Crm.Api;
+@using Coldew.Website;
+@using Coldew.Website.Models;
+@using Coldew.Api;
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,8 +23,8 @@
 	<script type="text/javascript" src="@this.Url.Content("~/js/jquery.ui.chengyuan.js")"></script>
 	<script type="text/javascript" src='@this.Url.Content("~/js/bootstrap.min.js")'></script>
 	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-extend.js")'></script>
-	<script type="text/javascript" src='@this.Url.Content("~/js/customerSelectDialog.js")'></script>
-	<script type="text/javascript" src='@this.Url.Content("~/js/contactSelectDialog.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/metadataSelectDialog.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/metadataSelect.js")'></script>
     <!--[if IE]>
 	    <script type="text/javascript" src='@this.Url.Content("~/js/placeholder.js")'></script>
     <![endif]-->
@@ -49,17 +53,14 @@
             </p>
             <ul class="nav">
             @{
-                string customerMenuClass = this.ViewBag.TopMenu == "Customer" ? "class='active'" : "";
                 string orgMenuClass = this.ViewBag.TopMenu == "OrgAdmin" ? "class='active'" : "";
                 string setupMenuClass = this.ViewBag.TopMenu == "Setup" ? "class='active'" : "";
-                string contactMenuClass = this.ViewBag.TopMenu == "Contact" ? "class='active'" : "";
-                string activityMenuClass = this.ViewBag.TopMenu == "Activity" ? "class='active'" : "";
-                string contractMenuClass = this.ViewBag.TopMenu == "Contract" ? "class='active'" : "";
             }
-                <li @this.Html.Raw(customerMenuClass)><a href="@this.Url.Action("Index", "Customer")">客户</a></li>
-                <li @this.Html.Raw(contactMenuClass)><a href="@this.Url.Content("~/Contact/Index")">联系人</a></li>
-                <li @this.Html.Raw(activityMenuClass)><a href="@this.Url.Content("~/Activity/Index")">客户接触</a></li>
-                <li @this.Html.Raw(contractMenuClass)><a href="@this.Url.Content("~/Contract/Index")">合同 @WebHelper.ExpiringContractCountMessage</a></li>
+            @foreach (FormInfo formInfo in WebHelper.Forms)
+            {
+                string metadataMenuClass = this.ViewBag.TopMenu == "Metadata" && formInfo.ID == Request["formId"] ? "class='active'" : "";
+                <li @this.Html.Raw(metadataMenuClass)><a href="@this.Url.Action("Index", "Metadata", new { formId = formInfo.ID })">@formInfo.Name</a></li>
+            }
             @if (WebHelper.IsAdmin)
             {
                 <li @this.Html.Raw(orgMenuClass)><a href="@this.Url.Action("Index", "Org")">组织管理</a></li>
@@ -70,6 +71,7 @@
           
             <form class="navbar-form form-search" method="get" action="@this.Url.Action("Index")">
                 <div class="input-append">
+                    <input name="formId" type="hidden" value="@Request["formId"]"/>
                     <input name="keyword" type="text" class="search-query"/>
                     <button id="btnKeywordSearch" class="btn" type="submit" data-loading-text="搜索中..."><i class="icon-search"></i>搜索</button>
                 </div>

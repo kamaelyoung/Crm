@@ -5,9 +5,9 @@ using System.Text;
 using NUnit.Framework;
 using Newtonsoft.Json.Linq;
 using System.Threading;
-using Crm.Core.Organization;
-using Crm.Api.Organization;
-using Crm.Api.Organization.Exceptions;
+using Coldew.Core.Organization;
+using Coldew.Api.Organization;
+using Coldew.Api.Organization.Exceptions;
 
 namespace Crm.UnitTest.Management
 {

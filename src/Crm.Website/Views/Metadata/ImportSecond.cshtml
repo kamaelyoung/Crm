@@ -1,0 +1,74 @@
+﻿@using Coldew.Website.Models;
+@{
+    ViewBag.Title = "客户信息导入";
+    Layout = "~/Views/Customer/Layout.cshtml";
+    this.ViewBag.LeftMenu = CustomerLeftMenu.Import;
+}
+
+<div class="row-fluid">
+    <div class="span2">
+        <p class="lead">客户信息导入</p>
+    </div>
+    <div class="span10">
+        <button id="btnImport" class="btn"><i class="icon-plus"></i>导入</button> 
+    </div>
+</div>
+
+<div id="customerGrid">
+    
+</div>
+        
+<div id="pager" class="pull-right" style="height: 30px">
+            
+</div>
+<script type="text/javascript" language="javascript">
+    var tempFileName = "@this.Html.Raw(this.Request["tempFileName"])";
+    var customerGrid = $("#customerGrid").datagrid({
+		columns: @this.Html.Raw(this.ViewBag.columnsJson),
+        height: "auto",
+		canSort: false,
+		singleSelect: false,
+		showNumberRow: true,
+        selectedRow: function(){
+            //btnZhipai.prop("disabled", false);
+        },
+        unselectedRow: function(){
+//            var rows = customerGrid.datagrid("getSelectedRows");
+//            btnZhipai.prop("disabled", rows.length == 0);
+        }
+	});
+
+    $("#pager").pager({change: function(event, args){
+        loadCustomerGrid(args.start);
+    }});
+
+    function loadCustomerGrid(start, cb){
+        var args = {start: start, size: 20, tempFileName: tempFileName};
+        $.get("@this.Url.Action("GetImportCustomers")", args, function(model){
+            if(cb){
+                cb();
+            }
+            if(model.result == 0){
+                $("#customerGrid").datagrid("option", "data", model.data.list);
+                $("#pager").pager("option", "pageInfo", {start: start, size: 20, count: model.data.count})
+            }
+            else{
+                alert(model.message)
+            }
+        });
+    }
+    loadCustomerGrid(0);
+
+    $("#btnImport").click(function(){
+        $("#btnImport").button("loading");
+        $.post("@this.Url.Action("Import")", {tempFileName: tempFileName}, function(model){
+            $("#btnImport").button("reset");
+            if(model.result == 0){
+                loadCustomerGrid(0);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+    });
+</script>

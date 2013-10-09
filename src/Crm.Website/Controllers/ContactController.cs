@@ -52,7 +52,7 @@ namespace Crm.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                Dictionary<string, CustomerInfo> customers = WebHelper.CustomerService.GetCustomers(WebHelper.CurrentUserAccount).ToDictionary(x => x.Name);
+                Dictionary<string, MetadataInfo> customers = WebHelper.CustomerService.GetCustomers(WebHelper.CurrentUserAccount).ToDictionary(x => x.Name);
                 string tempFilePath = Path.Combine(Server.MapPath("~/Temp"), tempFileName);
                 List<JObject> importModels = JsonConvert.DeserializeObject<List<JObject>>(System.IO.File.ReadAllText(tempFilePath));
 
@@ -72,7 +72,7 @@ namespace Crm.Website.Controllers
                         continue;
                     }
                     List<PropertyOperationInfo> propertys = new List<PropertyOperationInfo>();
-                    List<FieldInfo> fieldInfos = WebHelper.FormService.GetFields(FormType.Contact).Where(x => !x.CanModify && x.CanImport).ToList();
+                    List<FieldInfo> fieldInfos = WebHelper.FormService.GetFields(FormType.Contact).Where(x => x.CanInput).ToList();
                     foreach (FieldInfo filed in fieldInfos)
                     {
                         propertys.Add(new PropertyOperationInfo { Code = filed.Code, Value = model[filed.Code].ToString() });

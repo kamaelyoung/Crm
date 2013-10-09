@@ -1,0 +1,38 @@
+﻿@using Coldew.Api;
+@using Coldew.Website;
+@using Coldew.Website.Models;
+@{
+    string createMenuClass = this.ViewBag.LeftMenu == "Create" ? "class='active'" : "";
+    string viewManageMenuClass = this.ViewBag.LeftMenu == "ViewManage" ? "class='active'" : "";
+    FormInfo formInfo = WebHelper.FormService.GetFormById(Request["formId"]);
+    List<GridViewInfo> gridViews = WebHelper.GridViewService.GetGridViews(Request["formId"], WebHelper.CurrentUserAccount);
+    List<LeftMenuModel> menuModels = new List<LeftMenuModel>();
+    foreach(GridViewInfo viewInfo in gridViews)
+    {
+        LeftMenuModel menuModel = new LeftMenuModel();
+        if(viewInfo.Type == GridViewType.Manage)
+        {
+            menuModel.actionUrl = this.Url.Action("Index", new { viewId = viewInfo.ID, formId = formInfo.ID });
+        }
+        else if (viewInfo.Type == GridViewType.Favorite)
+        {
+            menuModel.actionUrl = this.Url.Action("Favorite", new { viewId = viewInfo.ID, formId = formInfo.ID });
+        }
+        else if (viewInfo.Type == GridViewType.Customized)
+        {
+            menuModel.actionUrl = this.Url.Action("Customized", new { viewId = viewInfo.ID, formId = formInfo.ID });
+        }
+        menuModel.name = viewInfo.Name;
+        menuModel.active = viewInfo.ID == this.ViewBag.viewId;
+        menuModels.Add(menuModel);
+    }
+}
+<ul class="nav nav-list">
+    <li class="nav-header">@formInfo.Name</li>
+    @foreach (LeftMenuModel menu in menuModels)
+    {
+        string menuClass = menu.active ? "class='active'" : "";
+        <li @this.Html.Raw(menuClass)><a href="@menu.actionUrl">@menu.name</a></li>
+    }
+    <li @this.Html.Raw(viewManageMenuClass)><a href="@this.Url.Action("GridViewManage", new { formId = formInfo.ID })">视图管理</a></li>
+</ul>

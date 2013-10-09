@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Crm.Api;
-using Crm.Core.Organization;
+using Coldew.Core.Organization;
 
 namespace Crm.Core
 {

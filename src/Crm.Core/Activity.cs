@@ -2,139 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Crm.Core.Organization;
+using Coldew.Core.Organization;
 using Crm.Data;
 using Crm.Api;
 using Crm.Api.Exceptions;
-using Crm.Core.Extend;
+using Newtonsoft.Json;
+using Coldew.Core;
 
 namespace Crm.Core
 {
-    public class Activity
+    public class Activity : Metadata
     {
-        public Activity(string id, string subject, Contact contact, User creator,
-            DateTime createTime, User modifiedUser, DateTime modifiedTime, Metadata metadata)
+        public Activity(string id, MetadataPropertyList propertys, Form form)
+            : base(id, propertys, form)
         {
-            this.ID = id;
-            this.Subject = subject;
-            this.Contact = contact;
-            this.Creator = creator;
-            this.CreateTime = createTime;
-            this.ModifiedUser = modifiedUser;
-            this.ModifiedTime = modifiedTime;
-            this.Metadata = metadata;
-            this.Contact.Deleted += new TEventHanlder<Contact, User>(Contact_Deleted);
-            this.BuildContent();
+
+            
         }
 
-        void Contact_Deleted(Contact sender, User args)
+        protected override List<MetadataProperty> GetVirtualPropertys()
         {
-            this._Delete(args);
+            List<MetadataProperty> propertys = new List<MetadataProperty>();
+            MetadataField customerField = this.Form.GetFieldByCode(CrmFormConstCode.FIELD_NAME_CUSTOMER) as MetadataField;
+            MetadataProperty customerProperty = new MetadataProperty(new DynamicMetadataMetadataValue(delegate() { return this.Contact.Customer;}, customerField));
+            propertys.Add(customerProperty);
+            return propertys;
         }
 
-        public string ID { private set; get; }
-
-        public string Subject { private set; get; }
-
-        public Contact Contact { private set; get; }
-
-        public User Creator { private set; get; }
-
-        public DateTime CreateTime { private set; get; }
-
-        public User ModifiedUser { private set; get; }
-
-        public DateTime ModifiedTime { private set; get; }
-
-        public Metadata Metadata { private set; get; }
-
-        public string Content { private set; get; }
-
-        private void BuildContent()
+        public Contact Contact
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(this.Subject.ToLower());
-            sb.Append(this.Contact.Customer.Name.ToLower());
-            sb.Append(this.Contact.Name);
-            sb.Append(this.Creator.Name.ToLower());
-            sb.Append(this.Creator.Account.ToLower());
-
-            foreach (MetadataProperty property in this.Metadata.GetPropertys())
+            get
             {
-                if (!string.IsNullOrEmpty(property.Value.ShowValue))
-                {
-                    sb.Append(property.Value.ShowValue.ToLower());
-                }
+                MetadataMetadataValue value = this.GetProperty(CrmFormConstCode.FIELD_NAME_CONTACT).Value as MetadataMetadataValue;
+                return value.Metadata as Contact;
             }
-            this.Content = sb.ToString();
         }
 
-        public event TEventHanlder<Activity, ActivityModifyInfo> Modifying;
-        public event TEventHanlder<Activity, ActivityModifyInfo> Modified;
-
-        public void Modify(ActivityModifyInfo info)
+        protected override void UpdateDB(MetadataPropertyList propertys)
         {
-            if (this.Modifying != null)
-            {
-                this.Modifying(this, info);
-            }
-
-            this.Metadata.SetPropertys(info.PropertyInfos);
-
             ActivityModel model = NHibernateHelper.CurrentSession.Get<ActivityModel>(this.ID);
-            model.ModifiedTime = DateTime.Now;
-            model.ModifiedUserId = info.OpUser.ID;
-            model.Subject = info.Subject;
+            model.PropertysJson = propertys.ToJson();
 
             NHibernateHelper.CurrentSession.Update(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            this.ModifiedTime = DateTime.Now;
-            this.ModifiedUser = info.OpUser;
-            this.Subject = info.Subject;
-
-            this.BuildContent();
-
-            if (this.Modified != null)
-            {
-                this.Modified(this, info);
-            }
         }
 
-        public event TEventHanlder<Activity> Deleting;
-        public event TEventHanlder<Activity> Deleted;
-
-        public void Delete(User opUser)
+        protected override void DeleteDB()
         {
-            if (!this.CanDelete(opUser))
-            {
-                throw new CrmException("没有权限删除该记录");
-            }
-
-            this._Delete(opUser);
-        }
-
-        private void _Delete(User opUser)
-        {
-            if (this.Deleting != null)
-            {
-                this.Deleting(this);
-            }
-
             ActivityModel model = NHibernateHelper.CurrentSession.Get<ActivityModel>(this.ID);
 
             NHibernateHelper.CurrentSession.Delete(model);
             NHibernateHelper.CurrentSession.Flush();
-
-            this.Metadata.Delete();
-
-            if (this.Deleted != null)
-            {
-                this.Deleted(this);
-            }
         }
 
-        public bool CanPreview(User user)
+        public override bool CanPreview(User user)
         {
 
             if (user == this.Creator)
@@ -150,7 +70,7 @@ namespace Crm.Core
             return false;
         }
 
-        public bool CanDelete(User user)
+        public override bool CanDelete(User user)
         {
 
             if (user == this.Creator)
@@ -164,24 +84,6 @@ namespace Crm.Core
             }
 
             return false;
-        }
-
-        public ActivityInfo Map()
-        {
-            return new ActivityInfo
-            {
-                CreateTime = this.CreateTime,
-                Creator = this.Creator.MapUserInfo(),
-                ID = this.ID,
-                ModifiedTime = this.ModifiedTime,
-                ModifiedUser = this.ModifiedUser.MapUserInfo(),
-                Subject = this.Subject,
-                CustomerName = this.Contact.Customer.Name,
-                CustomerId = this.Contact.Customer.ID,
-                ContactName = this.Contact.Name,
-                ContactId = this.Contact.ID,
-                Metadata = this.Metadata.MapMetadataInfo()
-            };
         }
     }
 }

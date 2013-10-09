@@ -2,14 +2,12 @@
 @using Crm.Website.Models;
 @using Crm.Api;
 @{
-    ViewBag.Title = "客户管理";
     Layout = "~/Views/Customer/Layout.cshtml";
-    this.ViewBag.LeftMenu = CustomerLeftMenu.Index;
 }
 <script type="text/javascript" src='@this.Url.Content("~/js/customerSearchPopover.js")'></script>
 <div class="row-fluid">
     <div class="span2">
-        <p class="lead">客户管理</p>
+        <p class="lead">this.ViewBag.Title</p>
     </div>
     <div class="span10">
         <a id="btnCreate" href="@this.Url.Action("Create")" class="btn"><i class="icon-plus"></i>创建</a>

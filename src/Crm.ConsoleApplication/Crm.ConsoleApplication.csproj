@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Crm.HB.config">
+    <None Include="Coldew.HB.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Crm.spring.config">

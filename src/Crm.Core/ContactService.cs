@@ -36,7 +36,7 @@ namespace Crm.Core
         public ContactInfo Create(string opUserAccount, string name, string customerId, List<PropertyOperationInfo> propertys)
         {
             User opUser = this._crmManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
-            Customer customer = this._crmManager.CustomerManager.GetCustomerById(customerId);
+            Customer customer = this._crmManager.CustomerManager.GetById(customerId) as Customer;
 
             Contact contact = this._crmManager.ContactManager.Create(new ContactCreateInfo { OpUser = opUser, Name = name, Customer = customer, PropertyInfos = propertys });
             return contact.Map();

@@ -7,13 +7,13 @@ namespace Crm.Api
 {
     public interface ICustomerService
     {
-        List<CustomerInfo> GetCustomers(string account);
+        List<MetadataInfo> GetCustomers(string account);
 
-        List<CustomerInfo> GetCustomers(string account, int skipCount, int takeCount, out int totalCount);
+        List<MetadataInfo> GetCustomers(string account, int skipCount, int takeCount, out int totalCount);
 
-        CustomerInfo Create(string opUserAccount, string name, int areaId, List<string> salesAccounts, List<PropertyOperationInfo> propertys);
+        MetadataInfo Create(string opUserAccount, PropertySettingDictionary propertys);
 
-        void Modify(string opUserAccount, string customerId, string name, int areaId, List<string> salesAccounts, List<PropertyOperationInfo> propertys);
+        void Modify(string opUserAccount, string customerId, PropertySettingDictionary propertys);
 
         void Delete(string opUserAccount, List<string> customerIds);
 
@@ -21,14 +21,14 @@ namespace Crm.Api
 
         void CancelFavorite(string opUserAccount, List<string> customerIds);
 
-        List<CustomerInfo> GetFavorites(string account, int skipCount, int takeCount, out int totalCount);
+        List<MetadataInfo> GetFavorites(string account, int skipCount, int takeCount, out int totalCount);
 
-        List<CustomerInfo> GetFavorites(string account);
+        List<MetadataInfo> GetFavorites(string account);
 
-        CustomerInfo GetCustomerById(string id);
+        MetadataInfo GetCustomerById(string id);
 
-        List<CustomerInfo> Search(string account, CustomerSearchInfo serachInfo, int skipCount, int takeCount, out int totalCount);
+        List<MetadataInfo> Search(string account, MetadataSearchInfo serachInfo, int skipCount, int takeCount, out int totalCount);
 
-        List<CustomerInfo> Search(string account, CustomerSearchInfo serachInfo);
+        List<MetadataInfo> Search(string account, MetadataSearchInfo serachInfo);
     }
 }

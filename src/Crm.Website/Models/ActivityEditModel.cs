@@ -20,7 +20,7 @@ namespace Crm.Website.Models
             this.Add("modifiedTime", info.ModifiedTime.ToString("yyyy-MM-dd"));
             foreach (PropertyInfo propertyInfo in info.Metadata.Propertys)
             {
-                this.Add(propertyInfo.Code, propertyInfo.Value);
+                this.Add(propertyInfo.Code, propertyInfo.ShowValue);
             }
         }
     }

@@ -50,9 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomerTester.cs" />
+    <Compile Include="SerializeHelper.cs" />
     <Compile Include="UnitTestBase.cs" />
     <Compile Include="Organization\OrganizationManagementTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tester.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -70,6 +72,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Coldew.Api\Coldew.Api.csproj">
+      <Project>{3CDFF38F-CF14-42F6-9E0C-66907C1D08CF}</Project>
+      <Name>Coldew.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coldew.Core\Coldew.Core.csproj">
+      <Project>{8587710A-9C73-46E6-9415-D23042CB0178}</Project>
+      <Name>Coldew.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coldew.Data\Coldew.Data.csproj">
+      <Project>{47EA2B39-B843-497F-88FD-136964A12577}</Project>
+      <Name>Coldew.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Crm.Api\Crm.Api.csproj">
       <Project>{BA1B16DF-70B1-43F4-BEAF-BCA39F1D6832}</Project>
       <Name>Crm.Api</Name>

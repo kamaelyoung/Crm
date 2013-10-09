@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Crm.Api.Organization;
+using Coldew.Api.Organization;
+using Coldew.Api;
 
 namespace Crm.Api
 {

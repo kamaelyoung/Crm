@@ -3,26 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Crm.Data;
-using Crm.Core.Organization;
 using log4net.Util;
 using Crm.Api.Exceptions;
+using Coldew.Core.Organization;
+using Coldew.Core;
+using Crm.Api;
 
 namespace Crm.Core
 {
     public class CustomerAreaManager
     {
+        FormManager _formManager;
         OrganizationManagement _orgManager;
         ReaderWriterLock _lock;
-        public CustomerAreaManager(OrganizationManagement orgManager)
+        public CustomerAreaManager(OrganizationManagement orgManager, FormManager formManager)
         {
             this._orgManager = orgManager;
+            this._formManager = formManager;
             this.Areas = new List<CustomerArea>();
             this._lock = new ReaderWriterLock();
-
-            this.Load();
         }
 
-        public event TEventHanlder<CustomerArea> CustomerAreaDeleting;
+        public event TEventHandler<CustomerArea> CustomerAreaDeleting;
 
         private List<CustomerArea> Areas { set; get; }
 
@@ -64,9 +66,9 @@ namespace Crm.Core
                 managers = model.ManagerAccounts.Split(',').Select(x => this._orgManager.UserManager.GetUserByAccount(x)).ToList();
             }
             CustomerArea area = new CustomerArea(model.ID, model.Name, managers);
-            area.Deleting += new TEventHanlder<CustomerArea>(Area_Deleting);
-            area.Deleted += new TEventHanlder<CustomerArea>(Area_Deleted);
-            area.Modifying += new TEventHanlder<CustomerArea, CustomerAreaModifyInfo>(Area_Modifying);
+            area.Deleting += new TEventHandler<CustomerArea>(Area_Deleting);
+            area.Deleted += new TEventHandler<CustomerArea>(Area_Deleted);
+            area.Modifying += new TEventHandler<CustomerArea, CustomerAreaModifyInfo>(Area_Modifying);
             this.Areas.Add(area);
             this.Areas = this.Areas.OrderBy(x => x.Name).ToList();
             return area;
@@ -74,6 +76,17 @@ namespace Crm.Core
 
         void Area_Deleting(CustomerArea args)
         {
+
+            Form customerForm = this._formManager.GetFormByCode(CrmFormConstCode.FORM_CUSTOMER);
+            CustomerManager customerManager = customerForm.MetadataManager as CustomerManager;
+
+            int count = customerManager.GetAreaCustomerCount(args);
+
+            if (count > 0)
+            {
+                throw new CustomerAreaDeleteException(string.Format("无法删除该区域，该区域下有{0}个客户", count));
+            }
+
             if (this.CustomerAreaDeleting != null)
             {
                 this.CustomerAreaDeleting(args);
@@ -135,7 +148,7 @@ namespace Crm.Core
             }
         }
 
-        private void Load()
+        internal void Load()
         {
             IList<CustomerAreaModel> models = NHibernateHelper.CurrentSession.QueryOver<CustomerAreaModel>().List();
             foreach (CustomerAreaModel model in models)

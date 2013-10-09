@@ -1,0 +1,51 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@using Coldew.Api;
+@{
+    ViewBag.Title = "编辑客户";
+    Layout = "~/Views/Metadata/Layout.cshtml";
+}
+
+<p class="lead">编辑客户</p>
+<form class="form-horizontal" id="editMetadataForm">
+    <input type="hidden" name="id" />
+    @{this.Html.RenderAction("EditFields", "Extend", new { formId = Request["formId"] });}
+    <div class="control-group">
+    <div class="controls">
+        <button id="btnSave" type="submit" class="btn btn-primary" data-loading-text="保存中...">保存</button>
+    </div>
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+var formId = "@Request["formId"]";
+var returnUrl = "@this.Html.Raw(this.Request["returnUrl"])";
+var metadataInfo = @this.Html.Raw(this.ViewBag.metadataInfoJson);
+$("#editMetadataForm").validate({
+    sendForm : false,
+    onBlur: true,
+    onChange: true,
+	eachValidField : function() {
+		$(this).closest('.control-group').removeClass('error');
+        $(this).next('.help-inline').hide();
+	},
+	eachInvalidField : function() {
+		$(this).closest('.control-group').addClass('error');
+        $(this).next('.help-inline').show();
+	},
+    valid: function(){
+        var formValue = $("#editMetadataForm").getFormValue();
+            
+        $("#btnSave").button("loading");
+        $.post("@this.Url.Action("EditPost")", {formId: formId, json: $.toJSON(formValue)}, function(data){
+            $("#btnSave").button("reset");
+            if(data.result == 0){
+                alert("保存成功");
+            }
+            else{
+                alert(data.message);
+            }
+        });
+    }
+})
+.setFormValue(metadataInfo);
+</script>

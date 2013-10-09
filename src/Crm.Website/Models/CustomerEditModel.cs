@@ -11,22 +11,10 @@ namespace Crm.Website.Models
 {
     public class CustomerEditModel : JObject
     {
-        public CustomerEditModel(CustomerInfo customerInfo)
+        public CustomerEditModel(MetadataInfo customerInfo)
         {
             this.Add("id", customerInfo.ID);
-            this.Add("name", customerInfo.Name);
-            this.Add("area", customerInfo.Area.ID);
-            JArray array = new JArray();
-            foreach (UserInfo userInfo in customerInfo.SalesUsers)
-            {
-                array.Add(userInfo.Account);
-            }
-            this.Add("salesAccounts", array);
-            this.Add("creator", customerInfo.Creator.Name);
-            this.Add("createTime", customerInfo.CreateTime.ToString("yyyy-MM-dd"));
-            this.Add("modifiedUser", customerInfo.ModifiedUser.Name);
-            this.Add("modifiedTime", customerInfo.ModifiedTime.ToString("yyyy-MM-dd"));
-            foreach (PropertyInfo propertyInfo in customerInfo.Metadata.Propertys)
+            foreach (PropertyInfo propertyInfo in customerInfo.Propertys)
             {
                 JToken token = null;
                 if (propertyInfo.EditValue is IEnumerable)

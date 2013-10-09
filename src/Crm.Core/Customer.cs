@@ -2,169 +2,63 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Crm.Core.Organization;
+using Coldew.Core.Organization;
 using Crm.Data;
 using Crm.Api;
 using Crm.Api.Exceptions;
-using Crm.Core.Extend;
+using Newtonsoft.Json;
+using Coldew.Core;
 
 namespace Crm.Core
 {
-    public class Customer
+    public class Customer : Metadata
     {
-        public Customer(string id, string name, CustomerArea area, List<User> salesUsers, User creator,
-            DateTime createTime, User modifiedUser, DateTime modifiedTime, Metadata metadata)
+        public Customer(string id, MetadataPropertyList propertys, Form form)
+            : base(id, propertys, form)
         {
-            this.ID = id;
-            this.Name = name;
-            this.Area = area;
-            this.SalesUsers = salesUsers;
-            this.Creator = creator;
-            this.CreateTime = createTime;
-            this.ModifiedUser = modifiedUser;
-            this.ModifiedTime = modifiedTime;
-            this.Metadata = metadata;
 
-            this.BuildContent();
         }
 
-        public string ID { private set; get; }
-
-        public string Name { private set; get; }
-
-        public CustomerArea Area { private set; get; }
-
-        public List<User> SalesUsers { private set; get; }
-
-        public User Creator { private set; get; }
-
-        public DateTime CreateTime { private set; get; }
-
-        public User ModifiedUser { private set; get; }
-
-        public DateTime ModifiedTime { private set; get; }
-
-        public Metadata Metadata { private set; get; }
-
-        public string Content { private set; get; }
-
-        private void BuildContent()
+        private CustomerAreaMetadataValue AreaValue
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(this.Name.ToLower());
-            sb.Append(this.Area.Name.ToLower());
-            sb.Append(string.Join(" ", this.SalesUsers.Select(x => x.Name.ToLower())));
-            sb.Append(string.Join(" ", this.SalesUsers.Select(x => x.Account.ToLower())));
-            sb.Append(this.Creator.Name.ToLower());
-            sb.Append(this.Creator.Account.ToLower());
-            sb.Append(this.ModifiedUser.Account.ToLower());
-            sb.Append(this.ModifiedUser.Name.ToLower());
-            foreach (MetadataProperty property in this.Metadata.GetPropertys())
+            get
             {
-                if (!string.IsNullOrEmpty(property.Value.ShowValue))
-                {
-                    sb.Append(property.Value.ShowValue.ToLower());
-                }
+                return this.GetProperty(CrmFormConstCode.CUST_FIELD_NAME_AREA).Value as CustomerAreaMetadataValue;
             }
-            this.Content = sb.ToString();
         }
 
-        public event TEventHanlder<Customer, CustomerModifyInfo> Modifying;
-        public event TEventHanlder<Customer, CustomerModifyInfo> Modified;
+        public CustomerArea Area { get { return this.AreaValue.Area; } }
 
-        public void Modify(CustomerModifyInfo info)
+        private UserListMetadataValue SalesUsersValue
         {
-            if (info.SalesUsers == null || info.SalesUsers.Count == 0)
+            get
             {
-                throw new CustomerSalesUserNullException();
+                return this.GetProperty(CrmFormConstCode.CUST_FIELD_NAME_SALES_USERS).Value as UserListMetadataValue;
             }
-            if (this.Modifying != null)
-            {
-                this.Modifying(this, info);
-            }
+        }
 
-            this.Metadata.SetPropertys(info.PropertyInfos);
+        public List<User> SalesUsers { get { return this.SalesUsersValue.Users; } }
 
+        protected override void UpdateDB(MetadataPropertyList propertys)
+        {
             CustomerModel model = NHibernateHelper.CurrentSession.Get<CustomerModel>(this.ID);
-            model.AreaId = info.Area.ID;
-            model.ModifiedTime = DateTime.Now;
-            model.ModifiedUserId = info.OpUser.ID;
-            model.Name = info.Name;
-            model.SalesUserIds = string.Join(",", info.SalesUsers.Select(x => x.ID).ToArray());
+            model.PropertysJson = propertys.ToJson();
 
             NHibernateHelper.CurrentSession.Update(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            this.Area = info.Area;
-            this.ModifiedTime = DateTime.Now;
-            this.ModifiedUser = info.OpUser;
-            this.Name = info.Name;
-            this.SalesUsers = info.SalesUsers;
-
-            this.BuildContent();
-
-            if (this.Modified != null)
-            {
-                this.Modified(this, info);
-            }
         }
 
-        public event TEventHanlder<Customer, User> Deleting;
-        public event TEventHanlder<Customer, User> Deleted;
-
-        public void Delete(User opUser)
+        protected override void DeleteDB()
         {
-            if (!this.CanDelete(opUser))
-            {
-                throw new CrmException("没有权限删除该客户!");
-            }
-
-            if (this.Deleting != null)
-            {
-                this.Deleting(this, opUser);
-            }
-
             CustomerModel model = NHibernateHelper.CurrentSession.Get<CustomerModel>(this.ID);
 
             NHibernateHelper.CurrentSession.Delete(model);
             NHibernateHelper.CurrentSession.Flush();
-
-            this.Metadata.Delete();
-
-            if (this.Deleted != null)
-            {
-                this.Deleted(this, opUser);
-            }
         }
 
-        public void Favorite(User opUser)
+        public override bool CanPreview(User user)
         {
-            if (this.Deleting != null)
-            {
-                this.Deleting(this, opUser);
-            }
-
-            CustomerModel model = NHibernateHelper.CurrentSession.Get<CustomerModel>(this.ID);
-
-            NHibernateHelper.CurrentSession.Delete(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            this.Metadata.Delete();
-
-            if (this.Deleted != null)
-            {
-                this.Deleted(this, opUser);
-            }
-        }
-
-        public bool CanPreview(User user)
-        {
-            if (user.Role == Api.Organization.UserRole.Administrator)
-            {
-                return true;
-            }
-
-            if (user == this.Creator)
+            bool canPreview = base.CanPreview(user);
+            if (canPreview)
             {
                 return true;
             }
@@ -175,11 +69,6 @@ namespace Crm.Core
             }
 
             if (this.Area.ManagerUsers.Contains(user))
-            {
-                return true;
-            }
-
-            if (this.Creator.IsMySuperior(user, true))
             {
                 return true;
             }
@@ -197,24 +86,15 @@ namespace Crm.Core
             return false;
         }
 
-        public bool CanDelete(User user)
+        public override bool CanDelete(User user)
         {
-            if (user.Role == Api.Organization.UserRole.Administrator)
-            {
-                return true;
-            }
-
-            if (user == this.Creator)
+            bool canDelete = base.CanPreview(user);
+            if (canDelete)
             {
                 return true;
             }
 
             if (this.Area.ManagerUsers.Contains(user))
-            {
-                return true;
-            }
-
-            if (this.Creator.IsMySuperior(user, true))
             {
                 return true;
             }
@@ -225,22 +105,6 @@ namespace Crm.Core
             }
 
             return false;
-        }
-
-        public CustomerInfo Map()
-        {
-            return new CustomerInfo
-            {
-                Area = this.Area.Map(),
-                CreateTime = this.CreateTime,
-                Creator = this.Creator.MapUserInfo(),
-                ID = this.ID,
-                ModifiedTime = this.ModifiedTime,
-                ModifiedUser = this.ModifiedUser.MapUserInfo(),
-                Name = this.Name,
-                SalesUsers = this.SalesUsers.Select(x => x.MapUserInfo()).ToList(),
-                Metadata = this.Metadata.MapMetadataInfo()
-            };
         }
     }
 }

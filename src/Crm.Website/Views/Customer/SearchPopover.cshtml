@@ -4,9 +4,7 @@
     <h3 class="popover-title">查询客户</h3>
     <div class="popover-content">
         <form class="form-horizontal">
-            <div class='extendSearchs'>
-                @{this.Html.RenderAction("SearchFields", "Extend", new { formType = Crm.Api.FormType.Customer });}
-            </div>
+            @{this.Html.RenderAction("SearchFields", "Extend", new { formType = Crm.Api.FormType.Customer });}
             <div class="control-group">
                 <label style="width: 80px" class="control-label">关键字</label>
                 <div style="margin-left: 120px;" class="controls">

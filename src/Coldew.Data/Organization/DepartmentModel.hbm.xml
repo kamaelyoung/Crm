@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Coldew.Data.Organization" assembly="Coldew.Data">
+    <class name="DepartmentModel" table="org_department">
+        <id name="ID" type="string" column="dept_id">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="Name" type="String" column="dept_name"></property>
+        <property name="ParentId" type="String" column="dept_parentId"></property>
+        <property name="ManagerPositionId" type="String" column="dept_managerPositionId"></property>
+        <property name="Remark" type="string" length="20000" column="dept_remark"></property>
+    </class>
+</hibernate-mapping>

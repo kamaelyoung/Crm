@@ -9,7 +9,7 @@ namespace Crm.Website.Models
 {
     public class CustomerAreaGridModel
     {
-        public CustomerAreaGridModel(CustomerAreaInfo areaInfo, SetupController cntr)
+        public CustomerAreaGridModel(CustomerAreaInfo areaInfo, CrmSetupController cntr)
         {
             this.id = areaInfo.ID;
             this.name = string.Format("<a href='{0}?areaId={1}'>{2}</a>", cntr.Url.Action("EditCustomerArea"), areaInfo.ID, areaInfo.Name);

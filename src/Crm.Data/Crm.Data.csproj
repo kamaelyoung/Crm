@@ -40,79 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CheckboxFieldConfigModel.cs" />
     <Compile Include="ContactModel.cs" />
     <Compile Include="ContractModel.cs" />
-    <Compile Include="ConfigModel.cs" />
     <Compile Include="CustomerAreaModel.cs" />
-    <Compile Include="CustomerFavoriteModel.cs" />
     <Compile Include="CustomerModel.cs" />
-    <Compile Include="EmailConfigModel.cs" />
-    <Compile Include="FieldModel.cs" />
-    <Compile Include="FormModel.cs" />
-    <Compile Include="GridViewColumnModel.cs" />
-    <Compile Include="GridViewModel.cs" />
-    <Compile Include="ListFieldConfigModel.cs" />
-    <Compile Include="MetadataModel.cs" />
-    <Compile Include="MetadataPropertyModel.cs" />
-    <Compile Include="Organization\DepartmentModel.cs" />
-    <Compile Include="Organization\FunctionModel.cs" />
-    <Compile Include="Organization\GroupMemberModel.cs" />
-    <Compile Include="Organization\GroupModel.cs" />
-    <Compile Include="Organization\MemberFunctionModel.cs" />
-    <Compile Include="Organization\OperationLogModel.cs" />
-    <Compile Include="Organization\PositionModel.cs" />
-    <Compile Include="Organization\SignInLogModel.cs" />
-    <Compile Include="Organization\UserModel.cs" />
-    <Compile Include="Organization\UserPositionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ActivityModel.cs" />
-    <Compile Include="NumberFieldConfigModel.cs" />
-    <Compile Include="DateFieldConfigModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Organization\DepartmentModel.hbm.xml" />
-    <EmbeddedResource Include="Organization\FunctionModel.hbm.xml" />
-    <EmbeddedResource Include="Organization\GroupMemberModel.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Organization\GroupModel.hbm.xml" />
-    <EmbeddedResource Include="Organization\MemberFunctionModel.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Organization\OperationLogModel.hbm.xml" />
-    <EmbeddedResource Include="Organization\PositionModel.hbm.xml" />
-    <EmbeddedResource Include="Organization\SignInLogModel.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Organization\UserModel.hbm.xml" />
-    <EmbeddedResource Include="Organization\UserPositionModel.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MetadataModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CustomerModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CustomerAreaModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FormModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FieldModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="GridViewModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="GridViewColumnModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CustomerFavoriteModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ContactModel.hbm.xml" />
@@ -122,9 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ContractModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ConfigModel.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

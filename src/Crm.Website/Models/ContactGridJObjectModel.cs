@@ -23,7 +23,7 @@ namespace Crm.Website.Models
             this.Add("modifiedTime", contactInfo.ModifiedTime.ToString("yyyy-MM-dd"));
             foreach (PropertyInfo propertyInfo in contactInfo.Metadata.Propertys)
             {
-                this.Add(propertyInfo.Code, propertyInfo.Value);
+                this.Add(propertyInfo.Code, propertyInfo.ShowValue);
             }
         }
 
@@ -38,7 +38,7 @@ namespace Crm.Website.Models
             this.Add("modifiedTime", contactInfo.ModifiedTime.ToString("yyyy-MM-dd"));
             foreach (PropertyInfo propertyInfo in contactInfo.Metadata.Propertys)
             {
-                this.Add(propertyInfo.Code, propertyInfo.Value);
+                this.Add(propertyInfo.Code, propertyInfo.ShowValue);
             }
         }
     }

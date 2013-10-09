@@ -1,0 +1,9 @@
+﻿@using Coldew.Website;
+@using Coldew.Api;
+@using Coldew.Website.Models;
+@{
+    ViewBag.Title = "视图设置";
+    Layout = "~/Views/Metadata/Layout.cshtml";
+}
+
+@{this.Html.RenderAction("ViewSetup", "Extend", new { formId = this.ViewBag.formId, viewId = this.ViewBag.viewId });}
