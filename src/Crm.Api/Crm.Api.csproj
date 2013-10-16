@@ -47,7 +47,7 @@
     <Compile Include="CustomerFieldType.cs" />
     <Compile Include="Exceptions\CustomerAreaDeleteException.cs" />
     <Compile Include="CustomerAreaFieldInfo.cs" />
-    <Compile Include="CrmFormConstCode.cs" />
+    <Compile Include="CrmObjectConstCode.cs" />
     <Compile Include="Exceptions\CrmException.cs" />
     <Compile Include="Exceptions\CustomerNameRepeatException.cs" />
     <Compile Include="Exceptions\CustomerSalesUserNullException.cs" />

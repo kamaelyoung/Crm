@@ -13,10 +13,10 @@ namespace Crm.Core
 {
     public class CustomerAreaManager
     {
-        FormManager _formManager;
+        ColdewObjectManager _formManager;
         OrganizationManagement _orgManager;
         ReaderWriterLock _lock;
-        public CustomerAreaManager(OrganizationManagement orgManager, FormManager formManager)
+        public CustomerAreaManager(OrganizationManagement orgManager, ColdewObjectManager formManager)
         {
             this._orgManager = orgManager;
             this._formManager = formManager;
@@ -77,7 +77,7 @@ namespace Crm.Core
         void Area_Deleting(CustomerArea args)
         {
 
-            Form customerForm = this._formManager.GetFormByCode(CrmFormConstCode.FORM_CUSTOMER);
+            ColdewObject customerForm = this._formManager.GetFormByCode(CrmObjectConstCode.FORM_CUSTOMER);
             CustomerManager customerManager = customerForm.MetadataManager as CustomerManager;
 
             int count = customerManager.GetAreaCustomerCount(args);
@@ -128,6 +128,19 @@ namespace Crm.Core
             try
             {
                 return this.Areas.Find(x => x.ID == areaId);
+            }
+            finally
+            {
+                this._lock.ReleaseReaderLock();
+            }
+        }
+
+        public CustomerArea GetAreaByName(string name)
+        {
+            this._lock.AcquireReaderLock();
+            try
+            {
+                return this.Areas.Find(x => x.Name == name);
             }
             finally
             {

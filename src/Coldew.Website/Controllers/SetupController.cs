@@ -16,7 +16,7 @@ namespace Coldew.Website.Controllers
 
         public ActionResult Index()
         {
-            EmailConfigInfo info = WebHelper.CrmConfigService.GetEmailConfig();
+            EmailConfigInfo info = WebHelper.ColdewConfigService.GetEmailConfig();
             EmailConfigModel emailConfigModel = new EmailConfigModel(info);
             this.ViewBag.emailConfigModelJson = JsonConvert.SerializeObject(emailConfigModel);
             return View();
@@ -39,7 +39,7 @@ namespace Coldew.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                WebHelper.CrmConfigService.SetEmailConfig(account, address, password, server);
+                WebHelper.ColdewConfigService.SetEmailConfig(account, address, password, server);
             }
             catch (Exception ex)
             {
@@ -56,7 +56,7 @@ namespace Coldew.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                WebHelper.CrmConfigService.TestEmailConfig(account, address, password, server);
+                WebHelper.ColdewConfigService.TestEmailConfig(account, address, password, server);
             }
             catch (Exception ex)
             {
@@ -72,22 +72,23 @@ namespace Coldew.Website.Controllers
             return View();
         }
 
-        public ActionResult Extend(string formId)
+        public ActionResult Extend(string objectId)
         {
-            FormInfo formInfo = WebHelper.FormService.GetFormById(formId);
-            this.ViewBag.formId = formId;
+            ColdewObjectInfo formInfo = WebHelper.ColdewObjectService.GetFormById(objectId);
+            this.ViewBag.objectId = objectId;
             this.ViewBag.Title = formInfo.Name + "扩展";
 
             return View();
         }
 
-        public ActionResult GetFields(string formId)
+        public ActionResult GetFields(string objectId)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                List<FieldInfo> fields = WebHelper.FormService.GetFields(formId).Where(x => !x.CanModify).ToList();
-                resultModel.data = fields.Select(x => new FieldGridModel(x, this, formId));
+                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+
+                resultModel.data = coldewObject.Fields.Select(x => new FieldGridModel(x, this, objectId));
             }
             catch (Exception ex)
             {
@@ -106,7 +107,7 @@ namespace Coldew.Website.Controllers
                 List<int> fieldIds = JsonConvert.DeserializeObject<List<int>>(fieldIdsJson);
                 foreach (int fielId in fieldIds)
                 {
-                    WebHelper.FormService.DeleteField(WebHelper.CurrentUserAccount, fielId);
+                    WebHelper.ColdewObjectService.DeleteField(WebHelper.CurrentUserAccount, fielId);
                 }
             }
             catch (Exception ex)
@@ -119,14 +120,14 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateStringField(string formId)
+        public ActionResult CreateStringField(string objectId)
         {
-            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formId) + 1;
+            this.ViewBag.FieldIndex = WebHelper.ColdewObjectService.GetFieldMaxIndex(objectId) + 1;
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateStringField(string formId, string name, bool? required, string defaultValue, int index)
+        public ActionResult CreateStringField(string objectId, string name, bool? required, string defaultValue, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -135,7 +136,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.CreateStringField(formId, name, required.Value, defaultValue, index);
+                WebHelper.ColdewObjectService.CreateStringField(objectId, name, required.Value, defaultValue, index);
             }
             catch (Exception ex)
             {
@@ -147,14 +148,14 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateDateField(string formId)
+        public ActionResult CreateDateField(string objectId)
         {
-            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formId) + 1;
+            this.ViewBag.FieldIndex = WebHelper.ColdewObjectService.GetFieldMaxIndex(objectId) + 1;
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateDateField(string formId, string name, bool? required, bool defaultValueIsToday, int index)
+        public ActionResult CreateDateField(string objectId, string name, bool? required, bool defaultValueIsToday, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -163,7 +164,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.CreateDateField(formId, name, required.Value, defaultValueIsToday, index);
+                WebHelper.ColdewObjectService.CreateDateField(objectId, name, required.Value, defaultValueIsToday, index);
             }
             catch (Exception ex)
             {
@@ -175,14 +176,14 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateNumberField(string formId)
+        public ActionResult CreateNumberField(string objectId)
         {
-            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formId) + 1;
+            this.ViewBag.FieldIndex = WebHelper.ColdewObjectService.GetFieldMaxIndex(objectId) + 1;
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateNumberField(string formId, string name, bool? required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        public ActionResult CreateNumberField(string objectId, string name, bool? required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -191,7 +192,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.CreateNumberField(formId, name, required.Value, defaultValue, max, min, precision, index);
+                WebHelper.ColdewObjectService.CreateNumberField(objectId, name, required.Value, defaultValue, max, min, precision, index);
             }
             catch (Exception ex)
             {
@@ -205,13 +206,13 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult EditStringField(int fieldId)
         {
-            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            FieldInfo field = WebHelper.ColdewObjectService.GetField(fieldId);
             this.ViewBag.modelJson = JsonConvert.SerializeObject(new StringFieldEditModel(field as StringFieldInfo));
             return View();
         }
 
         [HttpPost]
-        public ActionResult EditStringField(string formId, int fieldId, string name, bool? required, string defaultValue, int index)
+        public ActionResult EditStringField(string objectId, int fieldId, string name, bool? required, string defaultValue, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -220,7 +221,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.ModifyStringField(fieldId, name, required.Value, defaultValue, index);
+                WebHelper.ColdewObjectService.ModifyStringField(fieldId, name, required.Value, defaultValue, index);
             }
             catch (Exception ex)
             {
@@ -234,13 +235,13 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult EditDateField(int fieldId)
         {
-            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            FieldInfo field = WebHelper.ColdewObjectService.GetField(fieldId);
             this.ViewBag.modelJson = JsonConvert.SerializeObject(new DateFieldEditModel(field as DateFieldInfo));
             return View();
         }
 
         [HttpPost]
-        public ActionResult EditDateField(string formId, int fieldId, string name, bool? required, bool defaultValueIsToday, int index)
+        public ActionResult EditDateField(string objectId, int fieldId, string name, bool? required, bool defaultValueIsToday, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -249,7 +250,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.ModifyDateField(fieldId, name, required.Value, defaultValueIsToday, index);
+                WebHelper.ColdewObjectService.ModifyDateField(fieldId, name, required.Value, defaultValueIsToday, index);
             }
             catch (Exception ex)
             {
@@ -263,13 +264,13 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult EditNumberField(int fieldId)
         {
-            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            FieldInfo field = WebHelper.ColdewObjectService.GetField(fieldId);
             this.ViewBag.modelJson = JsonConvert.SerializeObject(new NumberFieldEditModel(field as NumberFieldInfo));
             return View();
         }
 
         [HttpPost]
-        public ActionResult EditNumberField(string formId, int fieldId, string name, bool? required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        public ActionResult EditNumberField(string objectId, int fieldId, string name, bool? required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -278,7 +279,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.ModifyNumberField(fieldId, name, required.Value, defaultValue, max, min, precision, index);
+                WebHelper.ColdewObjectService.ModifyNumberField(fieldId, name, required.Value, defaultValue, max, min, precision, index);
             }
             catch (Exception ex)
             {
@@ -290,14 +291,14 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateTextField(string formId)
+        public ActionResult CreateTextField(string objectId)
         {
-            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formId) + 1;
+            this.ViewBag.FieldIndex = WebHelper.ColdewObjectService.GetFieldMaxIndex(objectId) + 1;
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateTextField(string formId, string name, bool? required, string defaultValue, int index)
+        public ActionResult CreateTextField(string objectId, string name, bool? required, string defaultValue, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -306,7 +307,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.CreateTextField(formId, name, required.Value, defaultValue, index);
+                WebHelper.ColdewObjectService.CreateTextField(objectId, name, required.Value, defaultValue, index);
             }
             catch (Exception ex)
             {
@@ -320,13 +321,13 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult EditTextField(int fieldId)
         {
-            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            FieldInfo field = WebHelper.ColdewObjectService.GetField(fieldId);
             this.ViewBag.modelJson = JsonConvert.SerializeObject(new StringFieldEditModel(field as StringFieldInfo));
             return View();
         }
 
         [HttpPost]
-        public ActionResult EditTextField(string formId, int fieldId, string name, bool? required, string defaultValue, int index)
+        public ActionResult EditTextField(string objectId, int fieldId, string name, bool? required, string defaultValue, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -335,7 +336,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.ModifyTextField(fieldId, name, required.Value, defaultValue, index);
+                WebHelper.ColdewObjectService.ModifyTextField(fieldId, name, required.Value, defaultValue, index);
             }
             catch (Exception ex)
             {
@@ -347,14 +348,14 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateDropdownListField(string formId)
+        public ActionResult CreateDropdownListField(string objectId)
         {
-            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formId) + 1;
+            this.ViewBag.FieldIndex = WebHelper.ColdewObjectService.GetFieldMaxIndex(objectId) + 1;
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateDropdownListField(string formId, string name, bool? required, string selectList, string defaultValue, int index)
+        public ActionResult CreateDropdownListField(string objectId, string name, bool? required, string selectList, string defaultValue, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -365,7 +366,7 @@ namespace Coldew.Website.Controllers
                     required = false;
                 }
                 
-                WebHelper.FormService.CreateDropdownField(formId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
+                WebHelper.ColdewObjectService.CreateDropdownField(objectId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
             }
             catch (Exception ex)
             {
@@ -379,7 +380,7 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult EditDropdownListField(int fieldId)
         {
-            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            FieldInfo field = WebHelper.ColdewObjectService.GetField(fieldId);
             this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field as ListFieldInfo));
             return View();
         }
@@ -395,7 +396,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.ModifyDropdownField(fieldId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
+                WebHelper.ColdewObjectService.ModifyDropdownField(fieldId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
             }
             catch (Exception ex)
             {
@@ -407,14 +408,14 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateRadioboxListField(string formId)
+        public ActionResult CreateRadioboxListField(string objectId)
         {
-            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formId) + 1;
+            this.ViewBag.FieldIndex = WebHelper.ColdewObjectService.GetFieldMaxIndex(objectId) + 1;
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateRadioboxListField(string formId, string name, bool? required, string selectList, string defaultValue, int index)
+        public ActionResult CreateRadioboxListField(string objectId, string name, bool? required, string selectList, string defaultValue, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -425,7 +426,7 @@ namespace Coldew.Website.Controllers
                     required = false;
                 }
 
-                WebHelper.FormService.CreateRadioListField(formId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
+                WebHelper.ColdewObjectService.CreateRadioListField(objectId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
             }
             catch (Exception ex)
             {
@@ -439,7 +440,7 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult EditRadioboxListField(int fieldId)
         {
-            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            FieldInfo field = WebHelper.ColdewObjectService.GetField(fieldId);
             this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field as ListFieldInfo));
             return View();
         }
@@ -455,7 +456,7 @@ namespace Coldew.Website.Controllers
                 {
                     required = false;
                 }
-                WebHelper.FormService.ModifyRadioListField(fieldId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
+                WebHelper.ColdewObjectService.ModifyRadioListField(fieldId, name, required.Value, defaultValue, selectList.Split(',').ToList(), index);
             }
             catch (Exception ex)
             {
@@ -467,14 +468,14 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateCheckboxListField(string formId)
+        public ActionResult CreateCheckboxListField(string objectId)
         {
-            this.ViewBag.FieldIndex = WebHelper.FormService.GetFieldMaxIndex(formId) + 1;
+            this.ViewBag.FieldIndex = WebHelper.ColdewObjectService.GetFieldMaxIndex(objectId) + 1;
             return View();
         }
 
         [HttpPost]
-        public ActionResult CreateCheckboxListField(string formId, string name, bool? required, string selectList, string defaultValue, int index)
+        public ActionResult CreateCheckboxListField(string objectId, string name, bool? required, string selectList, string defaultValue, int index)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -490,7 +491,7 @@ namespace Coldew.Website.Controllers
                     defaultValue = defaultValue.Replace("，", ",");
                     defaultValues = defaultValue.Split(',').ToList();
                 }
-                WebHelper.FormService.CreateCheckboxListField(formId, name, required.Value, defaultValues, selectList.Split(',').ToList(), index);
+                WebHelper.ColdewObjectService.CreateCheckboxListField(objectId, name, required.Value, defaultValues, selectList.Split(',').ToList(), index);
             }
             catch (Exception ex)
             {
@@ -504,7 +505,7 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult EditCheckboxListField(int fieldId)
         {
-            FieldInfo field = WebHelper.FormService.GetField(fieldId);
+            FieldInfo field = WebHelper.ColdewObjectService.GetField(fieldId);
             this.ViewBag.modelJson = JsonConvert.SerializeObject(new ListFieldEditModel(field as CheckboxFieldInfo));
             return View();
         }
@@ -526,7 +527,7 @@ namespace Coldew.Website.Controllers
                     defaultValue = defaultValue.Replace("，", ",");
                     defaultValues = defaultValue.Split(',').ToList();
                 }
-                WebHelper.FormService.ModifyCheckboxListField(fieldId, name, required.Value, defaultValues, selectList.Split(',').ToList(), index);
+                WebHelper.ColdewObjectService.ModifyCheckboxListField(fieldId, name, required.Value, defaultValues, selectList.Split(',').ToList(), index);
             }
             catch (Exception ex)
             {

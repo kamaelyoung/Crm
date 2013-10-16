@@ -18,7 +18,7 @@ namespace Crm.UnitTest
             //Contact contact = this.CreateContact(customer);
             //Activity activity = this.CreateActivity(contact);
 
-            //Form form = this.CrmManager.FormManager.GetForm(FormType.Customer);
+            //ColdewObject form = this.CrmManager.FormManager.GetForm(FormType.Customer);
             //Assert.NotNull(form);
         }
     }

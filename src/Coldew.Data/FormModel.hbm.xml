@@ -6,7 +6,10 @@
             <generator class="uuid.hex">
             </generator>
         </id>
-        <property name="Code" type="string" column="form_code"></property>
-        <property name="Name" type="string" column="form_name"></property>
+        <property name="Code" type="String" column="form_code"></property>
+        <property name="ObjectId" type="String" column="object_id"></property>
+        <property name="Title" type="string" column="form_title"></property>
+        <property name="SectionsJson" type="String" length="20000" column="form_sectionsJson"></property>
+        <property name="RelatedsJson" type="String" length="20000" column="form_relatedsJson"></property>
     </class>
 </hibernate-mapping>

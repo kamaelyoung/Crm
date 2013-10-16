@@ -1,0 +1,40 @@
+﻿@using Coldew.Api;
+@using Coldew.Website;
+<table>
+@{
+    ColdewObjectInfo coldewObject = this.ViewBag.coldewObject;
+    ColdewSearchInput crmSearchInput = WebHelper.ColdewInputFactory.CreateSearchInput();
+}
+@for (int count = 0; count < coldewObject.Fields.Count; ++count)
+{
+    if (count % 2 == 0)
+    {
+        @this.Html.Raw("<tr>");
+    }
+    FieldInfo field = coldewObject.Fields[count];
+<td>
+<div class="control-group">
+    <label class="control-label" style="width: 80px" >
+        @field.Name
+    </label>
+    <div style="margin-left: 120px;" class="controls condition" data-field-code="@field.Code">
+    @crmSearchInput.Input(field)
+    </div>
+</div>
+</td>
+    if(count % 2 == 1)
+    {
+        @this.Html.Raw("</tr>");
+    }
+    else if (count == coldewObject.Fields.Count - 1)
+    {
+        @this.Html.Raw("<td></td></tr>");
+    }
+}
+</table>
+<div class="control-group">
+    <label style="width: 80px" class="control-label">关键字</label>
+    <div style="margin-left: 120px;" class="controls">
+        <input type="text" class="keyword" name="keyword" />
+    </div>
+</div>

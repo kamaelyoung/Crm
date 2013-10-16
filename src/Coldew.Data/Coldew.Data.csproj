@@ -45,14 +45,18 @@
     <Compile Include="DateFieldConfigModel.cs" />
     <Compile Include="EmailConfigModel.cs" />
     <Compile Include="FieldModel.cs" />
+    <Compile Include="ColdewObjectModel.cs" />
     <Compile Include="FormModel.cs" />
     <Compile Include="GridViewColumnModel.cs" />
     <Compile Include="GridViewModel.cs" />
+    <Compile Include="InputModel.cs" />
     <Compile Include="ListFieldConfigModel.cs" />
     <Compile Include="MetadataFavoriteModel.cs" />
     <Compile Include="MetadataModel.cs" />
     <Compile Include="MetadataPropertyModel.cs" />
     <Compile Include="NumberFieldConfigModel.cs" />
+    <Compile Include="RelatedObjectModel.cs" />
+    <Compile Include="SectionModel.cs" />
     <Compile Include="UserFieldConfigModel.cs" />
     <Compile Include="Organization\DepartmentModel.cs" />
     <Compile Include="Organization\FunctionModel.cs" />
@@ -71,7 +75,7 @@
     <EmbeddedResource Include="FieldModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FormModel.hbm.xml" />
+    <EmbeddedResource Include="ColdewObjectModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GridViewModel.hbm.xml" />
@@ -122,6 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConfigModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormModel.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

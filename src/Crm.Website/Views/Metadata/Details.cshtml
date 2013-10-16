@@ -1,0 +1,76 @@
+﻿@using Coldew.Website;
+@using Coldew.Api.UI;
+@using Coldew.Website.Models;
+@using Coldew.Api;
+@{
+    Layout = "~/Views/Metadata/Layout.cshtml";
+    ColdewObjectInfo coldewObject = this.ViewBag.coldewObject;
+    FormInfo formInfo = this.ViewBag.formInfo;
+    MetadataInfo metadataInfo = this.ViewBag.metadataInfo;
+    Dictionary<RelatedObjectInfo, List<MetadataInfo>> relateds = this.ViewBag.relateds;
+    this.ViewBag.Title = formInfo.Title;
+}
+<h3>@formInfo.Title-@metadataInfo.Name</h3>
+@*<div style="width: 400px; margin:auto;">
+    <button id="btnEdit" type="submit" class="btn">编辑</button>
+    <button id="btnDelete" type="submit" class="btn" data-loading-text="删除中...">删除</button>
+</div>*@
+<form class="form-horizontal">
+    <ul id="nav-tabs" class="nav nav-tabs">
+        <li class="active">
+            <a href="#pnlDetails">@coldewObject.Name</a>
+        </li>
+        @foreach (KeyValuePair<RelatedObjectInfo, List<MetadataInfo>> related in relateds)
+        {
+        <li>
+            <a href="#@related.Key.Object.ID">@related.Key.Object.Name</a>
+        </li>
+        }
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="pnlDetails">@{this.Html.RenderPartial("DetailsForm");}</div>
+    @foreach (KeyValuePair<RelatedObjectInfo, List<MetadataInfo>> related in relateds)
+    {
+        RelatedObjectInfo relatedObject = related.Key;
+        List<MetadataInfo> metadatas = related.Value;
+        <div class="tab-pane" id="@relatedObject.Object.ID">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                    @foreach (FieldInfo field in relatedObject.ShowFields)
+                    {
+                        <th>@field.Name</th>
+                    }   
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (MetadataInfo metadata in metadatas)
+                    {
+                        <tr>
+                            @foreach (FieldInfo field in relatedObject.ShowFields)
+                            {
+                                string value = "";
+                                PropertyInfo property = metadata.GetProperty(field.Code);
+                                if (property != null)
+                                {
+                                    value = property.ShowValue;
+                                }
+                                <td>@value</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+    var objectId = "@Request["objectId"]";
+    $(function () {
+        $('#nav-tabs a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+    })
+</script>

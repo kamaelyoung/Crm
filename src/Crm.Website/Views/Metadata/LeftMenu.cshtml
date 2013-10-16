@@ -4,23 +4,24 @@
 @{
     string createMenuClass = this.ViewBag.LeftMenu == "Create" ? "class='active'" : "";
     string viewManageMenuClass = this.ViewBag.LeftMenu == "ViewManage" ? "class='active'" : "";
-    FormInfo formInfo = WebHelper.FormService.GetFormById(Request["formId"]);
-    List<GridViewInfo> gridViews = WebHelper.GridViewService.GetGridViews(Request["formId"], WebHelper.CurrentUserAccount);
+    string importMenuClass = this.ViewBag.LeftMenu == "Import" ? "class='active'" : "";
+    ColdewObjectInfo formInfo = WebHelper.ColdewObjectService.GetFormById(Request["objectId"]);
+    List<GridViewInfo> gridViews = WebHelper.GridViewService.GetGridViews(Request["objectId"], WebHelper.CurrentUserAccount);
     List<LeftMenuModel> menuModels = new List<LeftMenuModel>();
     foreach(GridViewInfo viewInfo in gridViews)
     {
         LeftMenuModel menuModel = new LeftMenuModel();
         if(viewInfo.Type == GridViewType.Manage)
         {
-            menuModel.actionUrl = this.Url.Action("Index", new { viewId = viewInfo.ID, formId = formInfo.ID });
+            menuModel.actionUrl = this.Url.Action("Index", new { viewId = viewInfo.ID, objectId = formInfo.ID });
         }
         else if (viewInfo.Type == GridViewType.Favorite)
         {
-            menuModel.actionUrl = this.Url.Action("Favorite", new { viewId = viewInfo.ID, formId = formInfo.ID });
+            menuModel.actionUrl = this.Url.Action("Favorite", new { viewId = viewInfo.ID, objectId = formInfo.ID });
         }
         else if (viewInfo.Type == GridViewType.Customized)
         {
-            menuModel.actionUrl = this.Url.Action("Customized", new { viewId = viewInfo.ID, formId = formInfo.ID });
+            menuModel.actionUrl = this.Url.Action("Customized", new { viewId = viewInfo.ID, objectId = formInfo.ID });
         }
         menuModel.name = viewInfo.Name;
         menuModel.active = viewInfo.ID == this.ViewBag.viewId;
@@ -34,5 +35,6 @@
         string menuClass = menu.active ? "class='active'" : "";
         <li @this.Html.Raw(menuClass)><a href="@menu.actionUrl">@menu.name</a></li>
     }
-    <li @this.Html.Raw(viewManageMenuClass)><a href="@this.Url.Action("GridViewManage", new { formId = formInfo.ID })">视图管理</a></li>
+    <li @this.Html.Raw(viewManageMenuClass)><a href="@this.Url.Action("GridViewManage", new { objectId = formInfo.ID })">视图管理</a></li>
+    <li @this.Html.Raw(importMenuClass)><a href="@this.Url.Action("ImportFirst", new { objectId = formInfo.ID })">导入Excel</a></li>
 </ul>

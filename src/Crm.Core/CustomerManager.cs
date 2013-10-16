@@ -15,7 +15,7 @@ namespace Crm.Core
     public class CustomerManager : MetadataManager
     {
 
-        public CustomerManager(Form form, OrganizationManagement orgManger)
+        public CustomerManager(ColdewObject form, OrganizationManagement orgManger)
             :base(form, orgManger)
         {
             
@@ -27,14 +27,14 @@ namespace Crm.Core
             return count;
         }
 
-        protected override Metadata CreateAndSaveDB(MetadataPropertyList propertys)
+        protected override Metadata CreateAndSaveDB(List<MetadataProperty> propertys)
         {
             CustomerModel model = new CustomerModel();
-            model.PropertysJson = propertys.ToJson();
+            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
 
-            Customer metadata = new Customer(model.ID, propertys, this.Form);
+            Customer metadata = new Customer(model.ID, propertys, this.ColdewObject);
             return metadata;
         }
 
@@ -45,7 +45,7 @@ namespace Crm.Core
             IList<CustomerModel> models = NHibernateHelper.CurrentSession.QueryOver<CustomerModel>().List();
             foreach (CustomerModel model in models)
             {
-                Customer metadata = new Customer(model.ID, MetadataPropertyList.GetPropertys(model.PropertysJson, this.Form), this.Form);
+                Customer metadata = new Customer(model.ID, MetadataPropertyListHelper.GetPropertys(model.PropertysJson, this.ColdewObject), this.ColdewObject);
 
                 metadatas.Add(metadata);
             }

@@ -8,13 +8,13 @@ namespace Coldew.Core
 {
     public class MetadataField: Field
     {
-        public MetadataField(FieldNewInfo info, Form valueForm)
+        public MetadataField(FieldNewInfo info, ColdewObject valueForm)
             :base(info)
         {
             this.ValueForm = valueForm;
         }
 
-        public Form ValueForm { private set;get;}
+        public ColdewObject ValueForm { private set;get;}
 
         public override string Type
         {
@@ -32,7 +32,7 @@ namespace Coldew.Core
             {
                 throw new ArgumentNullException("value");
             }
-            return new MetadataMetadataValue(value, this);
+            return new MetadataRelatedValue(value, this);
         }
 
         public override FieldInfo Map()

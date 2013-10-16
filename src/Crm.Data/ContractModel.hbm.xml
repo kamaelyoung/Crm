@@ -6,18 +6,6 @@
             <generator class="uuid.hex">
             </generator>
         </id>
-        <property name="Name" type="String" column="contract_name"></property>
-        <property name="CustomerId" type="string" column="cust_id"></property>
-        <property name="StartDate" type="DateTime" column="contract_startTime"></property>
-        <property name="EndDate" type="DateTime" column="contract_endTime"></property>
-        <property name="ExpiredComputeDays" type="int" column="contract_expiredNotifyDays"></property>
-        <property name="OwnerAccounts" type="string" column="contract_ownerAccounts"></property>
-        <property name="CreatorId" type="String" column="contract_creatorId"></property>
-        <property name="CreateTime" type="DateTime" column="contract_createTime"></property>
-        <property name="ModifiedUserId" type="String" column="contract_modifiedUserId"></property>
-        <property name="ModifiedTime" type="DateTime" column="contract_modifiedTime"></property>
-        <property name="MetadataId" type="int" column="metadata_id"></property>
-        <property name="EmailNotified" type="bool" column="contact_emailNotified"></property>
-        <property name="Value" type="float" column="contact_value"></property>
+        <property name="PropertysJson" type="String" length="20000" column="metedata_propertysJson"></property>
     </class>
 </hibernate-mapping>

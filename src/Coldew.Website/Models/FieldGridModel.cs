@@ -9,7 +9,7 @@ namespace Coldew.Website.Models
 {
     public class FieldGridModel
     {
-        public FieldGridModel(FieldInfo fieldInfo, Controller controller, string formId)
+        public FieldGridModel(FieldInfo fieldInfo, Controller controller, string objectId)
         {
             this.id = fieldInfo.ID;
             this.name = fieldInfo.Name;
@@ -23,49 +23,49 @@ namespace Coldew.Website.Models
                         controller.Url.Action("EditCheckboxListField"),
                         fieldInfo.Code,
                         fieldInfo.ID,
-                        controller.Url.Action("Extend", new { formId = formId }));
+                        controller.Url.Action("Extend", new { objectId = objectId }));
                     break;
                 case FieldType.DropdownList:
                     this.editLink = string.Format("{0}?fieldId={2}&returnUrl={3}",
                         controller.Url.Action("EditDropdownListField"),
                         fieldInfo.Code,
                         fieldInfo.ID,
-                        controller.Url.Action("Extend", new { formId = formId }));
+                        controller.Url.Action("Extend", new { objectId = objectId }));
                     break;
                 case FieldType.RadioList:
                     this.editLink = string.Format("{0}?fieldId={2}&returnUrl={3}",
                         controller.Url.Action("EditRadioboxListField"),
                         fieldInfo.Code,
                         fieldInfo.ID,
-                        controller.Url.Action("Extend", new { formId = formId }));
+                        controller.Url.Action("Extend", new { objectId = objectId }));
                     break;
                 case FieldType.String:
                     this.editLink = string.Format("{0}?fieldId={2}&returnUrl={3}",
                         controller.Url.Action("EditStringField"),
                         fieldInfo.Code,
                         fieldInfo.ID,
-                        controller.Url.Action("Extend", new { formId = formId }));
+                        controller.Url.Action("Extend", new { objectId = objectId }));
                     break;
                 case FieldType.Text:
                     this.editLink = string.Format("{0}?fieldId={2}&returnUrl={3}",
                         controller.Url.Action("EditTextField"),
                         fieldInfo.Code,
                         fieldInfo.ID,
-                        controller.Url.Action("Extend", new { formId = formId }));
+                        controller.Url.Action("Extend", new { objectId = objectId }));
                     break;
                 case FieldType.Number:
                     this.editLink = string.Format("{0}?fieldId={2}&returnUrl={3}",
                         controller.Url.Action("EditNumberField"),
                         fieldInfo.Code,
                         fieldInfo.ID,
-                        controller.Url.Action("Extend", new { formId = formId }));
+                        controller.Url.Action("Extend", new { objectId = objectId }));
                     break;
                 case FieldType.Date:
                     this.editLink = string.Format("{0}?fieldId={2}&returnUrl={3}",
                         controller.Url.Action("EditDateField"),
                         fieldInfo.Code,
                         fieldInfo.ID,
-                        controller.Url.Action("Extend", new { formId = formId }));
+                        controller.Url.Action("Extend", new { objectId = objectId }));
                     break;
                 default: 
                     this.editLink = "#";

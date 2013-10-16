@@ -8,17 +8,17 @@ using Coldew.Api;
 
 namespace Coldew.Core
 {
-    public class MetadataPropertyList : List<MetadataProperty>
+    public class MetadataPropertyListHelper
     {
-        public string ToJson()
+        public static string ToPropertyModelJson(List<MetadataProperty> propertys)
         {
-            List<MetadataPropertyModel> propertyModels = this.Select(x => new MetadataPropertyModel { FieldId = x.Field.ID, Value = x.Value.PersistenceValue }).ToList();
+            List<MetadataPropertyModel> propertyModels = propertys.Select(x => new MetadataPropertyModel { FieldId = x.Field.ID, Value = x.Value.PersistenceValue }).ToList();
             return JsonConvert.SerializeObject(propertyModels);
         }
 
-        public static MetadataPropertyList MapPropertys(PropertySettingDictionary dictionary, Form form)
+        public static List<MetadataProperty> MapPropertys(PropertySettingDictionary dictionary, ColdewObject form)
         {
-            MetadataPropertyList propertys = new MetadataPropertyList();
+            List<MetadataProperty> propertys = new List<MetadataProperty>();
             foreach (KeyValuePair<string, string> pair in dictionary)
             {
                 Field field = form.GetFieldByCode(pair.Key);
@@ -29,10 +29,10 @@ namespace Coldew.Core
             return propertys;
         }
 
-        public static MetadataPropertyList GetPropertys(string propertysJson, Form form)
+        public static List<MetadataProperty> GetPropertys(string propertysJson, ColdewObject form)
         {
             List<MetadataPropertyModel> propertyModels = JsonConvert.DeserializeObject<List<MetadataPropertyModel>>(propertysJson);
-            MetadataPropertyList propertys = new MetadataPropertyList();
+            List<MetadataProperty> propertys = new List<MetadataProperty>();
             foreach (MetadataPropertyModel propertyModel in propertyModels)
             {
                 Field field = form.GetFieldById(propertyModel.FieldId);

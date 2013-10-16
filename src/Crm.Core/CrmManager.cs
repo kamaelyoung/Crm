@@ -6,6 +6,7 @@ using Crm.Data;
 using log4net;
 using Crm.Api;
 using Coldew.Core;
+using Coldew.Core.Organization;
 
 namespace Crm.Core
 {
@@ -18,7 +19,7 @@ namespace Crm.Core
         protected override void Init()
         {
             base.Init();
-            this.AreaManager = new CustomerAreaManager(this.OrgManager, this.FormManager);
+            this.AreaManager = new CustomerAreaManager(this.OrgManager, this.ObjectManager);
         }
 
         protected override void Load()
@@ -29,9 +30,9 @@ namespace Crm.Core
 
         public CustomerAreaManager AreaManager { set; get; }
 
-        protected override FormManager CreateFormManager()
+        protected override ColdewObjectManager CreateFormManager()
         {
-            return new CrmFormManager(this);
+            return new CrmObjectManager(this);
         }
     }
 }

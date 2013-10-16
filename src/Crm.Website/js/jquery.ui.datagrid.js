@@ -74,12 +74,12 @@ $.widget( "ui.datagrid", {
 		$.each(this.options.columns, function(i, column){
 			var th = $("<th class='ui-datagrid-header-cell'></th>");
 			if(column.sortDirection === "desc"){
-				th.append("<div class='ui-datagrid-header-sort-icon'>▼</div>");
+				th.append("<span class='ui-datagrid-header-sort-icon'>▼</span>");
 			}
 			else if(column.sortDirection === "asc"){
-				th.append("<div class='ui-datagrid-header-sort-icon'>▲</div>");
+				th.append("<span class='ui-datagrid-header-sort-icon'>▲</span>");
 			}
-			th.append("<div class='ui-datagrid-header-title'>" + column.title + "</div>");
+			th.append("<span class='ui-datagrid-header-title'>" + column.title + "</span>");
 			if(column.width){
 				th.width(column.width);
 			}
@@ -113,12 +113,12 @@ $.widget( "ui.datagrid", {
 			var cell = cells[0];
 			cell.column.sortDirection = direction;
 			if(direction === "desc"){
-				cell.element.prepend("<div class='ui-datagrid-header-sort-icon'>▼</div>");
+				cell.element.append("<span class='ui-datagrid-header-sort-icon'>▼</span>");
 			}
 			else if(direction === "asc"){
-				cell.element.prepend("<div class='ui-datagrid-header-sort-icon'>▲</div>");
+				cell.element.append("<span class='ui-datagrid-header-sort-icon'>▲</span>");
 			}
-			this._trigger("sort", null, cell);
+			this._trigger("sort", null, columnName + " " + direction);
 		}
 	},
 	_renderHeight: function(){

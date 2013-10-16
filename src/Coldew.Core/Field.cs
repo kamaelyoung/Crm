@@ -20,7 +20,7 @@ namespace Coldew.Core
             this._code = info.Code;
             this.CanInput = info.CanInput;
             this.Index = info.Index;
-            this.Form = info.Form;
+            this.ColdewObject = info.ColdewObject;
         }
 
         public int ID { set; get; }
@@ -58,7 +58,7 @@ namespace Coldew.Core
 
         public abstract MetadataValue CreateMetadataValue(string value);
 
-        public Form Form { private set; get; }
+        public ColdewObject ColdewObject { private set; get; }
 
         public event TEventHandler<Field, FieldModifyArgs> Modifying;
         public event TEventHandler<Field, FieldModifyArgs> Modified;

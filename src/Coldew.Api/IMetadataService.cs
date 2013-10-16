@@ -7,32 +7,34 @@ namespace Coldew.Api
 {
     public interface IMetadataService
     {
-        List<MetadataInfo> GetMetadatas(string formId, string account);
+        List<MetadataInfo> GetMetadatas(string objectId, string account, string orderBy);
 
-        List<MetadataInfo> GetMetadatas(string formId, string account, int skipCount, int takeCount, out int totalCount);
+        List<MetadataInfo> GetMetadatas(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
 
-        List<MetadataInfo> GetMetadatas(string formId, string gridViewId, string account);
+        List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, string orderBy);
 
-        List<MetadataInfo> GetMetadatas(string formId, string gridViewId, string account, int skipCount, int takeCount, out int totalCount);
+        List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
 
-        MetadataInfo Create(string formId, string opUserAccount, PropertySettingDictionary propertys);
+        MetadataInfo Create(string objectId, string opUserAccount, PropertySettingDictionary propertys);
 
-        void Modify(string formId, string opUserAccount, string customerId, PropertySettingDictionary propertys);
+        void Modify(string objectId, string opUserAccount, string customerId, PropertySettingDictionary propertys);
 
-        void Delete(string formId, string opUserAccount, List<string> customerIds);
+        void Delete(string objectId, string opUserAccount, List<string> customerIds);
 
-        void Favorite(string formId, string opUserAccount, List<string> customerIds);
+        void Favorite(string objectId, string opUserAccount, List<string> customerIds);
 
-        void CancelFavorite(string formId, string opUserAccount, List<string> customerIds);
+        void CancelFavorite(string objectId, string opUserAccount, List<string> customerIds);
 
-        List<MetadataInfo> GetFavorites(string formId, string account, int skipCount, int takeCount, out int totalCount);
+        List<MetadataInfo> GetFavorites(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
 
-        List<MetadataInfo> GetFavorites(string formId, string account);
+        List<MetadataInfo> GetFavorites(string objectId, string account, string orderBy);
 
-        MetadataInfo GetMetadataById(string formId, string id);
+        MetadataInfo GetMetadataById(string objectId, string id);
 
-        List<MetadataInfo> Search(string formId, string account, string serachExpressionJson, int skipCount, int takeCount, out int totalCount);
+        List<MetadataInfo> Search(string objectId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount);
 
-        List<MetadataInfo> Search(string formId, string account, string serachExpressionJson);
+        List<MetadataInfo> Search(string objectId, string account, string serachExpressionJson, string orderBy);
+
+        List<MetadataInfo> GetRelatedMetadatas(string relatedObjectId, string objectId, string metadataId, string orderBy);
     }
 }

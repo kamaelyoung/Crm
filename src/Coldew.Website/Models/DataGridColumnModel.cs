@@ -18,10 +18,12 @@ namespace Coldew.Website.Models
             this.title = column.Name;
             this.width = column.Width;
             this.field = column.Code;
+            this.name = column.Code;
         }
 
         public string title;
         public int width;
         public string field;
+        public string name;
     }
 }

@@ -14,20 +14,20 @@ namespace Crm.Core
 {
     public class ActivityManager : MetadataManager
     {
-        public ActivityManager(Form form, OrganizationManagement orgManger)
+        public ActivityManager(ColdewObject form, OrganizationManagement orgManger)
             :base(form, orgManger)
         {
             
         }
 
-        protected override Metadata CreateAndSaveDB(MetadataPropertyList propertys)
+        protected override Metadata CreateAndSaveDB(List<MetadataProperty> propertys)
         {
             ActivityModel model = new ActivityModel();
-            model.PropertysJson = propertys.ToJson();
+            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
 
-            Activity metadata = new Activity(model.ID, propertys, this.Form);
+            Activity metadata = new Activity(model.ID, propertys, this.ColdewObject);
             return metadata;
         }
 
@@ -38,7 +38,7 @@ namespace Crm.Core
             IList<ActivityModel> models = NHibernateHelper.CurrentSession.QueryOver<ActivityModel>().List();
             foreach (ActivityModel model in models)
             {
-                Activity metadata = new Activity(model.ID, MetadataPropertyList.GetPropertys(model.PropertysJson, this.Form), this.Form);
+                Activity metadata = new Activity(model.ID, MetadataPropertyListHelper.GetPropertys(model.PropertysJson, this.ColdewObject), this.ColdewObject);
 
                 metadatas.Add(metadata);
             }

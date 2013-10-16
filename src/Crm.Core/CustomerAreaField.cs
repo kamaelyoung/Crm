@@ -32,10 +32,19 @@ namespace Crm.Core
 
         public override MetadataValue CreateMetadataValue(string value)
         {
-            CustomerArea area = null;
-            if (!string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
-                area = this._areaManager.GetAreaById(int.Parse(value));
+                throw new ArgumentNullException();
+            }
+            CustomerArea area = null;
+            int areaId;
+            if (int.TryParse(value, out areaId))
+            {
+                area = this._areaManager.GetAreaById(areaId);
+            }
+            else
+            {
+                area = this._areaManager.GetAreaByName(value);
             }
             return new CustomerAreaMetadataValue(area, this);
         }

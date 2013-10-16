@@ -11,6 +11,12 @@ namespace Coldew.Data
 
         public virtual string Code { set; get; }
 
-        public virtual string Name { set; get; }
+        public virtual string ObjectId { set; get; }
+
+        public virtual string Title { set; get; }
+
+        public virtual string SectionsJson { set; get; }
+
+        public virtual string RelatedsJson { set; get; }
     }
 }

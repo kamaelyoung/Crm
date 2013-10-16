@@ -47,7 +47,7 @@
     </div>
 </form>
 <script type="text/javascript" language="javascript">
-    var formId = "@Request["formId"]";
+    var objectId = "@Request["objectId"]";
     var fieldId = @Request["fieldId"];
     var returnUrl = "@this.Html.Raw(Request["returnUrl"])";
     var model = @this.Html.Raw(this.ViewBag.modelJson);
@@ -64,7 +64,7 @@
         valid: function(){
             $(".btn-primary").button("loading");
             var formValue = $("#editForm").getFormValue();
-            formValue.formId = formId;
+            formValue.objectId = objectId;
             formValue.fieldId = fieldId;
             $.post("@this.Url.Action("EditRadioboxListField")", formValue, function(data){
                 $(".btn-primary").button("reset");

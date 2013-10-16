@@ -13,11 +13,11 @@ namespace Coldew.Core
 {
     public class Metadata
     {
-        public Metadata(string id, MetadataPropertyList propertys, Form form)
+        public Metadata(string id, List<MetadataProperty> propertys, ColdewObject form)
         {
             this.ID = id;
             this._propertys = propertys.ToDictionary(x => x.Field.Code);
-            this.Form = form;
+            this.ColdewObject = form;
             this.InitPropertys();
         }
 
@@ -33,6 +33,21 @@ namespace Coldew.Core
             }
         }
 
+        public void RemoveFieldProperty(Field field)
+        {
+            List<MetadataProperty> propertys = this._propertys.Values.ToList();
+            MetadataProperty property = propertys.Find(x => x.Field == field);
+            if (property != null)
+            {
+                propertys.Remove(property);
+
+                this.UpdateDB(propertys);
+
+                this._propertys = propertys.ToDictionary(x => x.Field.Code);
+                this.BuildContent();
+            }
+        }
+
         protected virtual List<MetadataProperty> GetVirtualPropertys()
         {
             return null;
@@ -44,7 +59,7 @@ namespace Coldew.Core
         {
             get
             {
-                StringMetadataValue value = this.GetProperty(this.Form.NameField.Code).Value as StringMetadataValue;
+                StringMetadataValue value = this.GetProperty(this.ColdewObject.NameField.Code).Value as StringMetadataValue;
                 return value.String;
             }
         }
@@ -53,7 +68,7 @@ namespace Coldew.Core
         {
             get
             {
-                UserMetadataValue value = this.GetProperty(this.Form.CreatorField.Code).Value as UserMetadataValue;
+                UserMetadataValue value = this.GetProperty(this.ColdewObject.CreatorField.Code).Value as UserMetadataValue;
                 return value.User;
             }
         }
@@ -62,12 +77,12 @@ namespace Coldew.Core
         {
             get
             {
-                DateMetadataValue value = this.GetProperty(this.Form.CreateTimeField.Code).Value as DateMetadataValue;
+                DateMetadataValue value = this.GetProperty(this.ColdewObject.CreateTimeField.Code).Value as DateMetadataValue;
                 return value.Date.Value;
             }
         }
 
-        public Form Form { private set; get; }
+        public ColdewObject ColdewObject { private set; get; }
 
         string _content;
         public string Content
@@ -124,7 +139,7 @@ namespace Coldew.Core
         {
             this.OnPropertyChanging(dictionary);
 
-            MetadataPropertyList propertys = MetadataPropertyList.MapPropertys(dictionary, this.Form);
+            List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
 
             this.UpdateDB(propertys);
 
@@ -135,25 +150,12 @@ namespace Coldew.Core
             this.OnPropertyChanged(dictionary);
         }
 
-        protected virtual void UpdateDB(MetadataPropertyList propertys)
+        protected virtual void UpdateDB(List<MetadataProperty> propertys)
         {
             MetadataModel model = NHibernateHelper.CurrentSession.Get<MetadataModel>(this.ID);
-            model.PropertysJson = propertys.ToJson();
+            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
 
             NHibernateHelper.CurrentSession.Update(model);
-        }
-
-        public static MetadataPropertyList ToJson(PropertySettingDictionary dictionary, Form form)
-        {
-            MetadataPropertyList propertys = new MetadataPropertyList();
-            foreach (KeyValuePair<string, string> pair in dictionary)
-            {
-                Field field = form.GetFieldByCode(pair.Key);
-                MetadataValue metadataValue = field.CreateMetadataValue(pair.Value);
-                propertys.Add(new MetadataProperty(metadataValue));
-            }
-
-            return propertys;
         }
 
         public virtual List<MetadataProperty> GetPropertys()
@@ -168,6 +170,18 @@ namespace Coldew.Core
                 return this._propertys[propertyCode];
             }
             return null;
+        }
+
+        public MetadataProperty GetPropertyByObject(ColdewObject cObject)
+        {
+            return this._propertys.Values.Where(x => {
+                if (x.Field is MetadataField)
+                {
+                    MetadataField field = x.Field as MetadataField;
+                    return field.ValueForm == cObject;
+                }
+                return false;
+            }).FirstOrDefault();
         }
 
         public event TEventHandler<Metadata, User> Deleting;
@@ -254,6 +268,7 @@ namespace Coldew.Core
             return new MetadataInfo()
             {
                 ID = this.ID,
+                Name = this.Name,
                 Propertys = this._propertys.Values.Select(x => x.Map()).ToList()
             };
         }

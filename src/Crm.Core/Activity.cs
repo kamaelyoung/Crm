@@ -13,7 +13,7 @@ namespace Crm.Core
 {
     public class Activity : Metadata
     {
-        public Activity(string id, MetadataPropertyList propertys, Form form)
+        public Activity(string id, List<MetadataProperty> propertys, ColdewObject form)
             : base(id, propertys, form)
         {
 
@@ -23,8 +23,8 @@ namespace Crm.Core
         protected override List<MetadataProperty> GetVirtualPropertys()
         {
             List<MetadataProperty> propertys = new List<MetadataProperty>();
-            MetadataField customerField = this.Form.GetFieldByCode(CrmFormConstCode.FIELD_NAME_CUSTOMER) as MetadataField;
-            MetadataProperty customerProperty = new MetadataProperty(new DynamicMetadataMetadataValue(delegate() { return this.Contact.Customer;}, customerField));
+            MetadataField customerField = this.ColdewObject.GetFieldByCode(CrmObjectConstCode.FIELD_NAME_CUSTOMER) as MetadataField;
+            MetadataProperty customerProperty = new MetadataProperty(new FunctionMetadataRelatedValue(delegate() { return this.Contact.Customer;}, customerField));
             propertys.Add(customerProperty);
             return propertys;
         }
@@ -33,15 +33,15 @@ namespace Crm.Core
         {
             get
             {
-                MetadataMetadataValue value = this.GetProperty(CrmFormConstCode.FIELD_NAME_CONTACT).Value as MetadataMetadataValue;
+                MetadataRelatedValue value = this.GetProperty(CrmObjectConstCode.FIELD_NAME_CONTACT).Value as MetadataRelatedValue;
                 return value.Metadata as Contact;
             }
         }
 
-        protected override void UpdateDB(MetadataPropertyList propertys)
+        protected override void UpdateDB(List<MetadataProperty> propertys)
         {
             ActivityModel model = NHibernateHelper.CurrentSession.Get<ActivityModel>(this.ID);
-            model.PropertysJson = propertys.ToJson();
+            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
 
             NHibernateHelper.CurrentSession.Update(model);
         }

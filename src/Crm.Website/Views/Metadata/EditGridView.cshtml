@@ -41,7 +41,7 @@
     <div class="control-group">
         <label class="control-label" >筛选条件</label>
         <div class="controls" id="panLSearchFields">
-            @{this.Html.RenderAction("SearchFields", "Extend", new { formId = Request["formId"] });}
+            @{this.Html.RenderPartial("SearchFields");}
         </div>
     </div>
     <div class="control-group">
@@ -52,10 +52,10 @@
     </div>
 </form>
 <script language="javascript" type="text/javascript">
-var formId = "@Request["formId"]";
+var objectId = "@Request["objectId"]";
 var viewId = "@Request["viewId"]";
 var viewInfo = @this.Html.Raw(this.ViewBag.viewInfoJson);
-var returnUrl = "@this.Html.Raw(this.Url.Action("GridViewManage", new { formId = Request["formId"]}))";
+var returnUrl = "@this.Html.Raw(this.Url.Action("GridViewManage", new { objectId = Request["objectId"]}))";
 $("#createForm").validate({
     sendForm : false,
     onBlur: true,

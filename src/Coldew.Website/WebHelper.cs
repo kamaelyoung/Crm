@@ -6,6 +6,7 @@ using log4net;
 using Coldew.Api.Organization;
 using Coldew.Api;
 using System.Text;
+using Coldew.Api.UI;
 
 namespace Coldew.Website
 {
@@ -14,9 +15,10 @@ namespace Coldew.Website
         static WebHelper()
         {
             Spring.Context.IApplicationContext ctx = Spring.Context.Support.ContextRegistry.GetContext();
-            MetadataService = (IMetadataService)ctx["MetadataService"];
-            CrmConfigService = (ICrmConfigService)ctx["CrmConfigService"];
             FormService = (IFormService)ctx["FormService"];
+            MetadataService = (IMetadataService)ctx["MetadataService"];
+            ColdewConfigService = (IColdewConfigService)ctx["ColdewConfigService"];
+            ColdewObjectService = (IColdewObjectService)ctx["ColdewObjectService"];
             UserService = (IUserService)ctx["UserService"];
             PositionService = (IPositionService)ctx["PositionService"];
             AuthenticationService = (IAuthenticationService)ctx["AuthenticationService"];
@@ -38,11 +40,13 @@ namespace Coldew.Website
 
         public static IMetadataService MetadataService { private set; get; }
 
-        public static ICrmConfigService CrmConfigService { private set; get; }
+        public static IColdewConfigService ColdewConfigService { private set; get; }
 
-        public static IFormService FormService { private set; get; }
+        public static IColdewObjectService ColdewObjectService { private set; get; }
 
         public static IGridViewService GridViewService { private set; get; }
+
+        public static IFormService FormService { private set; get; }
 
         public static UserInfo CurrentUserInfo
         {
@@ -125,11 +129,11 @@ namespace Coldew.Website
             return sb.ToString();
         }
 
-        public static List<FormInfo> Forms
+        public static List<ColdewObjectInfo> ColdewObjects
         {
             get
             {
-                return FormService.GetForms();
+                return ColdewObjectService.GetForms();
             }
         }
     }

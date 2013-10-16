@@ -13,7 +13,7 @@ namespace Crm.Core
 {
     public class Customer : Metadata
     {
-        public Customer(string id, MetadataPropertyList propertys, Form form)
+        public Customer(string id, List<MetadataProperty> propertys, ColdewObject form)
             : base(id, propertys, form)
         {
 
@@ -23,7 +23,7 @@ namespace Crm.Core
         {
             get
             {
-                return this.GetProperty(CrmFormConstCode.CUST_FIELD_NAME_AREA).Value as CustomerAreaMetadataValue;
+                return this.GetProperty(CrmObjectConstCode.CUST_FIELD_NAME_AREA).Value as CustomerAreaMetadataValue;
             }
         }
 
@@ -33,16 +33,16 @@ namespace Crm.Core
         {
             get
             {
-                return this.GetProperty(CrmFormConstCode.CUST_FIELD_NAME_SALES_USERS).Value as UserListMetadataValue;
+                return this.GetProperty(CrmObjectConstCode.CUST_FIELD_NAME_SALES_USERS).Value as UserListMetadataValue;
             }
         }
 
         public List<User> SalesUsers { get { return this.SalesUsersValue.Users; } }
 
-        protected override void UpdateDB(MetadataPropertyList propertys)
+        protected override void UpdateDB(List<MetadataProperty> propertys)
         {
             CustomerModel model = NHibernateHelper.CurrentSession.Get<CustomerModel>(this.ID);
-            model.PropertysJson = propertys.ToJson();
+            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
 
             NHibernateHelper.CurrentSession.Update(model);
         }

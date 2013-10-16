@@ -8,8 +8,8 @@
                 this._btnSelect = this.element.find(".btnSelect");
                 this._txtName = this.element.find(".txtName");
                 this._txtId = this.element.find(".txtId");
-                var valueFormId = this.element.data("formId");
-                var valueFormName = this.element.data("formName");
+                var valueFormId = this.element.data("objectId");
+                var valueFormName = this.element.data("objectName");
                 this._btnSelect.click(function(){
                     thiz.options.metadataSelectDialog.metadataSelectDialog("select", valueFormId, valueFormName, function(args){
                         thiz._txtName.val(args.name);

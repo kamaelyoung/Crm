@@ -7,7 +7,7 @@ namespace Coldew.Api
 {
     public interface IGridViewService
     {
-        GridViewInfo Create(string name, string formId, string creatorAccount, bool isShared, string searchExpressionJson, List<GridViewColumnSetupInfo> columns);
+        GridViewInfo Create(string name, string objectId, string creatorAccount, bool isShared, string searchExpressionJson, List<GridViewColumnSetupInfo> columns);
 
         void Modify(string viewId, List<GridViewColumnSetupInfo> columns);
 
@@ -17,10 +17,8 @@ namespace Coldew.Api
 
         GridViewInfo GetGridView(string viewId);
 
-        List<GridViewInfo> GetGridViews(string formId, string userAccount);
+        List<GridViewInfo> GetGridViews(string objectId, string userAccount);
 
-        List<GridViewInfo> GetMyGridViews(string formId, string userAccount);
-
-        List<GridViewInfo> GetSystemGridViews(string formId);
+        List<GridViewInfo> GetMyGridViews(string objectId, string userAccount);
     }
 }

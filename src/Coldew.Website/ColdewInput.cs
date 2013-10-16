@@ -235,7 +235,7 @@ namespace Coldew.Website
 
         public MvcHtmlString Metadata(MetadataFieldInfo field)
         {
-            string template = @"<div class='metadataSelect' data-form-id='{0}' data-form-name='{1}'> 
+            string template = @"<div class='metadataSelect' data-object-id='{0}' data-object-name='{1}'> 
             <input type='text' readonly='readonly' class='input-large txtName'/>
             <input class='txtId' type='hidden' name='{2}'/>
             <button class='btn btnSelect'>选择</button> </div>";

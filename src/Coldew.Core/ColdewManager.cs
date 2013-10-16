@@ -21,30 +21,26 @@ namespace Coldew.Core
         protected virtual void Init()
         {
             this.OrgManager = new OrganizationManagement();
-            this.FormManager = this.CreateFormManager();
-            this.GridViewManager = new GridViewManager(this.OrgManager, this.FormManager);
-            this.ConfigManager = new CrmConfigManager(this);
+            this.ObjectManager = this.CreateFormManager();
+            this.ConfigManager = new ColdewConfigManager(this);
         }
 
         protected virtual void Load()
         {
-            this.FormManager.Load();
-            this.GridViewManager.Load();
+            this.ObjectManager.Load();
             this.ConfigManager.Load();
         }
 
-        protected virtual FormManager CreateFormManager()
+        protected virtual ColdewObjectManager CreateFormManager()
         {
-            return new FormManager(this);
+            return new ColdewObjectManager(this);
         }
 
         public OrganizationManagement OrgManager { set; get; }
 
-        public FormManager FormManager { set; get; }
+        public ColdewObjectManager ObjectManager { set; get; }
 
-        public GridViewManager GridViewManager { set; get; }
-
-        public CrmConfigManager ConfigManager { set; get; }
+        public ColdewConfigManager ConfigManager { set; get; }
 
         public MailSender MailSender { set; get; }
 

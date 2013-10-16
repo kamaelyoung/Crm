@@ -16,5 +16,10 @@ namespace Coldew.Website
         {
             return new ColdewSearchInput();
         }
+
+        public virtual ColdewDetailsInput CreateDetailsInput()
+        {
+            return new ColdewDetailsInput();
+        }
     }
 }

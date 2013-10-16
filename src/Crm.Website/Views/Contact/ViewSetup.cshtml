@@ -1,9 +1,0 @@
-﻿@using Crm.Website;
-@using Crm.Api;
-@using Crm.Website.Models;
-@{
-    ViewBag.Title = "视图设置";
-    Layout = "~/Views/Contact/Layout.cshtml";
-}
-
-@{this.Html.RenderAction("ViewSetup", "Extend", new { formType = FormType.Contact, viewType = this.ViewBag.viewType });}

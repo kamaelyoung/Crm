@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColdewObjectCode.cs" />
     <Compile Include="DateRange.cs" />
     <Compile Include="CheckboxFieldInfo.cs" />
     <Compile Include="DateFieldInfo.cs" />
@@ -49,14 +50,16 @@
     <Compile Include="Exceptions\FieldNameRepeatException.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldType.cs" />
-    <Compile Include="FormConstCode.cs" />
-    <Compile Include="FormInfo.cs" />
+    <Compile Include="ColdewObjectInfo.cs" />
+    <Compile Include="UI\FormConstCode.cs" />
+    <Compile Include="UI\FormInfo.cs" />
     <Compile Include="GridViewColumnInfo.cs" />
     <Compile Include="GridViewColumnSetupInfo.cs" />
     <Compile Include="GridViewInfo.cs" />
     <Compile Include="GridViewType.cs" />
-    <Compile Include="ICrmConfigService.cs" />
-    <Compile Include="IFormService.cs" />
+    <Compile Include="IColdewConfigService.cs" />
+    <Compile Include="IColdewObjectService.cs" />
+    <Compile Include="UI\IFormService.cs" />
     <Compile Include="IGridViewService.cs" />
     <Compile Include="IMetadataService.cs" />
     <Compile Include="ListFieldInfo.cs" />
@@ -65,6 +68,9 @@
     <Compile Include="NumberFieldInfo.cs" />
     <Compile Include="PropertyInfo.cs" />
     <Compile Include="PropertySettingDictionary.cs" />
+    <Compile Include="UI\InputInfo.cs" />
+    <Compile Include="UI\RelatedObjectInfo.cs" />
+    <Compile Include="UI\SectionInfo.cs" />
     <Compile Include="StringFieldInfo.cs" />
     <Compile Include="UserFieldInfo.cs" />
     <Compile Include="UserListFieldInfo.cs" />

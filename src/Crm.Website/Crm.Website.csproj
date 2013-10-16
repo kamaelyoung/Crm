@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Views\Metadata\Edit.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -128,6 +129,55 @@
     <Content Include="Views\Steup\Index.cshtml" />
     <Content Include="Views\Steup\CustomerArea.cshtml" />
     <Content Include="Views\Steup\CustomerType.cshtml" />
+    <Content Include="Views\Metadata\Create.cshtml" />
+    <Content Include="Views\Metadata\CreateGridView.cshtml" />
+    <Content Include="Views\Metadata\Customized.cshtml" />
+    <Content Include="Views\Metadata\DownloadImportTemplate.cshtml" />
+    <Content Include="Views\Metadata\EditGridView.cshtml" />
+    <Content Include="Views\Metadata\Favorite.cshtml" />
+    <Content Include="Views\Metadata\GridViewManage.cshtml" />
+    <Content Include="Views\Metadata\ImportFirst.cshtml" />
+    <Content Include="Views\Metadata\ImportSecond.cshtml" />
+    <Content Include="Views\Metadata\Index.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Metadata\Layout.cshtml" />
+    <Content Include="Views\Metadata\LeftMenu.cshtml" />
+    <Content Include="Views\Metadata\SearchPopover.cshtml" />
+    <Content Include="Views\Metadata\SelectDialog.cshtml" />
+    <Content Include="Views\Metadata\ViewSetup.cshtml" />
+    <Content Include="Views\Org\Index.cshtml" />
+    <Content Include="Views\Org\PositionSelectDialog.cshtml" />
+    <Content Include="Views\Org\PositoinCreateDialog.cshtml" />
+    <Content Include="Views\Org\PositoinEditDialog.cshtml" />
+    <Content Include="Views\Org\ResetPasswordDialog.cshtml" />
+    <Content Include="Views\Org\UserCreateDialog.cshtml" />
+    <Content Include="Views\Org\UserEditDialog.cshtml" />
+    <Content Include="Views\Setup\CreateCheckboxListField.cshtml" />
+    <Content Include="Views\Setup\CreateCustomerArea.cshtml" />
+    <Content Include="Views\Setup\CreateDateField.cshtml" />
+    <Content Include="Views\Setup\CreateDropdownListField.cshtml" />
+    <Content Include="Views\Setup\CreateField.cshtml" />
+    <Content Include="Views\Setup\CreateNumberField.cshtml" />
+    <Content Include="Views\Setup\CreateRadioboxListField.cshtml" />
+    <Content Include="Views\Setup\CreateStringField.cshtml" />
+    <Content Include="Views\Setup\CreateTextField.cshtml" />
+    <Content Include="Views\Setup\EditCheckboxListField.cshtml" />
+    <Content Include="Views\Setup\EditCustomerArea.cshtml" />
+    <Content Include="Views\Setup\EditDropdownListField.cshtml" />
+    <Content Include="Views\Setup\EditRadioboxListField.cshtml" />
+    <Content Include="Views\Setup\EditStringField.cshtml" />
+    <Content Include="Views\Setup\EditTextField.cshtml" />
+    <Content Include="Views\Setup\Extend.cshtml" />
+    <Content Include="Views\Setup\Index.cshtml" />
+    <Content Include="Views\Setup\Layout.cshtml" />
+    <Content Include="Views\Setup\LeftMenu.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Metadata\SearchFields.cshtml" />
+    <Content Include="Views\Metadata\CreateForm.cshtml" />
+    <Content Include="Views\Metadata\EditForm.cshtml" />
+    <Content Include="Views\Metadata\Details.cshtml" />
+    <Content Include="Views\Metadata\DetailsForm.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

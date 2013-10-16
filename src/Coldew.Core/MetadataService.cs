@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Coldew.Api;
 using Coldew.Core.Organization;
+using Coldew.Core.Search;
 
 namespace Coldew.Core
 {
@@ -15,70 +16,70 @@ namespace Coldew.Core
             this._coldewManager = coldewManager;
         }
 
-        public List<MetadataInfo> GetMetadatas(string formId, string account)
+        public List<MetadataInfo> GetMetadatas(string objectId, string account, string orderBy)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
-            return form.MetadataManager.GetList(user)
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
+            return form.MetadataManager.GetList(user, orderBy)
                 .Select(x => x.Map())
                 .ToList();
         }
 
-        public List<MetadataInfo> GetMetadatas(string formId, string account, int skipCount, int takeCount, out int totalCount)
+        public List<MetadataInfo> GetMetadatas(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             return form.MetadataManager
-                .GetList(user, skipCount, takeCount, out totalCount)
+                .GetList(user, skipCount, takeCount, orderBy, out totalCount)
                 .Select(x => x.Map())
                 .ToList();
         }
 
-        public List<MetadataInfo> GetMetadatas(string formId, string gridViewId, string account)
+        public List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, string orderBy)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
-            GridView view = this._coldewManager.GridViewManager.GetGridView(gridViewId);
-            return form.MetadataManager.Search(user, view.Searcher)
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
+            GridView view = form.GridViewManager.GetGridView(gridViewId);
+            return form.MetadataManager.Search(user, view.Searcher, orderBy)
                 .Select(x => x.Map())
                 .ToList();
         }
 
-        public List<MetadataInfo> GetMetadatas(string formId, string gridViewId, string account, int skipCount, int takeCount, out int totalCount)
+        public List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
-            GridView view = this._coldewManager.GridViewManager.GetGridView(gridViewId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
+            GridView view = form.GridViewManager.GetGridView(gridViewId);
             return form.MetadataManager
-                .Search(user, view.Searcher, skipCount, takeCount, out totalCount)
+                .Search(user, view.Searcher, skipCount, takeCount, orderBy, out totalCount)
                 .Select(x => x.Map())
                 .ToList();
         }
 
-        public MetadataInfo Create(string formId, string opUserAccount, PropertySettingDictionary propertys)
+        public MetadataInfo Create(string objectId, string opUserAccount, PropertySettingDictionary propertys)
         {
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User opUser = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
 
             Metadata customer = form.MetadataManager.Create(opUser, propertys);
             return customer.Map();
         }
 
-        public void Modify(string formId, string opUserAccount, string customerId, PropertySettingDictionary propertys)
+        public void Modify(string objectId, string opUserAccount, string customerId, PropertySettingDictionary propertys)
         {
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User opUser = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
             Metadata customer = form.MetadataManager.GetById(customerId);
             customer.SetPropertys(propertys);
         }
 
-        public void Delete(string formId, string opUserAccount, List<string> customerIds)
+        public void Delete(string objectId, string opUserAccount, List<string> customerIds)
         {
             if (customerIds == null)
             {
                 return;
             }
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             foreach (string customerId in customerIds)
             {
                 User opUser = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
@@ -87,13 +88,13 @@ namespace Coldew.Core
             }
         }
 
-        public void Favorite(string formId, string opUserAccount, List<string> customerIds)
+        public void Favorite(string objectId, string opUserAccount, List<string> customerIds)
         {
             if (customerIds == null)
             {
                 return;
             }
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             foreach (string customerId in customerIds)
             {
                 User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
@@ -103,13 +104,13 @@ namespace Coldew.Core
             }
         }
 
-        public void CancelFavorite(string formId, string opUserAccount, List<string> customerIds)
+        public void CancelFavorite(string objectId, string opUserAccount, List<string> customerIds)
         {
             if (customerIds == null)
             {
                 return;
             }
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             foreach (string customerId in customerIds)
             {
                 User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
@@ -119,23 +120,23 @@ namespace Coldew.Core
             }
         }
 
-        public List<MetadataInfo> GetFavorites(string formId, string account, int skipCount, int takeCount, out int totalCount)
+        public List<MetadataInfo> GetFavorites(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            return form.MetadataManager.FavoriteManager.GetFavorites(user, skipCount, takeCount, out totalCount).Select(x => x.Map()).ToList();
+            return form.MetadataManager.FavoriteManager.GetFavorites(user, skipCount, takeCount, orderBy, out totalCount).Select(x => x.Map()).ToList();
         }
 
-        public List<MetadataInfo> GetFavorites(string formId, string account)
+        public List<MetadataInfo> GetFavorites(string objectId, string account, string orderBy)
         {
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            return form.MetadataManager.FavoriteManager.GetFavorites(user).Select(x => x.Map()).ToList();
+            return form.MetadataManager.FavoriteManager.GetFavorites(user, orderBy).Select(x => x.Map()).ToList();
         }
 
-        public MetadataInfo GetMetadataById(string formId, string id)
+        public MetadataInfo GetMetadataById(string objectId, string id)
         {
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             Metadata customer = form.MetadataManager.GetById(id);
             if (customer != null)
             {
@@ -144,19 +145,26 @@ namespace Coldew.Core
             return null;
         }
 
-        public List<MetadataInfo> Search(string formId, string account, string serachExpressionJson, int skipCount, int takeCount, out int totalCount)
+        public List<MetadataInfo> GetRelatedMetadatas(string relatedObjectId, string objectId, string metadataId, string orderBy)
         {
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject relatedObject = this._coldewManager.ObjectManager.GetFormById(relatedObjectId);
+            ColdewObject cObject = this._coldewManager.ObjectManager.GetFormById(objectId);
+            return relatedObject.MetadataManager.GetRelatedList(cObject, metadataId, orderBy).Select(x => x.Map()).ToList();
+        }
+
+        public List<MetadataInfo> Search(string objectId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount)
+        {
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            List<Metadata> customers = form.MetadataManager.Search(user, MetadataSearcher.Parse(serachExpressionJson, form), skipCount, takeCount, out totalCount);
+            List<Metadata> customers = form.MetadataManager.Search(user, MetadataExpressionSearcher.Parse(serachExpressionJson, form), skipCount, takeCount, orderBy, out totalCount);
             return customers.Select(x => x.Map()).ToList();
         }
 
-        public List<MetadataInfo> Search(string formId, string account, string serachExpressionJson)
+        public List<MetadataInfo> Search(string objectId, string account, string serachExpressionJson, string orderBy)
         {
-            Form form = this._coldewManager.FormManager.GetFormById(formId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            List<Metadata> customers = form.MetadataManager.Search(user, MetadataSearcher.Parse(serachExpressionJson, form));
+            List<Metadata> customers = form.MetadataManager.Search(user, MetadataExpressionSearcher.Parse(serachExpressionJson, form), orderBy);
             return customers.Select(x => x.Map()).ToList();
         }
     }

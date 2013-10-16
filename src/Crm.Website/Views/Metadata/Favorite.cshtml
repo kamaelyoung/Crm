@@ -10,7 +10,7 @@
     </div>
     <div class="span10">
         <button id="btnCancelFavorite" disabled="disabled" data-loading-text="取消中..." class="btn"><i class="icon-star-empty"></i>取消收藏</button> 
-        <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, formId = Request["formId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
+        <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, objectId = Request["objectId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
         <button id="btnExport" class="btn" data-loading-text="导出中..."><i class="icon-download"></i>导出Excel</button> 
     </div>
 </div>
@@ -23,12 +23,12 @@
             
 </div>
 <script type="text/javascript" language="javascript">
-    var formId = "@this.Html.Raw(this.Request["formId"])";
+    var objectId = "@this.Html.Raw(this.Request["objectId"])";
     var keyword = "@this.Html.Raw(this.Request["keyword"])";
     var metadataGrid = $("#metadataGrid").datagrid({
 		columns: @this.Html.Raw(this.ViewBag.columnsJson),
         height: "auto",
-		canSort: false,
+		canSort: true,
 		singleSelect: false,
 		showNumberRow: true,
         selectedRow: function(){
@@ -37,6 +37,11 @@
         unselectedRow: function(){
             var rows = metadataGrid.datagrid("getSelectedRows");
             $("#btnCancelFavorite").prop("disabled", rows.length == 0);
+        },
+        sort: function(sender, args){
+            var pageInfo = pager.pager("option").pageInfo;
+            loadMetadataGrid(_searchInfo, pageInfo.start, null, args);
+            return false;
         }
 	});
 
@@ -45,9 +50,9 @@
     }});
 
     var _searchInfo;
-    function loadMetadataGrid(searchInfo, start, cb){
+    function loadMetadataGrid(searchInfo, start, cb, orderBy){
         _searchInfo = searchInfo;
-        var args = {formId: formId, start: start, size: 20};
+        var args = {objectId: objectId, start: start, size: 20, orderBy: orderBy};
         if(_searchInfo){
             var searchInfoJson = $.toJSON(_searchInfo);
             args.searchInfoJson = searchInfoJson;
@@ -75,10 +80,10 @@
     
     $("#btnExport").click(function(){
         $("#btnExport").button("loading");
-        $.get("@this.Url.Action("ExportFavorite")", {formId: formId}, function(model){
+        $.get("@this.Url.Action("ExportFavorite")", {objectId: objectId}, function(model){
             $("#btnExport").button("reset");
             if(model.result == 0){
-                open("@this.Url.Action("DownloadExportFile", new {formId = Request["formId"]})" + "&fileName=" + model.data);
+                open("@this.Url.Action("DownloadExportFile", new {objectId = Request["objectId"]})" + "&fileName=" + model.data);
             }
             else{
                 alert(model.message)
@@ -92,7 +97,7 @@
             return row.datarow("option", "data").id;
         })
         $("#btnCancelFavorite").button("loading");
-        $.post("@this.Url.Action("CancelFavorite")", {formId: formId, metadataIdsJson: $.toJSON(metadataIds)}, function(model){
+        $.post("@this.Url.Action("CancelFavorite")", {objectId: objectId, metadataIdsJson: $.toJSON(metadataIds)}, function(model){
             $("#btnCancelFavorite").button("reset");
             if(model.result == 0){
                 var pageInfo = pager.pager("option").pageInfo;

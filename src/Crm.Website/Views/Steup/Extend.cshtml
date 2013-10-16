@@ -9,7 +9,7 @@
         <p class="lead">@this.ViewBag.Title</p>
     </div>
     <div class="span9">
-        <a id="btnAdd" class="btn" href="@string.Format("{0}?formId={1}&returnUrl={2}", this.Url.Action("CreateField"), this.Request["formId"], this.Request.Url)"><i class="icon-plus"></i>添加</a> 
+        <a id="btnAdd" class="btn" href="@string.Format("{0}?objectId={1}&returnUrl={2}", this.Url.Action("CreateField"), this.Request["objectId"], this.Request.Url)"><i class="icon-plus"></i>添加</a> 
         <button id="btnDelete" class="btn" disabled="disabled" ><i class="icon-trash"></i>删除</button>
         <button id="btnRefresh" class="btn" ><i class="icon-refresh"></i>刷新</button>
     </div>
@@ -19,7 +19,7 @@
                 
 </div>
 <script type="text/javascript" language="javascript">
-    var formId =  "@this.Request["formId"]";
+    var objectId =  "@this.Request["objectId"]";
     var extendGrid = $("#extendGrid").datagrid({
 		columns:[
 			{title: "字段名称", width: 180, field:"name", render: function(row, args){
@@ -67,7 +67,7 @@
     });
 
     function loadFields(cb){
-        $.get("@this.Url.Action("GetFields")", {formId: formId}, function(model){
+        $.get("@this.Url.Action("GetFields")", {objectId: objectId}, function(model){
             if(cb){
                 cb();
             }

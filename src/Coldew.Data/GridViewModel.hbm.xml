@@ -6,9 +6,10 @@
             <generator class="uuid.hex">
             </generator>
         </id>
+        <property name="Code" type="String" column="view_code"></property>
         <property name="Name" type="String" column="view_name"></property>
         <property name="Type" type="int" column="view_type"></property>
-        <property name="FormId" type="String" column="form_id"></property>
+        <property name="ObjectId" type="String" column="object_id"></property>
         <property name="CreatorAccount" type="String" column="view_creatorAccount"></property>
         <property name="IsShared" type="bool" column="view_isShared"></property>
         <property name="IsSystem" type="bool" column="view_isSystem"></property>

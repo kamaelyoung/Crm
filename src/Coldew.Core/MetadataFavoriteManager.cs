@@ -41,7 +41,7 @@ namespace Coldew.Core
                 {
                     return;
                 }
-                MetadataFavoriteModel model = new MetadataFavoriteModel { MetadataId = metadata.ID, UserId = user.ID, FormId = this._metadataManager.Form.ID };
+                MetadataFavoriteModel model = new MetadataFavoriteModel { MetadataId = metadata.ID, UserId = user.ID, FormId = this._metadataManager.ColdewObject.ID };
                 NHibernateHelper.CurrentSession.Save(model);
                 NHibernateHelper.CurrentSession.Flush();
 
@@ -116,7 +116,7 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> GetFavorites(User user, int skipCount, int takeCount, out int totalCount)
+        public List<Metadata> GetFavorites(User user, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             this._lock.AcquireReaderLock(0);
             try
@@ -127,7 +127,7 @@ namespace Coldew.Core
                     return new List<Metadata>();
                 }
                 totalCount = this._userFavoriteDic[user].Count;
-                return this._userFavoriteDic[user].Skip(skipCount).Take(takeCount).ToList();
+                return this._userFavoriteDic[user].OrderBy(orderBy).Skip(skipCount).Take(takeCount).ToList();
             }
             finally
             {
@@ -135,7 +135,7 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> GetFavorites(User user)
+        public List<Metadata> GetFavorites(User user, string orderBy)
         {
             this._lock.AcquireReaderLock(0);
             try
@@ -144,7 +144,7 @@ namespace Coldew.Core
                 {
                     return new List<Metadata>();
                 }
-                return this._userFavoriteDic[user].ToList();
+                return this._userFavoriteDic[user].OrderBy(orderBy).ToList();
             }
             finally
             {
@@ -154,7 +154,7 @@ namespace Coldew.Core
 
         private void Load()
         {
-            IList<MetadataFavoriteModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataFavoriteModel>().Where(x => x.FormId == this._metadataManager.Form.ID).List();
+            IList<MetadataFavoriteModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataFavoriteModel>().Where(x => x.FormId == this._metadataManager.ColdewObject.ID).List();
             foreach (MetadataFavoriteModel model in models)
             {
                 Metadata metadata = this._metadataManager.GetById(model.MetadataId);

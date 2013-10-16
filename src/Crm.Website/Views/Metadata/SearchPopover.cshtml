@@ -4,7 +4,7 @@
     <h3 class="popover-title">查询客户</h3>
     <div class="popover-content">
         <form class="form-horizontal">
-            @{this.Html.RenderAction("SearchFields", "Extend", new { formId = Request["formId"] });}
+            @{this.Html.RenderPartial("SearchFields");}
             <div class="control-group">
                 <div style="margin-left: 120px;" class="controls">
                     <button type="submit" class="btn btn-primary">确定</button>

@@ -9,7 +9,7 @@
         <p class="lead">视图管理</p>
     </div>
     <div class="span10">
-        <a id="btnCreate" href="@this.Url.Action("CreateGridView", new { formId = Request["formId"]})" class="btn"><i class="icon-plus"></i>创建</a>
+        <a id="btnCreate" href="@this.Url.Action("CreateGridView", new { objectId = Request["objectId"]})" class="btn"><i class="icon-plus"></i>创建</a>
         <button id="btnDelete" disabled="disabled" data-loading-text="删除中..." class="btn"><i class="icon-trash"></i>删除</button> 
     </div>
 </div>
@@ -19,7 +19,7 @@
 </div>
 
 <script type="text/javascript" language="javascript">
-    var formId = "@this.Html.Raw(this.Request["formId"])";
+    var objectId = "@this.Html.Raw(this.Request["objectId"])";
     var viewGrid = $("#viewGrid").datagrid({
 		columns: [
             {title: "名称", width: 180, field:"editLink"},
@@ -39,7 +39,7 @@
 	});
 
     function loadViewGrid(){
-        $.get("@this.Url.Action("GetGridViews")", {formId: formId}, function(model){
+        $.get("@this.Url.Action("GetGridViews")", {objectId: objectId}, function(model){
             if(model.result == 0){
                 viewGrid.datagrid("option", "data", model.data);
             }

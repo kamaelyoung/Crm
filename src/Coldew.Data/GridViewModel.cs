@@ -9,11 +9,13 @@ namespace Coldew.Data
     {
         public virtual string ID { set; get; }
 
+        public virtual string Code { set; get; }
+
         public virtual string Name { set; get; }
 
         public virtual int Type { set; get; }
 
-        public virtual string FormId { set; get; }
+        public virtual string ObjectId { set; get; }
 
         public virtual string CreatorAccount { set; get; }
 

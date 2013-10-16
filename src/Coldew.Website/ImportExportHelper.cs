@@ -245,7 +245,7 @@ namespace Coldew.Website
 			return dt;
 		}
 
-        public static string GetImportTemplate(string formId, Controller controller)
+        public static string GetImportTemplate(string objectId, Controller controller)
         {
             string path = controller.Server.MapPath("~/Template.xls");
             FileStream stream = System.IO.File.OpenRead(path);
@@ -254,9 +254,9 @@ namespace Coldew.Website
 
             HSSFRow row = sheet.CreateRow(0);
 
-            List<Coldew.Api.FieldInfo> fieldInfos = WebHelper.FormService.GetFields(formId).Where(x => x.CanInput).ToList();
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
             int i = 0;
-            foreach (Coldew.Api.FieldInfo filed in fieldInfos)
+            foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields.Where(x => x.CanInput))
             {
                 row.CreateCell(i).SetCellValue(filed.Name);
                 i++;
@@ -277,7 +277,7 @@ namespace Coldew.Website
             return tempPath;
         }
 
-        public static string GetUploadImportFileJsonFile(string formId, Controller controller)
+        public static string GetUploadImportFileJsonFile(string objectId, Controller controller)
         {
             HttpPostedFileBase importFile = controller.Request.Files["importFile"];
             string tempPath = controller.Server.MapPath("~/Temp");
@@ -293,11 +293,11 @@ namespace Coldew.Website
             List<JObject> importModels = new List<JObject>();
             if (customerTable != null)
             {
-                List<Coldew.Api.FieldInfo> fieldInfos = WebHelper.FormService.GetFields(formId).Where(x => x.CanInput).ToList();
+                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
                 foreach (DataRow customerRow in customerTable.Rows)
                 {
                     JObject importModel = new JObject();
-                    foreach (Coldew.Api.FieldInfo filed in fieldInfos)
+                    foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields.Where(x => x.CanInput))
                     {
                         if (customerRow[filed.Name] != null)
                         {
@@ -314,9 +314,10 @@ namespace Coldew.Website
             return jsonFilePath;
         }
 
-        public static List<DataGridColumnModel> GetImportColumns(string formId)
+        public static List<DataGridColumnModel> GetImportColumns(string objectId)
         {
-            List<Coldew.Api.FieldInfo> fields = WebHelper.FormService.GetFields(formId).Where(x => x.CanInput).ToList();
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            List<Coldew.Api.FieldInfo> fields = coldewObject.Fields.Where(x => x.CanInput).ToList();
 
             List<DataGridColumnModel> columns = new List<DataGridColumnModel>();
             columns.Add(new DataGridColumnModel { field = "importMessage", title = "导入结果", width = 80 });
@@ -324,17 +325,17 @@ namespace Coldew.Website
             return columns;
         }
 
-        public static string Export(List<JObject> models, string formId)
+        public static string Export(List<JObject> models, string objectId)
         {
             string path = HttpContext.Current.Server.MapPath("~/Template.xls");
             FileStream stream = System.IO.File.OpenRead(path);
             HSSFWorkbook workbook = new HSSFWorkbook(stream);
             HSSFSheet sheet = workbook.GetSheetAt(0);
 
-            List<Coldew.Api.FieldInfo> fieldInfos = WebHelper.FormService.GetFields(formId).ToList();
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
             HSSFRow nameRow = sheet.CreateRow(0);
             int nameCellIndex = 0;
-            foreach (Coldew.Api.FieldInfo filed in fieldInfos)
+            foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)
             {
                 nameRow.CreateCell(nameCellIndex).SetCellValue(filed.Name);
                 nameCellIndex++;
@@ -346,7 +347,7 @@ namespace Coldew.Website
                 HSSFRow dataRow = sheet.CreateRow(dataRowIndex);
 
                 int dataCellIndex = 0;
-                foreach (Coldew.Api.FieldInfo filed in fieldInfos)
+                foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)
                 {
                     JToken value = model[filed.Code];
                     var cell = dataRow.CreateCell(dataCellIndex);

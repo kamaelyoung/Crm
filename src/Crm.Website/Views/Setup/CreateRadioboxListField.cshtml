@@ -47,7 +47,7 @@
     </div>
 </form>
 <script type="text/javascript" language="javascript">
-    var formId = "@Request["formId"]";
+    var objectId = "@Request["objectId"]";
     var returnUrl = "@this.Html.Raw(Request["returnUrl"])";
     $("#createForm").validate({
         sendForm : false,
@@ -62,7 +62,7 @@
         valid: function(){
             $(".btn-primary").button("loading");
             var formValue = $("#createForm").getFormValue();
-            formValue.formId = formId;
+            formValue.objectId = objectId;
             $.post("@this.Url.Action("CreateRadioboxListField")", formValue, function(data){
                 $(".btn-primary").button("reset");
                 if(data.result == 0){

@@ -19,18 +19,35 @@ namespace Coldew.Core
         OrganizationManagement _orgManger;
         protected ReaderWriterLock _lock;
 
-        public MetadataManager(Form form, OrganizationManagement orgManger)
+        public MetadataManager(ColdewObject form, OrganizationManagement orgManger)
         {
             this._metadataDicById = new Dictionary<string, Metadata>();
             this._metadataDicByName = new Dictionary<string, Metadata>();
             this._metadataList = new List<Metadata>();
             this._orgManger = orgManger;
-            this.Form = form;
+            this.ColdewObject = form;
             this._lock = new ReaderWriterLock();
             this.FavoriteManager = new MetadataFavoriteManager(this, orgManger);
+            this.ColdewObject.FieldDeleted += new TEventHandler<Core.ColdewObject, Field>(ColdewObject_FieldDeleted);
         }
 
-        public Form Form { private set; get; }
+        void ColdewObject_FieldDeleted(ColdewObject sender, Field field)
+        {
+            this._lock.AcquireReaderLock(0);
+            try
+            {
+                foreach (Metadata metadata in this._metadataList)
+                {
+                    metadata.RemoveFieldProperty(field);
+                }
+            }
+            finally
+            {
+                this._lock.ReleaseReaderLock();
+            }
+        }
+
+        public ColdewObject ColdewObject { private set; get; }
 
         public MetadataFavoriteManager FavoriteManager { private set; get; }
 
@@ -45,12 +62,12 @@ namespace Coldew.Core
             try
             {
                 this.OnCreating(creator, dictionary);
-                dictionary.Add(FormConstCode.FIELD_NAME_CREATOR, creator.Account);
-                dictionary.Add(FormConstCode.FIELD_NAME_CREATE_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
-                dictionary.Add(FormConstCode.FIELD_NAME_MODIFIED_USER, creator.Account);
-                dictionary.Add(FormConstCode.FIELD_NAME_MODIFIED_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
+                dictionary.Add(ColdewObjectCode.FIELD_NAME_CREATOR, creator.Account);
+                dictionary.Add(ColdewObjectCode.FIELD_NAME_CREATE_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
+                dictionary.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, creator.Account);
+                dictionary.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
 
-                List<Field> requiredFields = this.Form.GetRequiredFields();
+                List<Field> requiredFields = this.ColdewObject.GetRequiredFields();
                 foreach (Field field in requiredFields)
                 {
                     if (!dictionary.ContainsKey(field.Code) || string.IsNullOrEmpty(dictionary[field.Code]))
@@ -58,12 +75,12 @@ namespace Coldew.Core
                         throw new ColdewException(string.Format("必要字段{0}不能空", field.Name));
                     }
                 }
-                if (this._metadataDicByName.ContainsKey(dictionary[FormConstCode.FIELD_NAME_NAME]))
+                if (this._metadataDicByName.ContainsKey(dictionary[ColdewObjectCode.FIELD_NAME_NAME]))
                 {
                     throw new FieldNameRepeatException();
                 }
 
-                MetadataPropertyList propertys = MetadataPropertyList.MapPropertys(dictionary, this.Form);
+                List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
                 Metadata metadata = this.CreateAndSaveDB(propertys);
 
                 this._metadataDicById.Add(metadata.ID, metadata);
@@ -79,29 +96,29 @@ namespace Coldew.Core
             }
         }
 
-        protected virtual Metadata CreateAndSaveDB(MetadataPropertyList propertys)
+        protected virtual Metadata CreateAndSaveDB(List<MetadataProperty> propertys)
         {
             MetadataModel model = new MetadataModel();
-            model.PropertysJson = propertys.ToJson();
+            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
 
-            Metadata metadata = new Metadata(model.ID, propertys, this.Form);
+            Metadata metadata = new Metadata(model.ID, propertys, this.ColdewObject);
             return metadata;
         }
 
         protected virtual void BindEvent(Metadata metadata)
         {
-            metadata.PropertyChanged += new TEventHandler<Metadata, PropertySettingDictionary>(Metadata_Modified);
+            metadata.PropertyChanging += new TEventHandler<Metadata, PropertySettingDictionary>(Metadata_Changing);
             metadata.Deleted += new TEventHandler<Metadata, User>(Metadata_Deleted);
         }
 
-        void Metadata_Modified(Metadata customer, PropertySettingDictionary propertys)
+        void Metadata_Changing(Metadata metadata, PropertySettingDictionary propertys)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                if (customer.Name != customer.Name && this._metadataDicByName.ContainsKey(customer.Name))
+                if (metadata.Name != metadata.Name && this._metadataDicByName.ContainsKey(metadata.Name))
                 {
                     throw new FieldNameRepeatException();
                 }
@@ -127,14 +144,15 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> GetList(User user, int skipCount, int takeCount, out int totalCount)
+        public List<Metadata> GetList(User user, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                var customers = this._metadataList.Where(x => x.CanPreview(user)).ToList().ToList();
-                totalCount = customers.Count;
-                return customers.Skip(skipCount).Take(takeCount).ToList();
+                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user));
+                var metadatas = metadatasEnumer.OrderBy(orderBy).ToList();
+                totalCount = metadatas.Count;
+                return metadatas.Skip(skipCount).Take(takeCount).ToList();
             }
             finally
             {
@@ -142,12 +160,13 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> GetList(User user)
+        public List<Metadata> GetList(User user, string orderBy)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                return this._metadataList.Where(x => x.CanPreview(user)).ToList();
+                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user));
+                return metadatasEnumer.OrderBy(orderBy).ToList();
             }
             finally
             {
@@ -155,40 +174,27 @@ namespace Coldew.Core
             }
         }
 
-        private List<Metadata> OrderBy(string code, IEnumerable<Metadata> customers)
+        public List<Metadata> GetRelatedList(ColdewObject cObject, string metadataId, string orderBy)
         {
-            if (string.IsNullOrEmpty(code))
+            this._lock.AcquireReaderLock(0);
+            try
             {
-                code = "name";
+                var metadatasEnumer = this._metadataList.Where(x => {
+                    MetadataProperty property = x.GetPropertyByObject(cObject);
+                    if (property != null)
+                    {
+                        MetadataRelatedValue value = property.Value as MetadataRelatedValue;
+                        return value.Metadata.ID == metadataId;
+                    }
+                    return false;
+                });
+
+                return metadatasEnumer.OrderBy(orderBy).ToList();
             }
-            List<Metadata> orderByCodeCustomers = new List<Metadata>();
-            IEnumerable<Metadata> canOrderByCodeCusomters = customers.Where(x => x.GetProperty(code) != null);
-            orderByCodeCustomers.AddRange(canOrderByCodeCusomters.OrderBy(x =>
+            finally
             {
-                MetadataProperty property = x.GetProperty(code);
-                return property.Value.OrderValue;
-
-            }).ToList());
-            orderByCodeCustomers.AddRange(customers.Where(x => x.GetProperty(code) == null));
-            return orderByCodeCustomers;
-        }
-
-        private List<Metadata> OrderByDescending(string code, IEnumerable<Metadata> customers)
-        {
-            if (string.IsNullOrEmpty(code))
-            {
-                code = "name";
+                this._lock.ReleaseReaderLock();
             }
-            List<Metadata> orderByCodeCustomers = new List<Metadata>();
-            IEnumerable<Metadata> canOrderByCodeCusomters = customers.Where(x => x.GetProperty(code) != null);
-            orderByCodeCustomers.AddRange(canOrderByCodeCusomters.OrderByDescending(x =>
-            {
-                MetadataProperty property = x.GetProperty(code);
-                return property.Value.OrderValue;
-
-            }).ToList());
-            orderByCodeCustomers.AddRange(customers.Where(x => x.GetProperty(code) == null));
-            return orderByCodeCustomers;
         }
 
         public Metadata GetById(string id)
@@ -208,14 +214,15 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> Search(User user, MetadataSearcher seracher, int skipCount, int takeCount, out int totalCount)
+        public List<Metadata> Search(User user, MetadataSearcher seracher, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                var searchCustomers = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(x)).ToList();
-                totalCount = searchCustomers.Count;
-                return searchCustomers.Skip(skipCount).Take(takeCount).ToList();
+                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(x));
+                var metadatas = metadatasEnumer.OrderBy(orderBy).ToList();
+                totalCount = metadatas.Count;
+                return metadatas.Skip(skipCount).Take(takeCount).ToList();
             }
             finally
             {
@@ -223,12 +230,13 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> Search(User user, MetadataSearcher seracher)
+        public List<Metadata> Search(User user, MetadataSearcher seracher, string orderBy)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                return this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(x)).ToList();
+                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(x));
+                return metadatasEnumer.OrderBy(orderBy).ToList();
             }
             finally
             {
@@ -243,7 +251,7 @@ namespace Coldew.Core
             IList<MetadataModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataModel>().List();
             foreach (MetadataModel model in models)
             {
-                Metadata metadata = new Metadata(model.ID, MetadataPropertyList.GetPropertys(model.PropertysJson, this.Form), this.Form);
+                Metadata metadata = new Metadata(model.ID, MetadataPropertyListHelper.GetPropertys(model.PropertysJson, this.ColdewObject), this.ColdewObject);
 
                 metadatas.Add(metadata);
             }

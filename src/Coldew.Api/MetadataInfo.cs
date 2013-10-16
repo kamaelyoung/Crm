@@ -12,13 +12,15 @@ namespace Coldew.Api
 
         public string Name
         {
-            get
-            {
-                PropertyInfo info = this.Propertys.Find(x => x.Code == FormConstCode.FIELD_NAME_NAME);
-                return info.ShowValue;
-            }
+            set;
+            get;
         }
 
         public List<PropertyInfo> Propertys { set; get; }
+
+        public PropertyInfo GetProperty(string code)
+        {
+            return this.Propertys.Find(x => x.Code == code);
+        }
     }
 }

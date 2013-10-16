@@ -56,10 +56,10 @@
                 string orgMenuClass = this.ViewBag.TopMenu == "OrgAdmin" ? "class='active'" : "";
                 string setupMenuClass = this.ViewBag.TopMenu == "Setup" ? "class='active'" : "";
             }
-            @foreach (FormInfo formInfo in WebHelper.Forms)
+            @foreach (ColdewObjectInfo formInfo in WebHelper.ColdewObjects)
             {
-                string metadataMenuClass = this.ViewBag.TopMenu == "Metadata" && formInfo.ID == Request["formId"] ? "class='active'" : "";
-                <li @this.Html.Raw(metadataMenuClass)><a href="@this.Url.Action("Index", "Metadata", new { formId = formInfo.ID })">@formInfo.Name</a></li>
+                string metadataMenuClass = this.ViewBag.TopMenu == "Metadata" && formInfo.ID == Request["objectId"] ? "class='active'" : "";
+                <li @this.Html.Raw(metadataMenuClass)><a href="@this.Url.Action("Index", "Metadata", new { objectId = formInfo.ID })">@formInfo.Name</a></li>
             }
             @if (WebHelper.IsAdmin)
             {
@@ -71,7 +71,7 @@
           
             <form class="navbar-form form-search" method="get" action="@this.Url.Action("Index")">
                 <div class="input-append">
-                    <input name="formId" type="hidden" value="@Request["formId"]"/>
+                    <input name="objectId" type="hidden" value="@Request["objectId"]"/>
                     <input name="keyword" type="text" class="search-query"/>
                     <button id="btnKeywordSearch" class="btn" type="submit" data-loading-text="搜索中..."><i class="icon-search"></i>搜索</button>
                 </div>

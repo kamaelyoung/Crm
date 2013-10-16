@@ -10,12 +10,13 @@
         <p class="lead">@this.ViewBag.Title</p>
     </div>
     <div class="span10">
-        <a id="btnCreate" href="@this.Url.Action("Create", new { formId = Request["formId"], viewId = this.ViewBag.viewId })" class="btn"><i class="icon-plus"></i>创建</a>
+        <a id="btnCreate" href="@this.Url.Action("Create", new { objectId = Request["objectId"], viewId = this.ViewBag.viewId })" class="btn"><i class="icon-plus"></i>创建</a>
         <button id="btnSearch" class="btn"><i class="icon-search"></i>查询</button>
+        <button id="btnEdit" disabled="disabled" class="btn"><i class="icon-edit"></i>编辑</button> 
         <button id="btnDelete" disabled="disabled" data-loading-text="删除中..." class="btn"><i class="icon-trash"></i>删除</button> 
         <button id="btnFavorite" disabled="disabled" data-loading-text="收藏中..." class="btn"><i class="icon-star"></i>收藏</button> 
         <button id="btnRefresh" class="btn"><i class="icon-refresh"></i>刷新</button> 
-        <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, formId = Request["formId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
+        <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, objectId = Request["objectId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
         <button id="btnExport" class="btn" data-loading-text="导出中..."><i class="icon-download"></i>导出Excel</button> 
     </div>
 </div>
@@ -29,20 +30,29 @@
 </div>
 <div id="searchPopover">@{this.Html.RenderPartial("SearchPopover");}</div>
 <script type="text/javascript" language="javascript">
-    var formId = "@this.Html.Raw(this.Request["formId"])";
+    var objectId = "@this.Html.Raw(this.Request["objectId"])";
+    var viewId = "@this.Html.Raw(this.Request["viewId"])";
     var keyword = "@this.Html.Raw(this.Request["keyword"])";
     var metadataGrid = $("#metadataGrid").datagrid({
 		columns: @this.Html.Raw(this.ViewBag.columnsJson),
         height: "auto",
-		canSort: false,
+		canSort: true,
 		singleSelect: false,
 		showNumberRow: true,
         selectedRow: function(){
+            var rows = metadataGrid.datagrid("getSelectedRows");
             $("#btnDelete, #btnFavorite").prop("disabled", false);
+            $("#btnEdit").prop("disabled", rows.length != 1);
         },
         unselectedRow: function(){
             var rows = metadataGrid.datagrid("getSelectedRows");
             $("#btnDelete, #btnFavorite").prop("disabled", rows.length == 0);
+            $("#btnEdit").prop("disabled", rows.length != 1);
+        },
+        sort: function(sender, args){
+            var pageInfo = pager.pager("option").pageInfo;
+            loadMetadataGrid(_searchInfo, pageInfo.start, null, args);
+            return false;
         }
 	});
 
@@ -51,9 +61,9 @@
     }});
 
     var _searchInfo;
-    function loadMetadataGrid(searchInfo, start, cb){
+    function loadMetadataGrid(searchInfo, start, cb, orderBy){
         _searchInfo = searchInfo;
-        var args = {formId: formId, start: start, size: 20};
+        var args = {objectId: objectId, start: start, size: 20, orderBy: orderBy};
         if(_searchInfo){
             var searchInfoJson = $.toJSON(_searchInfo);
             args.searchInfoJson = searchInfoJson;
@@ -103,10 +113,10 @@
         if(_searchInfo){
             searchInfoJson = $.toJSON(_searchInfo);
         }
-        $.get("@this.Url.Action("Export")", {formId: formId, searchInfoJson: searchInfoJson}, function(model){
+        $.get("@this.Url.Action("Export")", {objectId: objectId, searchInfoJson: searchInfoJson}, function(model){
             $("#btnExport").button("reset");
             if(model.result == 0){
-                open("@this.Url.Action("DownloadExportFile", new {formId = Request["formId"]})" + "&fileName=" + model.data);
+                open("@this.Url.Action("DownloadExportFile", new {objectId = Request["objectId"]})" + "&fileName=" + model.data);
             }
             else{
                 alert(model.message)
@@ -125,7 +135,7 @@
             return row.datarow("option", "data").id;
         })
         $("#btnDelete").button("loading");
-        $.post("@this.Url.Action("Delete")", {formId: formId, metadataIdsJson: $.toJSON(metadataIds)}, function(model){
+        $.post("@this.Url.Action("Delete")", {objectId: objectId, metadataIdsJson: $.toJSON(metadataIds)}, function(model){
             $("#btnDelete").button("reset");
             if(model.result == 0){
                 var pageInfo = pager.pager("option").pageInfo;
@@ -144,7 +154,7 @@
             return row.datarow("option", "data").id;
         })
         $("#btnFavorite").button("loading");
-        $.post("@this.Url.Action("Favorites")", {formId: formId,metadataIdsJson: $.toJSON(metadataIds)}, function(model){
+        $.post("@this.Url.Action("Favorites")", {objectId: objectId,metadataIdsJson: $.toJSON(metadataIds)}, function(model){
             $("#btnFavorite").button("reset");
             if(model.result == 0){
                 var pageInfo = pager.pager("option").pageInfo;
@@ -156,6 +166,14 @@
         });
         return false;
     });
+
+    $("#btnEdit").click(function(){
+        var row = $("#metadataGrid").datagrid("getSelectedRow");
+        var editAction = "@this.Html.Raw(this.Url.Action("Edit"))";
+        var editUrl = editAction + "?objectId=" + objectId + "&viewId=" + viewId + "&metadataId=" + row.datarow("option", "data").id;
+        location = editUrl;
+    });
+
     var searchPopover = $("#searchPopover").metadataSearchPopover();
     var btnSearch = $("#btnSearch").click(function(event){
         searchPopover.metadataSearchPopover("search", btnSearch, function(searchInfo){

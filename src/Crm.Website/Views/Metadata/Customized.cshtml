@@ -10,7 +10,7 @@
         <p class="lead">@this.ViewBag.Title</p>
     </div>
     <div class="span10">
-        <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, formId = Request["formId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
+        <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, objectId = Request["objectId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
         <button id="btnExport" class="btn" data-loading-text="导出中..."><i class="icon-download"></i>导出Excel</button> 
     </div>
 </div>
@@ -24,14 +24,19 @@
 </div>
 
 <script type="text/javascript" language="javascript">
-    var formId = "@this.Html.Raw(this.Request["formId"])";
+    var objectId = "@this.Html.Raw(this.Request["objectId"])";
     var viewId = "@this.ViewBag.viewId";
     var metadataGrid = $("#metadataGrid").datagrid({
 		columns: @this.Html.Raw(this.ViewBag.columnsJson),
         height: "auto",
 		canSort: false,
 		singleSelect: false,
-		showNumberRow: true
+		showNumberRow: true,
+        sort: function(sender, args){
+            var pageInfo = pager.pager("option").pageInfo;
+            loadMetadataGrid(_searchInfo, pageInfo.start, null, args);
+            return false;
+        }
 	});
 
     var pager = $("#pager").pager({change: function(event, args){
@@ -39,14 +44,14 @@
     }});
 
     var _searchInfo;
-    function loadMetadataGrid(searchInfo, start, cb){
+    function loadMetadataGrid(searchInfo, start, cb, orderBy){
         _searchInfo = searchInfo;
-        var args = {formId: formId, start: start, size: 20};
+        var args = {objectId: objectId, viewId: viewId, start: start, size: 20, orderBy: orderBy};
         if(_searchInfo){
             var searchInfoJson = $.toJSON(_searchInfo);
             args.searchInfoJson = searchInfoJson;
         }
-        $.get("@this.Url.Action("Metadatas")", args, function(model){
+        $.get("@this.Url.Action("CustomizedMetadatas")", args, function(model){
             if(cb){
                 cb();
             }
@@ -65,10 +70,10 @@
 
     $("#btnExport").click(function(){
         $("#btnExport").button("loading");
-        $.get("@this.Url.Action("ExportCustomized")", {formId: formId, viewId: viewId}, function(model){
+        $.get("@this.Url.Action("ExportCustomized")", {objectId: objectId, viewId: viewId}, function(model){
             $("#btnExport").button("reset");
             if(model.result == 0){
-                open("@this.Url.Action("DownloadExportFile", new {formId = Request["formId"]})" + "&fileName=" + model.data);
+                open("@this.Url.Action("DownloadExportFile", new {objectId = Request["objectId"]})" + "&fileName=" + model.data);
             }
             else{
                 alert(model.message)
