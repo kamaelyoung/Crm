@@ -11,34 +11,36 @@
 {
 <fieldset>
     <legend>@sectionInfo.Title</legend>
-    <table>
+    
     @for (int count = 0; count < sectionInfo.Inputs.Count; ++count)
     {
+        FieldInfo field = sectionInfo.Inputs[count].Field;
         if (count % sectionInfo.ColumnCount == 0)
         {
-            @this.Html.Raw("<tr>");
+            @this.Html.Raw("<div class='row-fluid'>");
         }
-        FieldInfo field = sectionInfo.Inputs[count].Field;
-    <td>
+    <div class="span6">
     <div class="control-group">
         <label class="control-label" >
-            @field.Name：
+        @if (string.IsNullOrEmpty(field.Tip))
+        {
+            @string.Format("{0}：", field.Name)
+        }
+        else{
+            @string.Format("{0}({1})：", field.Name, field.Tip)
+        }
         </label>
         <div class="controls">
             @crmInput.Input(field, metadataPropertys)
         </div>
     </div>
-    </td>
-        if (count % sectionInfo.ColumnCount == 1)
+    </div>
+        if (count % sectionInfo.ColumnCount == 1 ||
+            count == sectionInfo.Inputs.Count - 1)
         {
-            @this.Html.Raw("</tr>");
-        }
-        else if (count == sectionInfo.Inputs.Count - 1)
-        {
-            @this.Html.Raw("<td></td></tr>");
+            @this.Html.Raw("</div>");
         }
     }
-    </table>
 </fieldset>
 }
 

@@ -8,6 +8,7 @@
         </id>
         <property name="FormId" type="string" column="form_id"></property>
         <property name="Name" type="String" column="field_name"></property>
+        <property name="Tip" type="String" column="field_tip"></property>
         <property name="Code" type="String" column="field_code"></property>
         <property name="Required" type="bool" column="field_required"></property>
         <property name="CanModify" type="bool" column="field_canModify"></property>

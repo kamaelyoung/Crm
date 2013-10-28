@@ -14,6 +14,7 @@ namespace Coldew.Core
         public Field(FieldNewInfo info)
         {
             this.ID = info.ID;
+            this.Tip = info.Tip;
             this.Name = info.Name;
             this.Required = info.Required;
             this.CanModify = info.CanModify;
@@ -43,6 +44,8 @@ namespace Coldew.Core
         }
 
         public string Name { set; get; }
+
+        public string Tip { set; get; }
 
         public bool Required { set; get; }
 
@@ -106,6 +109,7 @@ namespace Coldew.Core
         {
             info.Code = this.Code;
             info.ID = this.ID;
+            info.Tip = this.Tip;
             info.CanModify = this.CanModify;
             info.Name = this.Name;
             info.Required = this.Required;

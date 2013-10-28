@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using log4net;
 using Coldew.Core.Organization;
+using Coldew.Core.Workflow;
 
 namespace Coldew.Core
 {
@@ -23,6 +24,7 @@ namespace Coldew.Core
             this.OrgManager = new OrganizationManagement();
             this.ObjectManager = this.CreateFormManager();
             this.ConfigManager = new ColdewConfigManager(this);
+            this.LiuchengYinqing = new DemoLiuchengYinqing(this);
         }
 
         protected virtual void Load()
@@ -35,6 +37,8 @@ namespace Coldew.Core
         {
             return new ColdewObjectManager(this);
         }
+
+        public Yinqing LiuchengYinqing { set; get; }
 
         public OrganizationManagement OrgManager { set; get; }
 

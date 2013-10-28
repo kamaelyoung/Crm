@@ -1,0 +1,98 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@{
+    
+    ViewBag.Title = "归档的任务";
+    Layout = "~/Views/Workflow/Layout.cshtml";
+    this.ViewBag.LiuchengCaidan = LiuchengCaidan.Guidangde;
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+    <div class="span2">
+        @{this.Html.RenderPartial("LiuchengCaidan");}
+    </div>
+    <div class="span10">
+        <div class="row-fluid">
+            <div class="span2">
+                <p class="lead">归档的任务</p>
+            </div>
+            <div class="span10">
+                <button id="btnDakaiSousuo" class="btn"><i class="icon-search"></i>查询</button>
+            </div>
+        </div>
+
+        <div id="renwuGrid">
+                
+        </div>
+        
+        <div id="pager" class="pull-right" style="height: 30px">
+            
+        </div>
+        @{this.Html.RenderPartial("WanchengdeRenwuSousuoPopover");}
+        
+
+    </div>
+    </div>
+</div>
+<div class="liuchengtuDialog">
+    @{this.Html.RenderPartial("LiuchengtuDialog");}
+</div>
+<script language="javascript" type="text/javascript">
+    var liuchengtuDialog = $(".liuchengtuDialog").liuchengtuDialog();
+    var renwuSousuoPopover = $(".renwuSousuoPopover").renwuSousuoPopover({sousuohou: function(event, args){
+        jiazaiRenwu(args, 0);
+    }});
+    var btnDakaiSousuo = $("#btnDakaiSousuo").click(function(event){
+        renwuSousuoPopover.show().position({my: "center top", at: "center bottom", of: btnDakaiSousuo});
+        event.stopPropagation();
+    });
+    $("#renwuGrid").datagrid({
+		columns:[
+			{title: "编号", width: 30, field:"liuchengId"},
+			{title: "流程名", width: 150, field:"liuchengMingcheng", render: function(row, args){
+                var span = $("<span></span>");
+				span.append("<a target='_blank' href='" + args.data.url + "'>"+args.value+"</a>");
+                var liuchengtu = $("<a href='#'><img src='/img/icon-liuchengtu.gif' title='流程图' /></a>")
+                    .click(function(){
+                        liuchengtuDialog.liuchengtuDialog("xianshi", args.data.liuchengtuUrl);
+                        return false;
+                    });
+                span.append(liuchengtu);
+                return span;
+			}},
+			{title: "步骤名", width: 80, field:"mingcheng"},
+			{title: "发起人", field:"faqiren"},
+			{title: "开始时间", width: 150, field:"kaishiShijian"},
+			{title: "完成时间", width: 150, field:"wanchengShijian"},
+			{title: "摘要", width: 200, field:"zhaiyao"}
+		],
+        height: "auto",
+		canSort: false,
+		singleSelect: false,
+		showNumberRow: true
+	});
+    $("#pager").pager({change: function(event, args){
+        jiazaiRenwu(_sousuoXinxi, args.start);
+    }});
+    var _sousuoXinxi;
+    function jiazaiRenwu(sousuoXinxi, start){
+        _sousuoXinxi = sousuoXinxi;
+        var args = {start: start, size: 20};
+        if(_sousuoXinxi){
+            $.extend(args, _sousuoXinxi);
+        }
+        $.get("@this.Url.Action("GuidangdeRenwu")", args, function(model){
+            if(model.result == 0){
+                $("#renwuGrid").datagrid("option", "data", model.data.list);
+                $("#pager").pager("option", "pageInfo", {start: start, size: 20, count: model.data.count})
+            }
+            else{
+                alert(model.message)
+            }
+        });
+    }
+    jiazaiRenwu(null, 0);
+
+</script>
+
+

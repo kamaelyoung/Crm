@@ -14,6 +14,6 @@ namespace Coldew.Api
 
         public string Code {  set; get; }
 
-        public int Width {  set; get; }
+        public int Width { set; get; }
     }
 }

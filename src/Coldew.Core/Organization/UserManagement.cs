@@ -239,6 +239,11 @@ namespace Coldew.Core.Organization
 
         public User GetUserByAccount(string account)
         {
+            if (string.IsNullOrEmpty(account))
+            {
+                return null;
+            }
+
             Load();
             try
             {

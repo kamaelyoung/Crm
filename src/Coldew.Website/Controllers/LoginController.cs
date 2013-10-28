@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Coldew.Website.Models;
+using Coldew.Api;
 
 namespace Coldew.Website.Controllers
 {
@@ -21,13 +22,14 @@ namespace Coldew.Website.Controllers
         {
             if (string.IsNullOrEmpty(returnUrl))
             {
-                returnUrl = this.Url.Action("Index", "Customer");
+                List<ColdewObjectInfo> forms = WebHelper.ColdewObjectService.GetForms();
+                returnUrl = this.Url.Action("Index", "Metadata", new { objectId = forms[0].ID });
             }
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
                 string token = WebHelper.AuthenticationService.SignIn(account, password, Request.UserHostAddress);
-                resultModel.data = this.Url.Action("Redirect", new {url = returnUrl, token = token, remember = remember});
+                resultModel.data = this.Url.Action("Redirect", new { url = returnUrl, token = token, remember = remember });
             }
             catch (Exception ex)
             {
@@ -46,6 +48,7 @@ namespace Coldew.Website.Controllers
 
         public ActionResult Redirect(string url, string token, bool remember)
         {
+
             WebHelper.SetCurrentUserToken(token, remember);
             return this.Redirect(url);
         }

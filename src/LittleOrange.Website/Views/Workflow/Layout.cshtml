@@ -1,0 +1,19 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    this.ViewBag.TopMenu = "Workflow";
+}
+
+<div class="container-fluid">
+    <div class="row-fluid">
+    <div class="span2">
+        <div class="well sidebar-nav">
+            @{this.Html.RenderPartial("LeftMenu");}
+        </div>
+    </div>
+    <div class="span10">
+        @RenderBody()
+    </div>
+    </div>
+</div>

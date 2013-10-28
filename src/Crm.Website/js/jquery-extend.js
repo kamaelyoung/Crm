@@ -244,19 +244,21 @@ jQuery.fn.extend({
         serach.keyword = keyword;
         return serach;
     },
-    setSearch: function(value){
-        if(!value){
+    setSearch: function(serach){
+        if(!serach){
             return;
         }
         this.find(".keywordSearch")
         .each(function (i, elem) {
-            $(elem).val(value[elem.name]);
+            $(elem).val(serach[elem.name]);
 		});
 
         this.find(".numberSearch, .dateSearch")
         .each(function (i, elem) {
             var fieldCode = $(this).data("fieldCode");
-            $(this).setFormValue(serach[fieldCode]);
+            if(fieldCode in serach){
+                $(this).setFormValue(serach[fieldCode]);
+            }
 		});
         return this;
     },
@@ -295,9 +297,7 @@ jQuery.fn.extend({
         return valueObj;
     },
     setFormValue: function (obj) {
-        this.map(function () {
-            return this.elements ? jQuery.makeArray(this.elements) : this;
-        })
+        this.find(":input")
         .filter(function () {
             return this.name &&
 				($.rradio.test(this.type) || $.rselect.test(this.nodeName) || $.rtextarea.test(this.nodeName) ||
@@ -307,9 +307,6 @@ jQuery.fn.extend({
             if($.rradio.test(this.type)){
                 if(obj[this.name] && $(this).val() == obj[this.name].toString()){
                     $(this).prop("checked", true);
-                }
-                else{
-                    $(this).prop("checked", false);
                 }
             }
             else if($.rcheckbox.test(this.type)){

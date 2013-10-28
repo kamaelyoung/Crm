@@ -7,6 +7,8 @@ using Coldew.Api.Organization;
 using Coldew.Api;
 using System.Text;
 using Coldew.Api.UI;
+using Coldew.Api.Workflow;
+using Coldew.Website.Models;
 
 namespace Coldew.Website
 {
@@ -26,7 +28,17 @@ namespace Coldew.Website
             log4net.Config.XmlConfigurator.Configure();
             Logger = log4net.LogManager.GetLogger("logger");
             ColdewInputFactory = (ColdewInputFactory)ctx["ColdewInputFactory"];
+
+            RenwuFuwu = (IRenwuFuwu)ctx["RenwuFuwu"];
+            LiuchengFuwu = (ILiuchengFuwu)ctx["LiuchengFuwu"];
+            YinqingFuwu = (IYinqingFuwu)ctx["YinqingFuwu"];
         }
+
+        public static IRenwuFuwu RenwuFuwu { private set; get; }
+
+        public static ILiuchengFuwu LiuchengFuwu { private set; get; }
+
+        public static IYinqingFuwu YinqingFuwu { private set; get; }
 
         public static ColdewInputFactory ColdewInputFactory { set; get; }
 
@@ -134,6 +146,26 @@ namespace Coldew.Website
             get
             {
                 return ColdewObjectService.GetForms();
+            }
+        }
+
+        public static List<LiuchengMobanModel> LiuchengMobanModelList
+        {
+            get
+            {
+                UserInfo currentUserInfo = WebHelper.CurrentUserInfo;
+                List<LiuchengMobanXinxi> list = WebHelper.YinqingFuwu.GetLiuchengMobanByYonghu(currentUserInfo.Account);
+                return list.Select(x => new LiuchengMobanModel(x, currentUserInfo)).ToList();
+            }
+        }
+
+        public static List<LiuchengMobanModel> SuoyouLiuchengMobanModelList
+        {
+            get
+            {
+                UserInfo currentUserInfo = WebHelper.CurrentUserInfo;
+                List<LiuchengMobanXinxi> list = WebHelper.YinqingFuwu.GetSuoyouLiuchengMoban();
+                return list.Select(x => new LiuchengMobanModel(x, currentUserInfo)).ToList();
             }
         }
     }

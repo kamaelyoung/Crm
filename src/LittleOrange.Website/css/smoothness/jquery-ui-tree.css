@@ -1,0 +1,12 @@
+.ui-tree{  }
+.ui-treenode { }
+.ui-treenode-node{cursor: default;}
+.ui-treenode-node table{border-collapse: collapse; white-space:nowrap;}
+.ui-treenode-node table td{margin: 0;padding: 1px;}
+.ui-treenode-children{padding:0 0 0 16px; display: none;}
+.ui-treenode-checkbox-cell {padding:0 !important; }
+.ui-treenode-collapse-icon{width:16px; height:16px;  white-space: nowrap; background: url(images/ui-treenode-collapse.gif) 50% 50% no-repeat;}
+.ui-treenode-expand-icon{width:16px; height:16px;  white-space: nowrap; background: url(images/ui-treenode-expand.gif) 50% 50% no-repeat;}
+.ui-treenode-leaf-icon{width:16px; height:16px;  white-space: nowrap; background: url(images/ui-treenode-leaf.gif) 50% 50% no-repeat;}
+.ui-treenode-node-hover table td{ background: #fbf9ee ; color: #363636;}
+.ui-treenode-node-selected table td{ background: #dadada ; color: #212121;}

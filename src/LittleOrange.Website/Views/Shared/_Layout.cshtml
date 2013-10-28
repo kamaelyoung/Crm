@@ -1,0 +1,90 @@
+﻿@using Crm.Website;
+@using Crm.Website.Models;
+@using Coldew.Website;
+@using Coldew.Website.Models;
+@using Coldew.Api;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link type="text/css" href='@this.Url.Content("~/css/smoothness/jquery-ui-1.8.23.custom.css")' rel="stylesheet" />
+	<link type="text/css" href='@this.Url.Content("~/css/jquery-ui-datagrid.css")' rel="stylesheet" />
+	<link type="text/css" href="@this.Url.Content("~/css/smoothness/jquery-ui-tree.css")" rel="stylesheet" />
+    <link type="text/css" href="@this.Url.Content("~/css/bootstrap.min.css")" rel="stylesheet" />
+	<link type="text/css" href='@this.Url.Content("~/css/default.css")' rel="stylesheet" />
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-1.8.0.min.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-ui-1.8.23.custom.min.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery.json-2.3.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-validate.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery.ui.datagrid.js")'></script>
+	<script type="text/javascript" src="@this.Url.Content("~/js/jquery.ui.tree.js")"></script>
+	<script type="text/javascript" src="@this.Url.Content("~/js/jquery.ui.pager.js")"></script>
+	<script type="text/javascript" src="@this.Url.Content("~/js/jquery.ui.chengyuan.js")"></script>
+	<script type="text/javascript" src="@this.Url.Content("~/js/chengyuanDialog.js")"></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jianglaiZhipaiDialog.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/renwuSousuoPopover.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/liuchengtuDialog.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/bootstrap.min.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-extend.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/metadataSelectDialog.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/metadataSelect.js")'></script>
+    <!--[if IE]>
+	    <script type="text/javascript" src='@this.Url.Content("~/js/placeholder.js")'></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+	    <script type="text/javascript" src='@this.Url.Content("~/js/html5shiv.js")'></script>
+    <![endif]-->
+    <script language="javascript" type="text/javascript">
+        $.baseUrl = "@this.Url.Content("~/")";
+    </script>
+</head>
+
+<body>
+    <div class="navbar navbar-lanse navbar-fixed-top">
+      <div class="navbar-inner" >
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="@this.Url.Action("Index", "Customer")">客户信息管理</a>
+            <div class="nav-collapse collapse" >
+            <p class="navbar-text pull-right">
+                欢迎您: <a href="#" class="navbar-link">@WebHelper.CurrentUserInfo.Name</a>
+                <a href="@this.Url.Action("SignOut", "Login")" class="navbar-link">退出</a>
+            </p>
+            <ul class="nav">
+            @{
+                string workflowMenuClass = this.ViewBag.TopMenu == "Workflow" ? "class='active'" : "";
+                string orgMenuClass = this.ViewBag.TopMenu == "OrgAdmin" ? "class='active'" : "";
+                string setupMenuClass = this.ViewBag.TopMenu == "Setup" ? "class='active'" : "";
+            }
+            @foreach (ColdewObjectInfo formInfo in WebHelper.ColdewObjects)
+            {
+                string metadataMenuClass = this.ViewBag.TopMenu == "Metadata" && formInfo.ID == Request["objectId"] ? "class='active'" : "";
+                <li @this.Html.Raw(metadataMenuClass)><a href="@this.Url.Action("Index", "Metadata", new { objectId = formInfo.ID })">@formInfo.Name</a></li>
+            }
+                <li @this.Html.Raw(workflowMenuClass)><a href="@this.Url.Action("Daibande", "Workflow")">工作流</a></li>
+            @if (WebHelper.IsAdmin)
+            {
+                <li @this.Html.Raw(orgMenuClass)><a href="@this.Url.Action("Index", "Org")">组织管理</a></li>
+                <li @this.Html.Raw(setupMenuClass)><a href="@this.Url.Action("Index", "Setup")">设置</a></li>
+            }
+            </ul>
+            </div>
+          
+            <form class="navbar-form form-search" method="get" action="@this.Url.Action("Index")">
+                <div class="input-append">
+                    <input name="objectId" type="hidden" value="@Request["objectId"]"/>
+                    <input name="keyword" type="text" class="search-query"/>
+                    <button id="btnKeywordSearch" class="btn" type="submit" data-loading-text="搜索中..."><i class="icon-search"></i>搜索</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+    @RenderBody()
+      
+</body>
+</html>

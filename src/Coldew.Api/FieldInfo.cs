@@ -14,6 +14,8 @@ namespace Coldew.Api
 
         public string Name { set; get; }
 
+        public string Tip { set; get; }
+
         public bool Required { set; get; }
 
         public string Type { set; get; }

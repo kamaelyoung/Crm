@@ -1,0 +1,109 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@{
+    ViewBag.Title = "用户登录";
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link type="text/css" href='@this.Url.Content("~/css/smoothness/jquery-ui-1.8.23.custom.css")' rel="stylesheet" />
+    <link type="text/css" href="@this.Url.Content("~/css/bootstrap.min.css")" rel="stylesheet" />
+	<link type="text/css" href='@this.Url.Content("~/css/default.css")' rel="stylesheet" />
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-1.8.0.min.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-ui-1.8.23.custom.min.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery.json-2.3.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-validate.js")'></script>
+	<script type="text/javascript" src="@this.Url.Content("~/js/jquery.ui.chengyuan.js")"></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/bootstrap.min.js")'></script>
+	<script type="text/javascript" src='@this.Url.Content("~/js/jquery-extend.js")'></script>
+    <!--[if lt IE 9]>
+	    <script type="text/javascript" src='@this.Url.Content("~/js/placeholder.js")'></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+	    <script type="text/javascript" src='@this.Url.Content("~/js/html5shiv.js")'></script>
+    <![endif]-->
+    <style type="text/css">
+      body {
+        padding-top: 80px;
+        padding-bottom: 40px;
+        background-color: #008eca;
+      }
+
+      .form-signin {
+        max-width: 500px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+      <form class="form-signin form-horizontal">
+        <div class="control-group">
+            <div class="controls">
+                <h2 >用户登录</h2>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">用户名</label>
+            <div class="controls">
+                <input id="txtAccount" name="account" type="text" class="input-large" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">密码</label>
+            <div class="controls">
+                <input id="txtPassword" type="password" name="passowrd" class="input-large" />
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                  <input id="chkRemember" type="checkbox" value="true" /> 记住我
+                </label>
+                <button id="btnSingIn" class="btn btn-large btn-primary" data-loading-text="登录中..." type="submit">登录</button>
+                <label id="txtMessage" style="color: Red"></label>
+            </div>
+        </div>
+      </form>
+      <div style="width: 200px; margin: auto; color: #ffffff">Copyright © 2013 </div>
+    </div> 
+      
+</body>
+</html>
+<script language="javascript" type="text/javascript">
+    var returnUrl = "@this.Html.Raw(this.Request["returnUrl"])";
+    $("#txtAccount").focus();
+
+    $("#btnSingIn").click(function(){
+        $("#txtMessage").text("");
+        var account = $("#txtAccount").val();
+        var password = $("#txtPassword").val();
+        var remember = $("#chkRemember").prop("checked");
+        $("#btnSingIn").button("loading");
+        $.post("@this.Url.Action("SignIn")", {account: account, password: password, remember: remember, returnUrl: returnUrl}, function(model){
+            $("#btnSingIn").button("reset");
+            if(model.result == 0){
+                location = model.data;
+            }
+            else{
+                $("#txtMessage").text(model.message);
+                $("#txtAccount").focus();
+            }
+        });
+
+        return false;
+    });
+</script>

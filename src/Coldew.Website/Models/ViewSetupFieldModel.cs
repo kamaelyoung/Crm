@@ -8,9 +8,14 @@ namespace Coldew.Website.Models
 {
     public class ViewSetupFieldModel
     {
-        public ViewSetupFieldModel()
+        public ViewSetupFieldModel(FieldInfo field, bool selected, int width)
         {
-            this.width = 80;
+            this.fieldId = field.ID;
+            this.name = field.Name;
+            this.required = field.Required;
+            this.selected = selected;
+            this.width = width;
+            this.index = field.Index;
         }
 
         public int fieldId;
@@ -33,5 +38,7 @@ namespace Coldew.Website.Models
         }
 
         public int width;
+
+        public int index;
     }
 }

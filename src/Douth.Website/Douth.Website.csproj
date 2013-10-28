@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ABA13B57-C164-418F-8E26-2D7761BBB1EC}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Douth.Website</RootNamespace>
+    <AssemblyName>Douth.Website</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\lib\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Services">
+      <HintPath>..\..\lib\Spring.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages" />
+    <Reference Include="System.Web.Helpers" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\CrmSetupController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Global.asax" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Login\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\CreateForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\CreateGridView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\Customized.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\DetailsForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\DownloadImportTemplate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\EditForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\EditGridView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\Favorite.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\GridViewManage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\ImportFirst.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\ImportSecond.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\LeftMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\SearchFields.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\SearchPopover.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\SelectDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Metadata\ViewSetup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Org\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Org\PositionSelectDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Org\PositoinCreateDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Org\PositoinEditDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Org\ResetPasswordDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Org\UserCreateDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Org\UserEditDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateCheckboxListField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateCustomerArea.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateDateField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateDropdownListField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateNumberField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateRadioboxListField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateStringField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\CreateTextField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\EditCheckboxListField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\EditCustomerArea.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\EditDropdownListField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\EditRadioboxListField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\EditStringField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\EditTextField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\Extend.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\LeftMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Steup\Extend.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Steup\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Steup\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Template.xls" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coldew.Api\Coldew.Api.csproj">
+      <Project>{3CDFF38F-CF14-42F6-9E0C-66907C1D08CF}</Project>
+      <Name>Coldew.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coldew.Website\Coldew.Website.csproj">
+      <Project>{E4527E74-26C9-4B11-9D78-476619E3D440}</Project>
+      <Name>Coldew.Website</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>7152</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

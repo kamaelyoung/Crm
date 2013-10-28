@@ -1,0 +1,35 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+
+@{
+    
+    ViewBag.Title = "发起流程";
+    Layout = "~/Views/Workflow/Layout.cshtml";
+    this.ViewBag.LiuchengCaidan = LiuchengCaidan.FaqiLiucheng;
+}
+<div class="span10">
+    <div id="liuchengDatagrid">
+                
+    </div>
+        
+</div>
+<script language="javascript" type="text/javascript">
+
+    $("#liuchengDatagrid").datagrid({
+		columns:[
+			{title: "流程名", width: 150, field:"mingcheng", render: function(row, args){
+				return "<a target='_blank' href='" + args.data.faqiUrl + "'>"+args.value+"</a>";
+			}},
+			{title: "说明", width: 200, field:"shuoming"}
+		],
+		canSort: false,
+		singleSelect: true,
+		showNumberRow: true
+	});
+
+    $.get("@this.Url.Action("Liucheng")", null, function(data){
+        $("#liuchengDatagrid").datagrid("option", "data", data);
+    });
+
+</script>
+

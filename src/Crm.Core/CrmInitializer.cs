@@ -9,6 +9,7 @@ using Coldew.Core;
 using Coldew.Api;
 using Coldew.Core.UI;
 using Coldew.Api.UI;
+using Coldew.Api.Organization;
 
 namespace Crm.Core
 {
@@ -30,6 +31,24 @@ namespace Crm.Core
                 List<ColdewObject> forms = this._crmManager.ObjectManager.GetForms();
                 if (forms.Count == 0)
                 {
+                    this._crmManager.OrgManager.UserManager.Create(this._crmManager.OrgManager.System, new UserCreateInfo
+                    {
+                        Name = "user1",
+                        Account = "user1",
+                        Password = "123456",
+                        Status = UserStatus.Normal,
+                        MainPositionId = this._crmManager.OrgManager.PositionManager.TopPosition.ID
+                    });
+
+                    this._crmManager.OrgManager.UserManager.Create(this._crmManager.OrgManager.System, new UserCreateInfo
+                    {
+                        Name = "user2",
+                        Account = "user2",
+                        Password = "123456",
+                        Status = UserStatus.Normal,
+                        MainPositionId = this._crmManager.OrgManager.PositionManager.TopPosition.ID
+                    });
+
                     this.InitConfig();
                     this.InitAreas();
                     ColdewObject customerForm = this.InitCustomer();
@@ -61,6 +80,7 @@ namespace Crm.Core
 
         private void InitConfig()
         {
+
             this._crmManager.ConfigManager.SetEmailConfig("2593975773", "2593975773@qq.com", "qwert12345", "smtp.qq.com");
         }
 

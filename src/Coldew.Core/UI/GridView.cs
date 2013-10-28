@@ -73,7 +73,7 @@ namespace Coldew.Core
                 List<GridViewColumn> columns = columnsInfo.Select(x => new GridViewColumn(this.ColdewObject.GetFieldById(x.FieldId), x.Width)).ToList();
 
                 GridViewModel model = NHibernateHelper.CurrentSession.Get<GridViewModel>(this.ID);
-                var columnModels = columns.Select(x => new GridViewColumnModel { FieldId = x.Field.ID, Width = x.Width });
+                var columnModels = columns.Select(x => new GridViewColumnModel { FieldId = x.Field.ID, Width = x.Width});
                 model.ColumnsJson = JsonConvert.SerializeObject(columnModels);
                 model.SearchExpression = searchExpressionJson;
                 model.Name = name;

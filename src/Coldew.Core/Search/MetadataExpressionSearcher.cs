@@ -96,18 +96,40 @@ namespace Coldew.Core.Search
                         expressions.Add(new NumberSearchExpression(field, min, max));
                         break;
                     case FieldType.Date:
+                        string startValue = jProperty.Value["start"].ToString();
+                        string endValue = jProperty.Value["end"].ToString();
                         DateTime? start = null;
                         DateTime? end = null;
                         DateTime dateOutput;
-                        if (DateTime.TryParse(jProperty.Value["start"].ToString(), out dateOutput))
+                        if (DateTime.TryParse(startValue, out dateOutput))
                         {
                             start = dateOutput;
                         }
-                        if (DateTime.TryParse(jProperty.Value["end"].ToString(), out dateOutput))
+                        if (DateTime.TryParse(endValue, out dateOutput))
                         {
                             end = dateOutput;
                         }
-                        expressions.Add(new DateSearchExpression(field, start, end));
+                        if (start.HasValue || end.HasValue)
+                        {
+                            expressions.Add(new DateSearchExpression(field, start, end));
+                            break;
+                        }
+
+                        int? startDays = null;
+                        int? endDays = null;
+                        int intOutput;
+                        if (int.TryParse(startValue, out intOutput))
+                        {
+                            startDays = intOutput;
+                        }
+                        if (int.TryParse(endValue, out intOutput))
+                        {
+                            endDays = intOutput;
+                        }
+                        if (startDays.HasValue || endDays.HasValue)
+                        {
+                            expressions.Add(new DateRecentlySearchExpression(field, startDays, endDays));
+                        }
                         break;
                     default:
                         string keywordPropertyValue = jProperty.Value.ToString();

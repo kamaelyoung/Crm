@@ -50,12 +50,15 @@
     <Compile Include="GridViewColumnModel.cs" />
     <Compile Include="GridViewModel.cs" />
     <Compile Include="InputModel.cs" />
+    <Compile Include="Workflow\JianglaiRenwuZhipaiModel.cs" />
     <Compile Include="ListFieldConfigModel.cs" />
+    <Compile Include="Workflow\LiuchengModel.cs" />
     <Compile Include="MetadataFavoriteModel.cs" />
     <Compile Include="MetadataModel.cs" />
     <Compile Include="MetadataPropertyModel.cs" />
     <Compile Include="NumberFieldConfigModel.cs" />
     <Compile Include="RelatedObjectModel.cs" />
+    <Compile Include="Workflow\RenwuModel.cs" />
     <Compile Include="SectionModel.cs" />
     <Compile Include="UserFieldConfigModel.cs" />
     <Compile Include="Organization\DepartmentModel.cs" />
@@ -70,6 +73,7 @@
     <Compile Include="Organization\UserPositionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MetadataFieldConfigModel.cs" />
+    <Compile Include="Workflow\XingdongModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FieldModel.hbm.xml" />
@@ -129,6 +133,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FormModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Workflow\JianglaiRenwuZhipaiModel.hbm.xml" />
+    <EmbeddedResource Include="Workflow\LiuchengModel.hbm.xml" />
+    <EmbeddedResource Include="Workflow\RenwuModel.hbm.xml" />
+    <EmbeddedResource Include="Workflow\XingdongModel.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

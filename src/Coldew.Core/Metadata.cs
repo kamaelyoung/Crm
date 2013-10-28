@@ -139,11 +139,22 @@ namespace Coldew.Core
         {
             this.OnPropertyChanging(dictionary);
 
-            List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
+            List<MetadataProperty> modifyPropertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
 
-            this.UpdateDB(propertys);
+            foreach (MetadataProperty modifyproperty in modifyPropertys)
+            {
+                if (this._propertys.ContainsKey(modifyproperty.Field.Code))
+                {
+                    this._propertys[modifyproperty.Field.Code] = modifyproperty;
+                }
+                else
+                {
+                    this._propertys.Add(modifyproperty.Field.Code, modifyproperty);
+                }
+            }
 
-            this._propertys = propertys.ToDictionary(x => x.Field.Code);
+            this.UpdateDB(this._propertys.Values.ToList());
+
             this.InitPropertys();
             this.BuildContent();
 

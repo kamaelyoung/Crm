@@ -1,0 +1,34 @@
+﻿@{ 
+    string nowDatetime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+    string yonghuTabId = "yonghuTab" + nowDatetime;
+    string yonghuzuTabId = "yonghuzuTab" + nowDatetime;
+    string bumenTabId = "bumenTab" + nowDatetime;
+    string zhiweiTabId = "zhiweiTab" + nowDatetime;
+}
+<div class="modal hide" style="width: 650px;" tabindex="-1" >
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3 >成员选择</h3>
+    </div>
+    <div class="modal-body">
+        <ul class="nav nav-tabs">
+            <li class="yonghuTab active"><a href="#@yonghuTabId" data-toggle="tab">用户</a></li>
+            <li class="yonghuzuTab"><a href="#@yonghuzuTabId" data-toggle="tab">用户组</a></li>
+            <li class="zhiweiTab"><a href="#@zhiweiTabId" data-toggle="tab">职位</a></li>
+            <li class="bumenTab"><a href="#@bumenTabId" data-toggle="tab">部门</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane yonghuPane active" id="@yonghuTabId">@{this.Html.RenderPartial("Yonghu");}</div>
+            <div class="tab-pane yonghuzuPane" id="@yonghuzuTabId">1</div>
+            <div class="tab-pane zhiweiPane" id="@zhiweiTabId">2</div>
+            <div class="tab-pane bumenPane" id="@bumenTabId">3</div>
+        </div>
+        <div style="margin-top:.3em; height: 3em; border: 1px solid #eee;" class="chengyuanPane">
+            
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btnXuanzeChengyuan btn-primary" >确定</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>

@@ -30,12 +30,12 @@ namespace Crm.Core
 
         public Field CreateCustomerAreaField(string code, string name, bool required, bool canModify, bool canInput, int index)
         {
-            return this.CreateField(code, name, required, canModify, canInput, index, CustomerFieldType.CustomerArea, "");
+            return this.CreateField(code, name, "", required, canModify, canInput, index, CustomerFieldType.CustomerArea, "");
         }
 
         public override Field CreateField(FieldModel model)
         {
-            FieldNewInfo newInfo = new FieldNewInfo(model.ID, model.Code, model.Name, model.Required, model.CanModify, model.Type, model.CanInput, model.Index, this);
+            FieldNewInfo newInfo = new FieldNewInfo(model.ID, model.Code, model.Tip, model.Name, model.Required, model.CanModify, model.Type, model.CanInput, model.Index, this);
             switch (newInfo.Type)
             {
                 case CustomerFieldType.CustomerArea:

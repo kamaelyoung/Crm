@@ -32,6 +32,7 @@ namespace Coldew.Website.Controllers
             this.ViewBag.columnsJson = JsonConvert.SerializeObject(columns);
             this.ViewBag.viewId = viewInfo.ID;
             this.ViewBag.Title = viewInfo.Name;
+            this.ViewBag.canSettingView = viewInfo.Creator.Account == this.CurrentUser.Account;
             return View();
         }
 
@@ -51,6 +52,7 @@ namespace Coldew.Website.Controllers
             this.ViewBag.columnsJson = JsonConvert.SerializeObject(columns);
             this.ViewBag.viewId = viewInfo.ID;
             this.ViewBag.Title = viewInfo.Name;
+            this.ViewBag.canSettingView = viewInfo.Creator.Account == this.CurrentUser.Account;
             return View();
         }
 
@@ -457,7 +459,7 @@ namespace Coldew.Website.Controllers
             this.ViewBag.coldewObject = coldewObject;
 
             List<ViewSetupFieldModel> fields = new List<ViewSetupFieldModel>();
-            fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel { fieldId = x.ID, name = x.Name }));
+            fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel(x, false, 80)));
             this.ViewBag.fields = fields;
             return View();
         }
@@ -469,9 +471,9 @@ namespace Coldew.Website.Controllers
             try
             {
                 GridViewCreateModel model = JsonConvert.DeserializeObject<GridViewCreateModel>(json);
-                List<GridViewColumnSetupInfo> columns = model.columns.Select(x => new GridViewColumnSetupInfo { FieldId = x.fieldId, Width = x.width }).ToList();
+                List<GridViewColumnSetupInfo> columns = model.columns.Select(x => new GridViewColumnSetupInfo(x.fieldId, x.width)).ToList();
                 string searchJson = JsonConvert.SerializeObject(model.search);
-                WebHelper.GridViewService.Create(model.name, objectId, WebHelper.CurrentUserAccount, false, searchJson, columns);
+                WebHelper.GridViewService.Create(model.name, objectId, WebHelper.CurrentUserAccount, model.isShared, searchJson, columns);
             }
             catch (Exception ex)
             {
@@ -488,7 +490,7 @@ namespace Coldew.Website.Controllers
             this.ViewBag.coldewObject = coldewObject;
 
             List<ViewSetupFieldModel> fields = new List<ViewSetupFieldModel>();
-            fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel { fieldId = x.ID, name = x.Name }));
+            fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel(x, false, 80)));
             GridViewInfo viewInfo = WebHelper.GridViewService.GetGridView(viewId);
             foreach (GridViewColumnInfo column in viewInfo.Columns)
             {
@@ -511,9 +513,9 @@ namespace Coldew.Website.Controllers
             try
             {
                 GridViewEditPostModel model = JsonConvert.DeserializeObject<GridViewEditPostModel>(json);
-                List<GridViewColumnSetupInfo> columns = model.columns.Select(x => new GridViewColumnSetupInfo { FieldId = x.fieldId, Width = x.width }).ToList();
+                List<GridViewColumnSetupInfo> columns = model.columns.Select(x => new GridViewColumnSetupInfo(x.fieldId, x.width)).ToList();
                 string searchJson = JsonConvert.SerializeObject(model.search);
-                WebHelper.GridViewService.Modify(model.id, model.name, false, searchJson, columns);
+                WebHelper.GridViewService.Modify(model.id, model.name, model.isShared, searchJson, columns);
             }
             catch (Exception ex)
             {
@@ -535,6 +537,7 @@ namespace Coldew.Website.Controllers
             this.ViewBag.columnsJson = JsonConvert.SerializeObject(columns);
             this.ViewBag.viewId = viewInfo.ID;
             this.ViewBag.Title = viewInfo.Name;
+            this.ViewBag.canSettingView = viewInfo.Creator.Account == this.CurrentUser.Account;
             return View();
         }
 
@@ -567,7 +570,7 @@ namespace Coldew.Website.Controllers
             this.ViewBag.objectId = objectId;
 
             List<ViewSetupFieldModel> fields = new List<ViewSetupFieldModel>();
-            fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel { fieldId = x.ID, name = x.Name }));
+            fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel(x, false, 80)));
 
             GridViewInfo viewInfo = WebHelper.GridViewService.GetGridView(viewId);
             foreach (GridViewColumnInfo column in viewInfo.Columns)
@@ -591,7 +594,7 @@ namespace Coldew.Website.Controllers
             try
             {
                 List<GridViweColumnSetupModel> columnModels = JsonConvert.DeserializeObject<List<GridViweColumnSetupModel>>(columnsJson);
-                List<GridViewColumnSetupInfo> columns = columnModels.Select(x => new GridViewColumnSetupInfo { FieldId = x.fieldId, Width = x.width }).ToList();
+                List<GridViewColumnSetupInfo> columns = columnModels.Select(x => new GridViewColumnSetupInfo(x.fieldId, x.width)).ToList();
                 WebHelper.GridViewService.Modify(viewId, columns);
             }
             catch (Exception ex)

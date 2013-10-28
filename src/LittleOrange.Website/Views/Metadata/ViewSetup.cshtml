@@ -1,0 +1,58 @@
+﻿@using Coldew.Website;
+@using Coldew.Api;
+@using Coldew.Website.Models;
+@{
+    ViewBag.Title = "视图设置";
+    Layout = "~/Views/Metadata/Layout.cshtml";
+}
+<p class="lead">视图设置</p>
+<form>
+<table id="viewColumnTable" class="table">
+    <thead>
+        <tr>
+            <th>字段名称</th>
+            <th>宽度</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ViewSetupFieldModel field in this.ViewBag.fields)
+        {
+            <tr data-field-id="@field.fieldId">
+                <td><label class='checkbox'><input type='checkbox' @field.checkedAttr />@field.name</label></td>
+                <td><input name='width' value="@field.width"/></td>
+                <input type="hidden" name="fieldId" value="@field.fieldId" /></td>
+            </tr>
+        }
+        <tr>
+            <td colspan="2">
+                <button type="submit" class="btn btnSave btn-primary">保存</button>
+                <button type="button" class="btn btnCancel">取消</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</form>
+
+
+<script type="text/javascript" language="javascript">
+    var returnUrl = "@this.Html.Raw(this.Request["returnUrl"])";
+    var viewId = "@this.Request["viewId"]";
+    
+    $(".btnSave").click(function(){
+        var columns = $("#viewColumnTable").getViewColumn();
+
+        $(".btnSave").button("loading");
+        $.post("@this.Url.Action("SetViewSetup")", {viewId: viewId, columnsJson: $.toJSON(columns)}, function(data){
+            $(".btnSave").button("reset");
+            if(data.result == 0){
+                location = returnUrl;
+            }
+            else{
+                alert(data.message);
+            }
+        });
+        return false;
+    });
+
+    $(".btnCancel").click(function(){location = returnUrl;});
+</script>

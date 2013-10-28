@@ -1,0 +1,76 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@{
+    ViewBag.Title = "创建长文本字段";
+    Layout = "~/Views/Setup/Layout.cshtml";
+}
+
+<p class="lead">创建长文本字段</p>
+<form class="form-horizontal" id="createForm">
+    <div class="control-group">
+        <label class="control-label" >名称<font style="color: Red">*</font></label>
+        <div class="controls">
+            <input type="text" name="name" data-required="true"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >必填项</label>
+        <div class="controls">
+            <label class="radio"><input type="radio" name="required" value="false" checked="checked"/>否</label>
+            <label class="radio"><input type="radio" name="required" value="true"/>是</label>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >默认值</label>
+        <div class="controls">
+            <textarea rows="3" name="defaultValue" ></textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >顺序<font style="color: Red">*</font></label>
+        <div class="controls">
+            <input type="text" name="index" value="@this.ViewBag.FieldIndex" data-required data-pattern="^[0-9]*[1-9][0-9]*$"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn btn-primary" data-loading-text="保存中...">保存</button>
+            <button type="button" class="btn btnCancel">取消</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" language="javascript">
+    var objectId = "@Request["objectId"]";
+    var returnUrl = "@this.Html.Raw(Request["returnUrl"])";
+    $("#createForm").validate({
+        sendForm : false,
+        onBlur: true,
+        onChange: true,
+	    eachValidField : function() {
+		    $(this).closest('.control-group').removeClass('error');
+            $(this).next('.help-inline').hide();
+	    },
+	    eachInvalidField : function() {
+		    $(this).closest('.control-group').addClass('error');
+            $(this).next('.help-inline').show();
+	    },
+        valid: function(){
+            $(".btn-primary").button("loading");
+            var formValue = $("#createForm").getFormValue();
+            formValue.objectId = objectId;
+            $.post("@this.Url.Action("CreateTextField")", formValue, function(data){
+                $(".btn-primary").button("reset");
+                if(data.result == 0){
+                    location = returnUrl;
+                }
+                else{
+                    alert(data.message);
+                }
+            });
+        }
+    });
+
+    $(".btnCancel").click(function(){
+        location = returnUrl;
+    });
+</script>

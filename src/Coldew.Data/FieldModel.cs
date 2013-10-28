@@ -15,6 +15,8 @@ namespace Coldew.Data
 
         public virtual string Name { set; get; }
 
+        public virtual string Tip { set; get; }
+
         public virtual bool Required { set; get; }
 
         public virtual bool CanModify { set; get; }

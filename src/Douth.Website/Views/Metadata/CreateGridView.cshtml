@@ -1,0 +1,89 @@
+﻿@using Coldew.Website;
+@using Coldew.Api;
+@using Coldew.Website.Models;
+@{
+    ViewBag.Title = "创建视图";
+    Layout = "~/Views/Metadata/Layout.cshtml";
+    this.ViewBag.LeftMenu = "ViewManage";
+}
+
+<p class="lead">创建视图</p>
+<form class="form-horizontal" id="createForm">
+    
+    <div class="control-group">
+        <label class="control-label" >名称</label>
+        <div class="controls">
+            <input id="txtName" name="name" type="text" data-required="true"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >字段</label>
+        <div class="controls">
+            <table class="table" id="viewColumnTable">
+                <thead>
+                    <tr>
+                        <th>字段名称</th>
+                        <th>宽度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ViewSetupFieldModel field in this.ViewBag.fields)
+                    {
+                        <tr data-field-id="@field.fieldId">
+                            <td><label class='checkbox'><input type='checkbox' @field.checkedAttr />@field.name</label></td>
+                            <td><input value="@field.width"/></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >筛选条件</label>
+        <div class="controls" id="panLSearchFields">
+            @{this.Html.RenderPartial("SearchFields");}
+        </div>
+    </div>
+    <div class="control-group">
+    <div class="controls">
+        <button id="btnCreate" type="submit" class="btn btn-primary" data-loading-text="保存中...">创建</button>
+        <button id="btnCancel" type="button" class="btn">取消</button>
+    </div>
+    </div>
+</form>
+<script language="javascript" type="text/javascript">
+var objectId = "@Request["objectId"]";
+var returnUrl = "@this.Html.Raw(this.Url.Action("GridViewManage", new { objectId = Request["objectId"]}))";
+$("#createForm").validate({
+    sendForm : false,
+    onBlur: true,
+    onChange: true,
+	eachValidField : function() {
+		$(this).closest('.control-group').removeClass('error');
+        $(this).next('.help-inline').hide();
+	},
+	eachInvalidField : function() {
+		$(this).closest('.control-group').addClass('error');
+        $(this).next('.help-inline').show();
+	},
+    valid: function(){
+        var createInfo = {};
+        createInfo.name = $("#txtName").val();
+        createInfo.columns = $("#viewColumnTable").getViewColumn();
+        createInfo.search = $("#panLSearchFields").getSearch();
+        $("#btnCreate").button("loading");
+        $.post("@this.Url.Action("CreateGridView")", {objectId: objectId, json: $.toJSON(createInfo)}, function(data){
+            $("#btnCreate").button("reset");
+            if(data.result == 0){
+                location = returnUrl;
+            }
+            else{
+                alert(data.message);
+            }
+        });
+    }
+});
+$("#btnCancel").click(function(){
+    location = returnUrl;
+});
+</script>

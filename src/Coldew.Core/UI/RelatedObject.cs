@@ -5,6 +5,7 @@ using System.Text;
 using Coldew.Api.UI;
 using Coldew.Data;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace Coldew.Core.UI
 {
@@ -48,9 +49,10 @@ namespace Coldew.Core.UI
 
         public void ClearFieldData(Field field)
         {
-            List<Field> fields = this._fields.ToList();
+            List<Field> fields = this.Fields.ToList();
             fields.Remove(field);
             this._fields = fields;
+            this._fieldCodes = this._fields.Select(x => x.Code).ToList();
         }
 
         public RelatedObjectInfo Map()
@@ -65,7 +67,7 @@ namespace Coldew.Core.UI
         internal RelatedObjectModel MapModel()
         {
             RelatedObjectModel model = new RelatedObjectModel();
-            model.FieldCodes = this._fields.Select(x => x.Code).ToList();
+            model.FieldCodes = this._fieldCodes;
             model.ObjectCode = this._objectCode;
             return model;
         }

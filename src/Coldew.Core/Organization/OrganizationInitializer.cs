@@ -49,24 +49,6 @@ namespace Coldew.Core.Organization
                         Role = UserRole.Administrator,
                         Status = UserStatus.Normal
                     });
-
-                    orgManager.UserManager.Create(orgManager.System, new UserCreateInfo
-                    {
-                        Name = "user1",
-                        Account = "user1",
-                        Password = "123456",
-                        Status = UserStatus.Normal,
-                        MainPositionId = orgManager.PositionManager.TopPosition.ID
-                    });
-
-                    orgManager.UserManager.Create(orgManager.System, new UserCreateInfo
-                    {
-                        Name = "user2",
-                        Account = "user2",
-                        Password = "123456",
-                        Status = UserStatus.Normal,
-                        MainPositionId = orgManager.PositionManager.TopPosition.ID
-                    });
                 }
             }
             catch(Exception ex)

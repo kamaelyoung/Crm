@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Coldew.Data" assembly="Coldew.Data">
+    <class name="RenwuModel" table="gzl_renwu">
+        <id name="Id" type="Int32" column="renwu_id" unsaved-value="0">
+            <generator class="identity">
+            </generator>
+        </id>
+        <property name="Guid" type="String" column="renwu_guid"></property>
+        <property name="Bianhao" type="String" column="renwu_bianhao"></property>
+        <property name="XingdongId" type="Int32" column="xingdong_id"></property>
+        <property name="Yongyouren" type="String" column="renwu_yongyouren"></property>
+        <property name="Chuliren" type="String" column="renwu_chuliren"></property>
+        <property name="Zhuangtai" type="Int32" column="renwu_zhuangtai"></property>
+        <property name="ShijiChuliren" type="String" column="renwu_shijiChuliren"></property>
+        <property name="ChuliShijian" type="DateTime" column="renwu_chuliShijian"></property>
+        <property name="ChuliJieguo" type="int" column="renwu_chuliJieguo"></property>
+        <property name="ChuliShuoming" type="String" length="20000" column="renwu_chuliShuoming"></property>
+    </class>
+</hibernate-mapping>

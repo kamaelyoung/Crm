@@ -1,0 +1,228 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@using Coldew.Api;
+@{
+    ViewBag.Title = "组织管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    this.ViewBag.TopMenu = "OrgAdmin";
+}
+<script type="text/javascript" src='@this.Url.Content("~/js/positionManager.js")'></script>
+<script type="text/javascript" src='@this.Url.Content("~/js/positionCreateDialog.js")'></script>
+<script type="text/javascript" src='@this.Url.Content("~/js/positoinEditDialog.js")'></script>
+<script type="text/javascript" src='@this.Url.Content("~/js/userCreateDialog.js")'></script>
+<script type="text/javascript" src='@this.Url.Content("~/js/userEditDialog.js")'></script>
+<script type="text/javascript" src='@this.Url.Content("~/js/resetPasswordDialog.js")'></script>
+<script type="text/javascript" src='@this.Url.Content("~/js/positionSelectDialog.js")'></script>
+<div class="container-fluid">
+    <div class="row-fluid">
+    <div class="span3" id="positionManager">
+        <div class="btn-toolbar" style="margin-top: 0">
+            <button class="btn btnCreatePosition" title="创建职位" ><i class="icon-plus"></i>创建</button>
+            <button class="btn btnEditPositoin" title="修改职位" ><i class="icon-edit"></i>修改</button>
+            <button class="btn btnDeletePosition" title="删除职位" ><i class="icon-trash"></i>删除</button>  
+        </div>
+        <div class="positionTree">
+            
+        </div>
+        <div class="positionCreateDialog">
+            @{this.Html.RenderPartial("PositoinCreateDialog");}
+        </div>
+        <div class="positoinEditDialog">
+            @{this.Html.RenderPartial("PositoinEditDialog");}
+        </div>
+    </div>
+    <div class="span9">
+        <div class="btn-toolbar" style="margin-top: 0">
+            <button id="btnCreateUser" class="btn" title="创建用户" ><i class="icon-plus"></i>创建</button>
+            <button id="btnEditUser" disabled="disabled" class="btn" title="编辑用户" ><i class="icon-edit"></i>编辑</button>
+            <button id="btnResetPassword" disabled="disabled" class="btn" title="重置用户密码" ><i class="icon-edit"></i>重置密码</button>
+            <button id="btnMoveUser" disabled="disabled"  class="btn" title="移动用户" ><i class="icon-move"></i>移动</button>
+            <button id="btnLockUser" disabled="disabled" title="锁定用户" class="btn"><i class="icon-lock"></i>锁定</button>
+            <button id="btnActivateUser" disabled="disabled" title="激活用户" class="btn"><i class="icon-lock"></i>解锁</button>
+        </div>
+        <div id="userCreateDialog">
+            @{this.Html.RenderPartial("UserCreateDialog");}
+        </div>
+        <div id="userEditDialog">
+            @{this.Html.RenderPartial("UserEditDialog");}
+        </div>
+        <div id="resetPasswordDialog">
+            @{this.Html.RenderPartial("ResetPasswordDialog");}
+        </div>
+        <div id="positionSelectDialog">
+            @{this.Html.RenderPartial("PositionSelectDialog");}
+        </div>
+        <div id="userGrid">
+                
+        </div>
+    </div>
+    </div>
+</div>
+<script type="text/javascript" language="javascript">
+    var selectedNode;
+    var positionManager = $("#positionManager").positionManager({treenodeSelected: function(sender, node){
+        selectedNode = node;
+        loadUserGrid();
+    }});
+
+    var userCreateDialog= $("#userCreateDialog").userCreateDialog();
+    var userEditDialog= $("#userEditDialog").userEditDialog();
+    var resetPasswordDialog= $("#resetPasswordDialog").resetPasswordDialog();
+    var positionSelectDialog= $("#positionSelectDialog").positionSelectDialog();
+
+    function loadUserGrid(){
+        var positionId = selectedNode.treenode("option", "id");
+        $.get("@this.Url.Action("Users")", {positionId: positionId}, function(model){
+            if(model.result == 0){
+                userGrid.datagrid("option", "data", model.data);
+                $("#btnEditUser,#btnResetPassword,#btnMoveUser,#btnLockUser,#btnActivateUser").prop("disabled", true);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+    }
+
+    var userGrid = $("#userGrid").datagrid({
+		columns:[
+			{title: "帐号", width: 100, field:"account"},
+			{title: "姓名", width: 100, field:"name"},
+			{title: "职位", width: 150, field:"position"},
+			{title: "邮件地址", width: 250, field:"email"},
+			{title: "状态", width: 150, field:"status"}
+		],
+        height: "auto",
+		canSort: false,
+		singleSelect: false,
+		showNumberRow: true,
+        selectedRow: function(){
+            var rows = userGrid.datagrid("getSelectedRows");
+            $("#btnResetPassword,#btnMoveUser,#btnLockUser,#btnActivateUser").prop("disabled", false);
+            $("#btnEditUser").prop("disabled", rows.length != 1);
+        },
+        unselectedRow: function(){
+            var rows = userGrid.datagrid("getSelectedRows");
+            $("#btnResetPassword,#btnMoveUser,#btnLockUser,#btnActivateUser").prop("disabled", rows.length == 0);
+            $("#btnEditUser").prop("disabled", rows.length != 1);
+        }
+	});
+
+    $("#btnKeywordSearch").click(function(){
+        var formValue = $(".navbar-form").getFormValue();
+        $.get("@this.Url.Action("SearchUsers")", formValue, function(model){
+            if(model.result == 0){
+                userGrid.datagrid("option", "data", model.data);
+                $("#btnEditUser,#btnResetPassword,#btnMoveUser,#btnLockUser,#btnActivateUser").prop("disabled", true);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+
+    $("#btnCreateUser").click(function(){
+        var positionId = selectedNode.treenode("option", "id");
+        userCreateDialog.userCreateDialog("create", positionId, function(){
+            loadUserGrid();
+        });
+        return false;
+    });
+    
+    $("#btnEditUser").click(function(){
+        var row = userGrid.datagrid("getSelectedRow");
+        var user = row.datarow("option", "data");
+        userEditDialog.userEditDialog("edit", user, function(){
+            loadUserGrid();
+        });
+        return false;
+    });
+
+    $("#btnResetPassword").click(function(){
+        var rows = userGrid.datagrid("getSelectedRows");
+        var userIds = $.map(rows, function(row){
+            return row.datarow("option", "data").id;
+        })
+        userIds = userIds.join(',');
+        resetPasswordDialog.resetPasswordDialog("reset", userIds, function(){
+            alert("重置成功!");
+        });
+        return false;
+    });
+    
+    $("#btnMoveUser").click(function(){
+        positionSelectDialog.positionSelectDialog("select", function(positionId){
+            var rows = userGrid.datagrid("getSelectedRows");
+            var userIds = $.map(rows, function(row){
+                return row.datarow("option", "data").id;
+            })
+            userIds = userIds.join(',');
+            $.post("@this.Url.Action("MoveUser")", {userIds: userIds, positionId: positionId}, function(model){
+                if(model.result == 0){
+                    loadUserGrid();
+                }
+                else{
+                    alert(model.message)
+                }
+            });
+        });
+        return false;
+    });
+    
+    $("#btnLockUser").click(function(){
+        var rows = userGrid.datagrid("getSelectedRows");
+        var userIds = $.map(rows, function(row){
+            return row.datarow("option", "data").id;
+        })
+        userIds = userIds.join(',');
+        $("#btnLockUser").button("loading");
+        $.post("@this.Url.Action("LockUser")", {userIds: userIds}, function(model){
+            $("#btnLockUser").button("reset");
+            if(model.result == 0){
+                loadUserGrid();
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+
+    $("#btnActivateUser").click(function(){
+        var rows = userGrid.datagrid("getSelectedRows");
+        var userIds = $.map(rows, function(row){
+            return row.datarow("option", "data").id;
+        })
+        userIds = userIds.join(',');
+        $("#btnActivateUser").button("loading");
+        $.post("@this.Url.Action("ActivateUser")", {userIds: userIds}, function(model){
+            $("#btnActivateUser").button("reset");
+            if(model.result == 0){
+                loadUserGrid();
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+
+    $("#btnDelete").click(function(){
+        var rows = userGrid.datagrid("getSelectedRows");
+        var customerIds = $.map(rows, function(row){
+            return row.datarow("option", "data").id;
+        })
+        $("#btnDelete").button("loading");
+        $.post("@this.Url.Action("Delete")", {customerIdsJson: $.toJSON(customerIds)}, function(model){
+            $("#btnDelete").button("reset");
+            if(model.result == 0){
+                var pageInfo = pager.pager("option").pageInfo;
+                loadCustomerGrid(_sousuoXinxi, pageInfo.start);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+</script>

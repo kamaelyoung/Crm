@@ -75,6 +75,7 @@
     <Compile Include="ColdewDetailsInput.cs" />
     <Compile Include="ColdewInputFactory.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ChengyuanController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
@@ -82,11 +83,14 @@
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="ColdewInput.cs" />
     <Compile Include="ColdewSearchInput.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
+    <Compile Include="Controllers\Workflow\LiuchengGuanliController.cs" />
     <Compile Include="ExtendHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ImportExportHelper.cs" />
+    <Compile Include="Models\ChengyuanXuanzeTab.cs" />
     <Compile Include="Models\ControllerResultModel.cs" />
     <Compile Include="Models\MetadataEditModel.cs" />
     <Compile Include="Models\DataGridColumnModel.cs" />
@@ -107,9 +111,19 @@
     <Compile Include="Models\StringFieldEditModel.cs" />
     <Compile Include="Models\UserGridModel.cs" />
     <Compile Include="Models\ViewSetupFieldModel.cs" />
+    <Compile Include="Models\Workflow\DatagridModel.cs" />
+    <Compile Include="Models\Workflow\JianglaiZhipaiModel.cs" />
+    <Compile Include="Models\Workflow\LiuchengCaidan.cs" />
+    <Compile Include="Models\Workflow\LiuchengChexiaoModel.cs" />
+    <Compile Include="Models\Workflow\LiuchengMobanModel.cs" />
+    <Compile Include="Models\Workflow\LiuchengModel.cs" />
+    <Compile Include="Models\Workflow\QuxiaoZhipaiModel.cs" />
+    <Compile Include="Models\Workflow\RenwuModel.cs" />
+    <Compile Include="Models\Workflow\RenwuZhipaiModel.cs" />
     <Compile Include="NewtonJsonResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebHelper.cs" />
+    <Compile Include="ColdewGridViewFilterInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\bootstrap-responsive.min.css" />
@@ -135,21 +149,6 @@
     <Content Include="css\smoothness\jquery-ui-1.8.23.custom.css" />
     <Content Include="css\smoothness\jquery-ui-tree.css" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
-    <Content Include="Content\themes\base\jquery-ui.css" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="img\forward_24.gif" />
     <Content Include="img\glyphicons-halflings-white.png" />
     <Content Include="img\glyphicons-halflings.png" />
@@ -200,24 +199,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery-1.4.4.js" />
-    <Content Include="Scripts\jquery-1.4.4.min.js" />
-    <Content Include="Scripts\jquery-1.4.4-vsdoc.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui.js" />
-    <Content Include="Scripts\jquery-ui.min.js" />
-    <Content Include="Scripts\MicrosoftAjax.js" />
-    <Content Include="Scripts\MicrosoftAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

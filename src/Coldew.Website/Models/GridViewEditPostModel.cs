@@ -10,6 +10,7 @@ namespace Coldew.Website.Models
     {
         public string id;
         public string name;
+        public bool isShared;
         public List<GridViweColumnSetupModel> columns;
         public JObject search;
     }

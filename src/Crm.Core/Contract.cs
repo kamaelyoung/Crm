@@ -91,7 +91,7 @@ namespace Crm.Core
         //    this.EmailNotified = notified;
         //}
 
-        public bool CanPreview(User user)
+        public override bool CanPreview(User user)
         {
             if (user == this.Creator)
             {
@@ -111,7 +111,7 @@ namespace Crm.Core
             return false;
         }
 
-        public bool CanDelete(User user)
+        public override bool CanDelete(User user)
         {
             if (user == this.Creator)
             {

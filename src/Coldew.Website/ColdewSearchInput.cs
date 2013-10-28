@@ -28,12 +28,12 @@ namespace Coldew.Website
             }
         }
 
-        public MvcHtmlString String(FieldInfo field)
+        public virtual MvcHtmlString String(FieldInfo field)
         {
             return new MvcHtmlString(string.Format("<input class='keywordSearch' type='text' name='{0}' />", field.Code));
         }
 
-        public MvcHtmlString DropdownList(ListFieldInfo field)
+        public virtual MvcHtmlString DropdownList(ListFieldInfo field)
         {
             string template = @"<select class='keywordSearch' name='{0}'>{1}</select>";
             StringBuilder itemSb= new StringBuilder();
@@ -45,12 +45,12 @@ namespace Coldew.Website
             return new MvcHtmlString(string.Format(template, field.Code, itemSb.ToString()));
         }
 
-        public MvcHtmlString Number(NumberFieldInfo field)
+        public virtual MvcHtmlString Number(NumberFieldInfo field)
         {
             return new MvcHtmlString(string.Format("<div class='numberSearch' data-field-code='{0}'><input type='text' name='min' class='input-small'/> <span>到</span><input type='text' name='max' class='input-small'/></div>", field.Code));
         }
 
-        public MvcHtmlString Date(DateFieldInfo field)
+        public virtual MvcHtmlString Date(DateFieldInfo field)
         {
             return new MvcHtmlString(string.Format("<div class='dateSearch' data-field-code='{0}'><input type='text' name='start' class='date input-small'/> <span>到</span><input type='text' name='end' class='date input-small'/></div>", field.Code));
         }

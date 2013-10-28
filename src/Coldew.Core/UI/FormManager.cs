@@ -22,6 +22,23 @@ namespace Coldew.Core.UI
             this._forms = new List<Form>();
             this._lock = new ReaderWriterLock();
             this._coldewObject.FieldDeleted += new TEventHandler<ColdewObject, Field>(ColdewObject_FieldDeleted);
+            this._coldewObject.FieldCreated += new TEventHandler<ColdewObject, Field>(ColdewObject_FieldCreated);
+        }
+
+        void ColdewObject_FieldCreated(ColdewObject sender, Field field)
+        {
+            this._lock.AcquireReaderLock(0);
+            try
+            {
+                foreach (Form form in this._forms)
+                {
+                    form.Sections[0].Inputs.Add(new Input(field, field.Index));
+                }
+            }
+            finally
+            {
+                this._lock.ReleaseReaderLock();
+            }
         }
 
         void ColdewObject_FieldDeleted(ColdewObject sender, Field field)
@@ -48,13 +65,14 @@ namespace Coldew.Core.UI
                 string sectionModelsJson = null;
                 if (sections != null)
                 {
-                    sectionModelsJson = JsonConvert.SerializeObject(sections.Select(x => x.MapModel()));
+                    sectionModelsJson = JsonConvert.SerializeObject(sections.Select(x => x.MapModel()).ToList());
                 }
 
                 string relatedModelsJson = null;
                 if(relateds != null)
                 {
-                    relatedModelsJson = JsonConvert.SerializeObject(relateds.Select(x => x.MapModel()));
+                    var models = relateds.Select(x => x.MapModel()).ToList();
+                    relatedModelsJson = JsonConvert.SerializeObject(models);
                 }
 
                 FormModel model = new FormModel

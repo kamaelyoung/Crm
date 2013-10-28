@@ -44,7 +44,7 @@ namespace Coldew.Core
         public GridView Create(GridViewType type, string code, string name, User user, bool isShared, bool isSystem, int index, 
             string searchExpressionJson, List<GridViewColumnSetupInfo> setupColumns)
         {
-            var columnModels = setupColumns.Select(x => new GridViewColumnModel { FieldId = x.FieldId, Width = x.Width });
+            var columnModels = setupColumns.Select(x => new GridViewColumnModel { FieldId = x.FieldId, Width = x.Width});
             string columnJson = JsonConvert.SerializeObject(columnModels);
             GridViewModel model = new GridViewModel
             {

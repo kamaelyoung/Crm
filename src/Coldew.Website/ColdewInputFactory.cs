@@ -17,6 +17,11 @@ namespace Coldew.Website
             return new ColdewSearchInput();
         }
 
+        public virtual ColdewGridViewFilterInput CreateGridViewFilterInput()
+        {
+            return new ColdewGridViewFilterInput();
+        }
+
         public virtual ColdewDetailsInput CreateDetailsInput()
         {
             return new ColdewDetailsInput();

@@ -12,9 +12,10 @@ namespace Coldew.Website.Models
         public GridViewEditModel(GridViewInfo viewInfo)
         {
             this.name = viewInfo.Name;
+            this.isShared = viewInfo.IsShared;
             this.search = viewInfo.SearchExpression;
         }
-
+        public bool isShared;
         public string name;
         public string search;
     }

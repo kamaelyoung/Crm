@@ -1,0 +1,36 @@
+﻿<div class="modal hide" style="width: 650px;" tabindex="-1" >
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3 >将来指派</h3>
+    </div>
+        <form class="form-horizontal">
+    <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" >用户</label>
+                <div class="controls">
+                    <div class="yonghuXuanze">
+                        <input type="text" class="xingming" name="dailirenXingming" readonly="readonly" data-required="true"/>
+                        <input type="hidden" class="zhanghao" name="dailirenZhanghao" data-required="true"/>
+                        <button class="btn btnXuanze" type="button">选择</button>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">开始时间</label>
+                <div class="controls">
+                    <input type="text" class="date" value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" name="kaishiShijian" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">开始时间</label>
+                <div class="controls">
+                    <input type="text" class="date" name="jieshuShijian" />
+                </div>
+            </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary btnZhipai" type="submit">确定</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true" type="button">关闭</button>
+    </div>
+        </form>
+</div>

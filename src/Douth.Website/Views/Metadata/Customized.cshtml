@@ -1,0 +1,84 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@using Coldew.Api;
+@{
+    Layout = "~/Views/Metadata/Layout.cshtml";
+}
+<script type="text/javascript" src='@this.Url.Content("~/js/metadataSearchPopover.js")'></script>
+<div class="row-fluid">
+    <div class="span2">
+        <p class="lead">@this.ViewBag.Title</p>
+    </div>
+    <div class="span10">
+        <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, objectId = Request["objectId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
+        <button id="btnExport" class="btn" data-loading-text="导出中..."><i class="icon-download"></i>导出Excel</button> 
+    </div>
+</div>
+
+<div id="metadataGrid">
+                
+</div>
+        
+<div id="pager" class="pull-right" style="height: 30px">
+            
+</div>
+
+<script type="text/javascript" language="javascript">
+    var objectId = "@this.Html.Raw(this.Request["objectId"])";
+    var viewId = "@this.ViewBag.viewId";
+    var metadataGrid = $("#metadataGrid").datagrid({
+		columns: @this.Html.Raw(this.ViewBag.columnsJson),
+        height: "auto",
+		canSort: false,
+		singleSelect: false,
+		showNumberRow: true,
+        sort: function(sender, args){
+            var pageInfo = pager.pager("option").pageInfo;
+            loadMetadataGrid(_searchInfo, pageInfo.start, null, args);
+            return false;
+        }
+	});
+
+    var pager = $("#pager").pager({change: function(event, args){
+        loadMetadataGrid(_searchInfo, args.start);
+    }});
+
+    var _searchInfo;
+    function loadMetadataGrid(searchInfo, start, cb, orderBy){
+        _searchInfo = searchInfo;
+        var args = {objectId: objectId, viewId: viewId, start: start, size: 20, orderBy: orderBy};
+        if(_searchInfo){
+            var searchInfoJson = $.toJSON(_searchInfo);
+            args.searchInfoJson = searchInfoJson;
+        }
+        $.get("@this.Url.Action("CustomizedMetadatas")", args, function(model){
+            if(cb){
+                cb();
+            }
+            if(model.result == 0){
+                $("#metadataGrid").datagrid("option", "data", model.data.list);
+                $("#pager").pager("option", "pageInfo", {start: start, size: 20, count: model.data.count})
+                $("#btnDelete, #btnFavorite").prop("disabled", true);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+    }
+    
+    loadMetadataGrid(null, 0);
+
+    $("#btnExport").click(function(){
+        $("#btnExport").button("loading");
+        $.get("@this.Url.Action("ExportCustomized")", {objectId: objectId, viewId: viewId}, function(model){
+            $("#btnExport").button("reset");
+            if(model.result == 0){
+                open("@this.Url.Action("DownloadExportFile", new {objectId = Request["objectId"]})" + "&fileName=" + model.data);
+            }
+            else{
+                alert(model.message)
+            }
+        });
+        return false;
+    });
+</script>

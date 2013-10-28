@@ -1,0 +1,19 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+@{
+    Layout = "~/Views/Metadata/Layout.cshtml";
+    this.ViewBag.LeftMenu = "Import";
+}
+<p class="lead">@this.ViewBag.Title</p>
+<form enctype="multipart/form-data" action="@this.Url.Action("UploadImportFile")" method="post">
+     <fieldset>
+        <legend>第一步</legend>
+        <a class="btn" href="@this.Url.Action("DownloadImportTemplate", new {objectId = this.Request["objectId"]})"><i class="icon-download"></i>下载模板</a>
+    </fieldset>
+     <fieldset>
+        <legend>第二步</legend>
+        <input type="hidden" name="objectId" value="@this.Request["objectId"]"/>
+        <input type="file" name="importFile"/>
+        <button class="btn"><i class="icon-upload"></i>上传</button>
+    </fieldset>
+</form>

@@ -1,0 +1,44 @@
+﻿@using Coldew.Api.UI;
+@using Coldew.Api;
+@using Coldew.Website;
+@{
+    FormInfo formInfo = this.ViewBag.formInfo;
+    MetadataInfo metadataInfo = this.ViewBag.metadataInfo;
+    Dictionary<string, PropertyInfo> metadataPropertys = metadataInfo.Propertys.ToDictionary(x => x.Code);
+    ColdewDetailsInput crmInput = WebHelper.ColdewInputFactory.CreateDetailsInput();
+}
+@foreach (SectionInfo sectionInfo in formInfo.Sections)
+{
+<fieldset>
+    <legend>@sectionInfo.Title</legend>
+    <table>
+    @for (int count = 0; count < sectionInfo.Inputs.Count; ++count)
+    {
+        if (count % sectionInfo.ColumnCount == 0)
+        {
+            @this.Html.Raw("<tr>");
+        }
+        FieldInfo field = sectionInfo.Inputs[count].Field;
+    <td>
+    <div class="control-group">
+        <label class="control-label" >
+            @field.Name：
+        </label>
+        <div class="controls">
+            @crmInput.Input(field, metadataPropertys)
+        </div>
+    </div>
+    </td>
+        if (count % sectionInfo.ColumnCount == 1)
+        {
+            @this.Html.Raw("</tr>");
+        }
+        else if (count == sectionInfo.Inputs.Count - 1)
+        {
+            @this.Html.Raw("<td></td></tr>");
+        }
+    }
+    </table>
+</fieldset>
+}
+

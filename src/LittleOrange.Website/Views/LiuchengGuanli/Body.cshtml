@@ -1,0 +1,123 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+<script type="text/javascript" src='@this.Url.Content("~/js/renwuGuanliDialog.js")'></script>
+<div class="container-fluid">
+    <div class="row-fluid">
+    <div class="span2">
+        <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">管理</li>
+            <li class="active"><a href="@this.Url.Action("Index", "LiuchengGuanli")">流程管理</a></li>
+        </ul>
+        </div>
+    </div>
+    <div id="daibanDiv" class="span10">
+        <div class="row-fluid">
+            <div class="span2">
+                <p class="lead">流程管理</p>
+            </div>
+            <div class="span10">
+                <button id="btnDakaiSousuo" class="btn"><i class="icon-search"></i>查询</button>
+                <button id="btnRenwuGuanli" class="btn"><i class="icon-tasks"></i>任务管理</button>
+            </div>
+        </div>
+
+        <div id="liuchengGrid">
+                
+        </div>
+        
+        
+        <div id="pager" class="pull-right" style="height: 30px">
+            
+        </div>
+        @{this.Html.RenderPartial("LiuchengSousuoPopover");}
+        
+    </div>
+    </div>
+</div>
+<div id="chengyuanDialog">
+    @{this.Html.RenderAction("Dialog", "chengyuan");}
+</div>
+<div id="liuchengtuDialog">
+    @{this.Html.RenderPartial("LiuchengtuDialog");}
+</div>
+<div id="renwuGuanliDialog">
+    @{this.Html.RenderPartial("RenwuGuanliDialog");}
+</div>
+<script language="javascript" type="text/javascript">
+    var chengyuanDialog = $("#chengyuanDialog").chengyuanDialog();
+    var liuchengtuDialog = $("#liuchengtuDialog").liuchengtuDialog();
+    var renwuGuanliDialog = $("#renwuGuanliDialog").renwuGuanliDialog({
+        renwuListUrl: '@this.Url.Action("RenwuList")', 
+        xiugaiRenwuChulirenUrl: '@this.Url.Action("XiugaiRenChuliren")', 
+        chengyuanDialog: chengyuanDialog
+    });
+    var renwuSousuoPopover = $(".renwuSousuoPopover").renwuSousuoPopover({sousuohou: function(event, args){
+        jiazaiLiucheng(args, 0);
+    }});
+    var btnDakaiSousuo = $("#btnDakaiSousuo").click(function(event){
+        renwuSousuoPopover.show().position({my: "center top", at: "center bottom", of: btnDakaiSousuo});
+        event.stopPropagation();
+    });
+
+    var liuchengGrid = $("#liuchengGrid").datagrid({
+		columns:[
+			{title: "", width: 35, field:"id", render: function(row, args){
+				return $("<a href='#'><img src='/img/icon-liuchengtu.gif' title='流程图' />"+args.value+"</a>")
+                    .click(function(){
+                        liuchengtuDialog.liuchengtuDialog("xianshi", args.data.liuchengtuUrl);
+                        return false;
+                    });
+			}},
+			{title: "流程名", width: 150, field:"mingcheng", render: function(row, args){
+				return "<a target='_blank' href='" + args.data.url + "'>"+args.value+"</a>";
+			}},
+			{title: "发起人", field:"faqiren"},
+			{title: "状态", width: 60, field:"zhuangtai"},
+			{title: "发起时间", width: 150, field:"faqiShijian"},
+			{title: "结束时间", width: 150, field:"jieshuShijian"},
+			{title: "摘要", width: 150, field:"zhaiyao"}
+		],
+		canSort: false,
+		singleSelect: false,
+		showNumberRow: true,
+        height: "auto",
+        selectedRow: function(){
+            btnRenwuGuanli.prop("disabled", false);
+        },
+        unselectedRow: function(){
+            var rows = liuchengGrid.datagrid("getSelectedRows");
+            btnRenwuGuanli.prop("disabled", rows.length == 0);
+        }
+	});
+
+    var btnRenwuGuanli = $("#btnRenwuGuanli").click(function(){
+        var selectedRow = liuchengGrid.datagrid("getSelectedRow");
+        var liucheng = selectedRow.datarow("option", "data");
+        renwuGuanliDialog.renwuGuanliDialog("guanli", liucheng.guid)
+    });
+    
+    var pager = $("#pager").pager({change: function(event, args){
+        jiazaiLiucheng(_sousuoXinxi, args.start);
+    }});
+
+    var _sousuoXinxi;
+    function jiazaiLiucheng(sousuoXinxi, start){
+        _sousuoXinxi = sousuoXinxi;
+        var args = {start: start, size: 20};
+        if(_sousuoXinxi){
+            $.extend(args, _sousuoXinxi);
+        }
+        btnRenwuGuanli.prop("disabled", true);
+        $.get("@this.Url.Action("LiuchengList")", args, function(model){
+            if(model.result == 0){
+                liuchengGrid.datagrid("option", "data", model.data.list);
+                pager.pager("option", "pageInfo", {start: start, size: 20, count: model.data.count})
+            }
+            else{
+                alert(model.message)
+            }
+        });
+    }
+    jiazaiLiucheng(null, 0);
+</script>

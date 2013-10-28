@@ -1,0 +1,43 @@
+﻿@using Coldew.Website;
+@using Coldew.Website.Models;
+<div class="popover bottom renwuSousuoPopover" style="width:400px;max-width:400px;">
+    <div class="arrow">
+    </div>
+    <h3 class="popover-title">查询任务</h3>
+    <div class="popover-content" style="width:400px;">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label style="width: 80px" class="control-label">流程</label>
+                <div style="margin-left: 120px;" class="controls">
+                    <select name="liuchengMobanId">
+                        <option></option>
+                        @foreach (LiuchengMobanModel mobanModel in WebHelper.LiuchengMobanModelList)
+                        {
+                            <option value="@mobanModel.guid">@mobanModel.mingcheng</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label style="width: 80px" class="control-label">开始时间</label>
+                <div style="margin-left: 120px;" class="controls">
+                    <input type="text" name="kaishiShijian" class='date input-small'/>到
+                    <input type="text" name="jieshuShijian" class='date input-small'/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label style="width: 80px" class="control-label">摘要</label>
+                <div style="margin-left: 120px;" class="controls">
+                    <input type="text" name="zhaiyao" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div style="margin-left: 120px;" class="controls">
+                    <button type="submit" class="btn btn-primary">确定</button>
+                    <button type="button btnQuxiao" class="btn">取消</button>
+                    <button type="reset" class="btn">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

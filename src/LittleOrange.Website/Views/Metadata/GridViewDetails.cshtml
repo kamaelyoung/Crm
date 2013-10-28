@@ -1,0 +1,84 @@
+﻿@using Coldew.Website.Models;
+@using Coldew.Api;
+@using Coldew.Website;
+<div id="basicInfo">
+        <div class="control-group">
+            <label class="control-label" >名称</label>
+            <div class="controls">
+                <input id="txtName" name="name" type="text" data-required="true"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" >共享给所有人</label>
+            <div class="controls">
+                <label class="radio"><input type="radio" name="isShared" value="false" checked="checked"/>否</label>
+                <label class="radio"><input type="radio" name="isShared" value="true"/>是</label>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >字段</label>
+        <div class="controls">
+            <table class="table" id="viewColumnTable">
+                <thead>
+                    <tr>
+                        <th>字段名称</th>
+                        <th>宽度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ViewSetupFieldModel field in this.ViewBag.fields)
+                    {
+                        <tr data-field-id="@field.fieldId">
+                            <td><label class='checkbox'><input type='checkbox' @field.checkedAttr />@field.name</label></td>
+                            <td><input name='width' value="@field.width"/></td>
+                            <input type="hidden" name="fieldId" value="@field.fieldId" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" >筛选条件</label>
+        <div class="controls" id="panLSearchFields">
+            <table>
+            @{
+                ColdewObjectInfo coldewObject = this.ViewBag.coldewObject;
+                ColdewGridViewFilterInput filterInput = WebHelper.ColdewInputFactory.CreateGridViewFilterInput();
+            }
+            @for (int count = 0; count < coldewObject.Fields.Count; ++count)
+            {
+                if (count % 2 == 0)
+                {
+                    @this.Html.Raw("<tr>");
+                }
+                FieldInfo field = coldewObject.Fields[count];
+            <td>
+            <div class="control-group">
+                <label class="control-label" style="width: 80px" >
+                    @field.Name
+                </label>
+                <div style="margin-left: 120px;" class="controls condition" data-field-code="@field.Code">
+                @filterInput.Input(field)
+                </div>
+            </div>
+            </td>
+                if(count % 2 == 1)
+                {
+                    @this.Html.Raw("</tr>");
+                }
+                else if (count == coldewObject.Fields.Count - 1)
+                {
+                    @this.Html.Raw("<td></td></tr>");
+                }
+            }
+            </table>
+            <div class="control-group">
+                <label style="width: 80px" class="control-label">关键字</label>
+                <div style="margin-left: 120px;" class="controls">
+                    <input type="text" class="keyword" name="keyword" />
+                </div>
+            </div>
+        </div>
+    </div>
