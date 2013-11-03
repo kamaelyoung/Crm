@@ -86,8 +86,6 @@ namespace Coldew.Core
             }
         }
 
-
-
         public Field CreateStringField(string code, string name, bool required, bool canModify, bool canInput, int index, string defaultValue)
         {
             return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.String, defaultValue);
@@ -415,6 +413,8 @@ namespace Coldew.Core
             }
             this._fields = this._fields.OrderBy(x => x.Index).ToList();
             this.MetadataManager.Load();
+            this.GridViewManager.Load();
+            this.FormManager.Load();
         }
     }
 }

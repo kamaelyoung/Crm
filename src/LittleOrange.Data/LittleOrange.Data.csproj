@@ -40,8 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ZhiranrenModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GongsiKehuModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GongsiKehuModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ZhiranrenModel.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

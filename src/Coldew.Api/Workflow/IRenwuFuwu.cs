@@ -7,8 +7,6 @@ namespace Coldew.Api.Workflow
 {
     public interface IRenwuFuwu
     {
-        List<RenwuXinxi> GetFaqideRenwu(string chulirenZhanghao, string mobanId, DateTime? kaishiShijian, DateTime? jieshuShijian, string zhaiyao, int start, int size, out int count);
-
         List<RenwuXinxi> GetChulizhongdeRenwu(string chulirenZhanghao, string mobanId, DateTime? kaishiShijian, DateTime? jieshuShijian, string zhaiyao, int start, int size, out int count);
 
         List<RenwuXinxi> GetZhipaideRenwu(string zhipairen, int start, int size, out int count);
@@ -31,8 +29,12 @@ namespace Coldew.Api.Workflow
 
         XingdongXinxi GetXingdong(string xingdongId);
 
-        RenwuXinxi GetRenwu(string renwuId);
+        RenwuXinxi GetRenwu(string liuchengId, string renwuId);
 
         List<RenwuXinxi> GetLiuchengRenwu(string liuchengId);
+
+        RenwuXinxi WanchengRenwu(string liuchengId, string chulirenAccount, string renwuId, string shuoming);
+
+        XingdongXinxi ChuangjianXingdong(string liuchengId, string code, string name, List<string> chulirenAccounts, string zhaiyao, DateTime? qiwangWanchengShijian);
     }
 }

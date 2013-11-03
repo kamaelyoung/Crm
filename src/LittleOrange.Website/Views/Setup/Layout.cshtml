@@ -9,7 +9,7 @@
     <div class="row-fluid">
     <div class="span2">
         <div class="well sidebar-nav">
-            @{this.Html.RenderPartial("LeftMenu");}
+            @{this.Html.RenderAction("LeftMenu", "Setup", new { leftMenu = this.ViewBag.LeftMenu });}
         </div>
     </div>
     <div class="span10">
@@ -19,5 +19,5 @@
 </div>
 
 <script type="text/javascript" language="javascript">
-    $(".navbar-form").attr("action", "@this.Url.Action("Index", "Customer")");
+    $(".navbar-form").attr("action", "@this.Url.Action("Index", "Metadata")");
 </script>

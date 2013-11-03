@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Coldew.Data" assembly="Coldew.Data">
+    <class name="LiuchengMobanModel" table="gzl_liuchengMoban">
+        <id name="ID" type="string" column="moban_id">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="Code" type="String" column="moban_code"></property>
+        <property name="Name" type="String" column="moban_name"></property>
+        <property name="ObjectCode" type="String" column="object_code"></property>
+        <property name="FaqiFormCode" type="String" column="faqiForm_code"></property>
+        <property name="BuzhouListJson" type="String" length="20000" column="moban_buzhouJson"></property>
+        <property name="Remark" type="String" length="20000" column="moban_remark"></property>
+    </class>
+</hibernate-mapping>

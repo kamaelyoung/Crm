@@ -9,7 +9,7 @@ namespace Coldew.Core.Workflow
 {
     public class YinqingFuwu : IYinqingFuwu
     {
-        Yinqing _yingqing;
+        LiuchengYinqing _yingqing;
 
         public YinqingFuwu(ColdewManager coldewManger)
         {
@@ -19,12 +19,12 @@ namespace Coldew.Core.Workflow
         public List<LiuchengMobanXinxi> GetLiuchengMobanByYonghu(string yonghuZhanghao)
         {
             User yonghu = this._yingqing.GetYonghu(yonghuZhanghao);
-            return this._yingqing.LiuchengMobanList.Where(x => x.NengFaqi(yonghu)).Select(x => x.Map()).ToList();
+            return this._yingqing.LiuchengMobanManager.GetAllMoban().Where(x => x.NengFaqi(yonghu)).Select(x => x.Map()).ToList();
         }
 
         public List<LiuchengMobanXinxi> GetSuoyouLiuchengMoban()
         {
-            return this._yingqing.LiuchengMobanList.Select(x => x.Map()).ToList();
+            return this._yingqing.LiuchengMobanManager.GetAllMoban().Select(x => x.Map()).ToList();
         }
     }
 }

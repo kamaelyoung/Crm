@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="LittleOrange.Data" assembly="LittleOrange.Data">
+    <class name="GongsiKehuModel" table="crm_gongsiKehu">
+        <id name="ID" type="string" column="cust_id">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="PropertysJson" type="String" length="20000" column="metedata_propertysJson"></property>
+    </class>
+</hibernate-mapping>

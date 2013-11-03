@@ -21,5 +21,12 @@ namespace Coldew.Core.UI
             Form form = cObject.FormManager.GetFormByCode(code);
             return form.Map();
         }
+
+        public FormInfo GetFormByCode(string objectCode, string code)
+        {
+            ColdewObject cObject = this._coldewManager.ObjectManager.GetFormByCode(objectCode);
+            Form form = cObject.FormManager.GetFormByCode(code);
+            return form.Map();
+        }
     }
 }

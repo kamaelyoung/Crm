@@ -7,11 +7,18 @@
         string indexAreaMenuClass = this.ViewBag.LeftMenu == "Index" ? "class='active'" : "";
         string customerAreaMenuClass = this.ViewBag.LeftMenu == "CustomerArea" ? "class='active'" : "";
     }
-    <li @this.Html.Raw(indexAreaMenuClass)><a href="@this.Url.Action("Index")">基本设置</a></li>
-    <li @this.Html.Raw(customerAreaMenuClass)><a href="@this.Url.Action("CustomerArea")">客户区域配置</a></li>
+    <li @this.Html.Raw(indexAreaMenuClass)><a href="@this.Url.Action("Index", "Setup")">基本设置</a></li>
     @foreach (ColdewObjectInfo formInfo in WebHelper.ColdewObjects)
     {
         string metadataMenuClass = formInfo.ID == Request["objectId"] ? "class='active'" : "";
-        <li @this.Html.Raw(metadataMenuClass)><a href="@this.Url.Action("Extend", new { objectId = formInfo.ID })">@string.Format("{0}{1}", formInfo.Name, "扩展")</a></li>
+        <li @this.Html.Raw(metadataMenuClass)><a href="@this.Url.Action("Extend", "Setup", new { objectId = formInfo.ID })">@string.Format("{0}{1}", formInfo.Name, "扩展")</a></li>
     }
+
+    @{
+        string orgAdminMenuClass = this.ViewBag.LeftMenu == "OrgAdmin" ? "class='active'" : "";
+        string groupMenuClass = this.ViewBag.LeftMenu == "Group" ? "class='active'" : "";
+    }
+    <li class="nav-header">组织</li>
+    <li @this.Html.Raw(orgAdminMenuClass)><a href="@this.Url.Action("Index", "Org")">组织管理</a></li>
+    @*<li @this.Html.Raw(groupMenuClass)><a href="@this.Url.Action("Group", "Org")">用户组管理</a></li>*@
 </ul>

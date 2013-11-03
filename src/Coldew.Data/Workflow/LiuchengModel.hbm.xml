@@ -7,7 +7,7 @@
             </generator>
         </id>
         <property name="Guid" type="String" column="liucheng_guid"></property>
-        <property name="MobanId" type="int" column="moban_id"></property>
+        <property name="MobanId" type="string" column="moban_id"></property>
         <property name="Mingcheng" type="String" column="liucheng_mingcheng"></property>
         <property name="Faqiren" type="String" column="liucheng_faqiren"></property>
         <property name="FaqiShijian" type="DateTime" column="liucheng_faqiShijian"></property>

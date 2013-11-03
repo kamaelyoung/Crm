@@ -16,7 +16,7 @@ namespace Coldew.Website.Models
             this.id = renwu.Id;
             this.guid = renwu.Guid;
             this.kaishiShijian = renwu.Xingdong.KaishiShijian.ToString();
-            this.mingcheng = renwu.Xingdong.Mingcheng;
+            this.mingcheng = renwu.Xingdong.Name;
             if (!renwu.Xingdong.QiwangWanchengShijian.HasValue)
             {
                 this.qiwangWanchengShijian = renwu.Xingdong.QiwangWanchengShijian.ToString();
@@ -25,7 +25,6 @@ namespace Coldew.Website.Models
             this.liuchengGuid = renwu.Xingdong.liucheng.Guid;
             this.liuchengtuUrl = string.Format("{0}?liuchengId={1}", controller.Url.Action("Liuchengtu"), renwu.Xingdong.liucheng.Guid);
             this.liuchengMingcheng = renwu.Xingdong.LiuchengMingcheng;
-            this.shiTuihuide = renwu.Xingdong.Tuihuide;
             if (renwu.ChuliShijian.HasValue)
             {
                 this.wanchengShijian = renwu.ChuliShijian.ToString();
@@ -34,15 +33,11 @@ namespace Coldew.Website.Models
 
             this.zhuangtaiMingcheng = this.Map(renwu.Zhuangtai);
             this.zhuangtai = renwu.Zhuangtai;
-            this.url = string.Format("{0}?renwuId={1}&uid={2}", renwu.Xingdong.liucheng.Liucheng.RenwuUrl, renwu.Guid, currentUser.ID);
+            //this.url = string.Format("{0}?renwuId={1}&uid={2}", renwu.Xingdong.liucheng.Liucheng.RenwuUrl, renwu.Guid, currentUser.ID);
             this.faqiren = renwu.Xingdong.liucheng.Faqiren.Name;
             this.chuliren = renwu.Chuliren.Name;
             this.wanchengShuoming = renwu.ChuliShuoming;
             this.icons = "";
-            if (renwu.Xingdong.Tuihuide)
-            {
-                this.icons += "<span title='退回的任务' class='icon-tuihuide-renwu'></span>";
-            }
             if (renwu.Xingdong.Jinjide)
             {
                 this.icons += "<span title='紧急的任务' class='icon-jinji-renwu'></span>";
@@ -105,8 +100,6 @@ namespace Coldew.Website.Models
         public string zhuangtaiMingcheng;
 
         public RenwuZhuangtai zhuangtai;
-
-        public bool shiTuihuide;
 
         public string wanchengShuoming;
     }

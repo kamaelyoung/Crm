@@ -41,7 +41,7 @@ namespace Coldew.Website.Controllers
                 int count;
                 List<LiuchengXinxi> liuchengList = WebHelper.LiuchengFuwu.GetLiuchengXinxiList(liuchengMobanId, faqiShijianFanwei, jieshuShijianFanwei, zhaiyao, start, size, out count);
 
-                DatagridModel<LiuchengModel> gridModel = new DatagridModel<LiuchengModel>();
+                DatagridModel gridModel = new DatagridModel();
                 gridModel.list = liuchengList.Select(x => new LiuchengModel(x, this, this.CurrentUser));
                 gridModel.count = count;
                 resultModel.data = gridModel;

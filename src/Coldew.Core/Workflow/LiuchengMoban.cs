@@ -10,36 +10,33 @@ using Coldew.Core.Organization;
 
 namespace Coldew.Core.Workflow
 {
-    public abstract class LiuchengMoban
+    public class LiuchengMoban
     {
-        public LiuchengMoban(int id, string guid, string mingcheng, string faqiUrl, string renwuUrl, string guidangUrl, string shuoming)
+        public LiuchengMoban(string id, string code, string mingcheng, string objectCode, string faqiFormCode, string shuoming, LiuchengYinqing yinqing)
         {
-            this.Id = id;
-            this.Guid = guid;
+            this.ID = id;
             this.Mingcheng = mingcheng;
+            this.ObjectCode = objectCode;
+            this.FaqiFormCode = faqiFormCode;
             this.Shuoming = shuoming;
-            this.FaqiUrl = faqiUrl;
-            this.RenwuUrl = renwuUrl;
-            this.GuidangUrl = guidangUrl;
+            this.Yinqing = yinqing;
             this._shiliList = new List<Liucheng>();
         }
 
-        public Yinqing Yinqing { internal set; get; }
+        public LiuchengYinqing Yinqing { internal set; get; }
 
-        public int Id { protected set; get; }
+        public string ID { protected set; get; }
 
-        public string Guid { protected set; get; }
+        public string Code { protected set; get; }
 
         public string Mingcheng { protected set; get; }
 
-        public string FaqiUrl { protected set; get; }
+        public string ObjectCode { protected set; get; }
 
-        public string RenwuUrl { protected set; get; }
-
-        public string GuidangUrl { protected set; get; }
+        public string FaqiFormCode { protected set; get; }
 
         public string Shuoming { protected set; get; }
-        
+
         Dictionary<string, Liucheng> _shiliDictionaryById;
         List<Liucheng> _shiliList;
         public List<Liucheng> LiuchengList
@@ -61,7 +58,7 @@ namespace Coldew.Core.Workflow
                 model.Faqiren = faqiren.Account;
                 model.FaqiShijian = DateTime.Now;
                 model.Mingcheng = this.Mingcheng;
-                model.MobanId = this.Id;
+                model.MobanId = this.ID;
                 model.Zhuangtai = (int)LiuchengZhuangtai.Chulizhong;
                 model.Zhaiyao = zhaiyao;
                 model.Jinjide = jinjide;
@@ -71,9 +68,10 @@ namespace Coldew.Core.Workflow
             }
         }
 
-        public abstract byte[] ShengchengLiuchengtu(Liucheng liucheng);
-
-        public abstract bool NengFaqi(User yong);
+        public bool NengFaqi(User yong)
+        {
+            return true;
+        }
 
         internal Liucheng ChuangjianLiucheng(LiuchengModel model)
         {
@@ -119,7 +117,7 @@ namespace Coldew.Core.Workflow
         {
             foreach (Liucheng liucheng in this._shiliList)
             {
-                Xingdong renwu = liucheng.GetRenwu(id);
+                Xingdong renwu = liucheng.GetXingdong(id);
                 if (renwu != null)
                 {
                     return renwu;
@@ -132,26 +130,10 @@ namespace Coldew.Core.Workflow
         {
             foreach (Liucheng liucheng in this._shiliList)
             {
-                Xingdong renwu = liucheng.GetRenwu(id);
+                Xingdong renwu = liucheng.GetXingdong(id);
                 if (renwu != null)
                 {
                     return renwu;
-                }
-            }
-            return null;
-        }
-
-        public Renwu GetRenwu(string id)
-        {
-            foreach (Liucheng liucheng in this._shiliList)
-            {
-                foreach (Xingdong renwu in liucheng.XingdongList)
-                {
-                    Renwu xingdong = renwu.RenwuList.Find(x => x.Guid == id);
-                    if (xingdong != null)
-                    {
-                        return xingdong;
-                    }
                 }
             }
             return null;
@@ -164,7 +146,7 @@ namespace Coldew.Core.Workflow
 
         private void JiazaiLiucheng()
         {
-            List<LiuchengModel> shiliModelList = NHibernateHelper.CurrentSession.QueryOver<LiuchengModel>().Where(x => x.MobanId == this.Id).List().ToList();
+            List<LiuchengModel> shiliModelList = NHibernateHelper.CurrentSession.QueryOver<LiuchengModel>().Where(x => x.MobanId == this.ID).List().ToList();
             foreach (LiuchengModel shiliModel in shiliModelList)
             {
                 Liucheng liucheng = this.ChuangjianLiucheng(shiliModel);
@@ -176,13 +158,12 @@ namespace Coldew.Core.Workflow
         {
             return new LiuchengMobanXinxi
             {
-                Id = this.Id,
-                Guid = this.Guid,
+                ID = this.ID,
                 Mingcheng = this.Mingcheng,
-                Shuoming = this.Shuoming,
-                FaqiUrl = this.FaqiUrl,
-                RenwuUrl = this.RenwuUrl,
-                GuidangUrl = this.GuidangUrl
+                Code = this.Code,
+                FaqiFormCode = this.FaqiFormCode,
+                ObjectCode = this.ObjectCode,
+                Shuoming = this.Shuoming
             };
         }
     }

@@ -8,5 +8,7 @@ namespace Coldew.Api.UI
     public interface IFormService
     {
         FormInfo GetForm(string objectId, string code);
+
+        FormInfo GetFormByCode(string objectCode, string code);
     }
 }

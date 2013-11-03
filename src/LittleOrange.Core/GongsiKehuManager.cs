@@ -7,13 +7,14 @@ using Newtonsoft.Json;
 using Coldew.Core;
 using Coldew.Core.Organization;
 using Coldew.Data;
+using LittleOrange.Data;
 
 namespace LittleOrange.Core
 {
-    public class CustomerManager : MetadataManager
+    public class GongsiKehuManager : MetadataManager
     {
 
-        public CustomerManager(ColdewObject form, OrganizationManagement orgManger)
+        public GongsiKehuManager(ColdewObject form, OrganizationManagement orgManger)
             :base(form, orgManger)
         {
             
@@ -21,7 +22,7 @@ namespace LittleOrange.Core
 
         protected override Metadata CreateAndSaveDB(List<MetadataProperty> propertys)
         {
-            MetadataModel model = new MetadataModel();
+            GongsiKehuModel model = new GongsiKehuModel();
             model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
@@ -34,8 +35,8 @@ namespace LittleOrange.Core
         {
             List<Metadata> metadatas = new List<Metadata>();
 
-            IList<MetadataModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataModel>().List();
-            foreach (MetadataModel model in models)
+            IList<GongsiKehuModel> models = NHibernateHelper.CurrentSession.QueryOver<GongsiKehuModel>().List();
+            foreach (GongsiKehuModel model in models)
             {
                 Customer metadata = new Customer(model.ID, MetadataPropertyListHelper.GetPropertys(model.PropertysJson, this.ColdewObject), this.ColdewObject);
 

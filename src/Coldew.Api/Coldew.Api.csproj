@@ -201,8 +201,6 @@
     <Compile Include="Workflow\RenwuXinxi.cs" />
     <Compile Include="Workflow\RenwuZhuangtai.cs" />
     <Compile Include="Workflow\ShijianFanwei.cs" />
-    <Compile Include="Workflow\XingdongLeixing.cs" />
-    <Compile Include="Workflow\XingdongWanchengJieguo.cs" />
     <Compile Include="Workflow\XingdongXinxi.cs" />
     <Compile Include="Workflow\XingdongZhuangtai.cs" />
   </ItemGroup>

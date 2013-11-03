@@ -111,9 +111,7 @@
     <Compile Include="Models\StringFieldEditModel.cs" />
     <Compile Include="Models\UserGridModel.cs" />
     <Compile Include="Models\ViewSetupFieldModel.cs" />
-    <Compile Include="Models\Workflow\DatagridModel.cs" />
     <Compile Include="Models\Workflow\JianglaiZhipaiModel.cs" />
-    <Compile Include="Models\Workflow\LiuchengCaidan.cs" />
     <Compile Include="Models\Workflow\LiuchengChexiaoModel.cs" />
     <Compile Include="Models\Workflow\LiuchengMobanModel.cs" />
     <Compile Include="Models\Workflow\LiuchengModel.cs" />

@@ -62,6 +62,7 @@
     <None Include="app.config" />
     <None Include="Coldew.HB.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="LittleOrange.spring.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

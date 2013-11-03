@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Coldew.Website.Models;
 using Coldew.Api.Workflow;
 using Newtonsoft.Json;
+using Coldew.Api.UI;
 
 namespace Coldew.Website.Controllers
 {
@@ -36,7 +37,7 @@ namespace Coldew.Website.Controllers
                 int count;
                 List<RenwuXinxi> renwuList = WebHelper.RenwuFuwu.GetChulizhongdeRenwu(WebHelper.CurrentUserAccount, liuchengMobanId, kaishiShijian, jieshuShijian, zhaiyao, start, size, out count);
 
-                DatagridModel<RenwuModel> gridModel = new DatagridModel<RenwuModel>();
+                DatagridModel gridModel = new DatagridModel();
                 gridModel.list = renwuList.Select(x => new RenwuModel(x, this, this.CurrentUser));
                 gridModel.count = count;
                 resultModel.data = gridModel;
@@ -126,51 +127,6 @@ namespace Coldew.Website.Controllers
             return View();
         }
 
-        public ActionResult FaqideRenwu(string liuchengMobanId, DateTime? kaishiShijian, DateTime? jieshuShijian, string zhaiyao, int start, int size)
-        {
-
-            ControllerResultModel resultModel = new ControllerResultModel();
-            try
-            {
-                if (jieshuShijian.HasValue)
-                {
-                    jieshuShijian = jieshuShijian.Value.AddHours(24);
-                }
-                int count;
-                var models = WebHelper.RenwuFuwu.GetFaqideRenwu(WebHelper.CurrentUserAccount, liuchengMobanId, kaishiShijian, jieshuShijian, zhaiyao, start, size, out count)
-                    .Select(x => new RenwuModel(x, this, this.CurrentUser));
-                DatagridModel<RenwuModel> gridModel = new DatagridModel<RenwuModel>();
-                gridModel.list = models;
-                gridModel.count = count;
-                resultModel.data = gridModel;
-            }
-            catch (Exception ex)
-            {
-                WebHelper.Logger.Error(ex.Message, ex);
-                resultModel.result = ControllerResult.Error;
-                resultModel.message = ex.Message;
-            }
-            return Json(resultModel, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Chexiao(string argsJosn)
-        {
-
-            ControllerResultModel resultModel = new ControllerResultModel();
-            try
-            {
-                LiuchengChexiaoModel model = JsonConvert.DeserializeObject<LiuchengChexiaoModel>(argsJosn);
-                WebHelper.LiuchengFuwu.Chexiao(model.liuchengId);
-            }
-            catch (Exception ex)
-            {
-                WebHelper.Logger.Error(ex.Message, ex);
-                resultModel.result = ControllerResult.Error;
-                resultModel.message = ex.Message;
-            }
-            return Json(resultModel, JsonRequestBehavior.AllowGet);
-        }
-
         public ActionResult FaqiLiucheng()
         {
             return View();
@@ -180,7 +136,7 @@ namespace Coldew.Website.Controllers
         {
 
             List<LiuchengMobanXinxi> list = WebHelper.YinqingFuwu.GetLiuchengMobanByYonghu(this.CurrentUser.Account);
-            return Json(list.Select(x => new LiuchengMobanModel(x, this.CurrentUser)), JsonRequestBehavior.AllowGet);
+            return Json(list.Select(x => new LiuchengMobanModel(x, this.CurrentUser, this)), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Guidangde()
@@ -201,7 +157,7 @@ namespace Coldew.Website.Controllers
                 int count;
                 var models = WebHelper.RenwuFuwu.GetGuidangdeRenwu(WebHelper.CurrentUserAccount, liuchengMobanId, wanchengKaishiShijian, wanchengJieshuShijian, zhaiyao, start, size, out count)
                     .Select(x => new RenwuModel(x, this, this.CurrentUser));
-                DatagridModel<RenwuModel> gridModel = new DatagridModel<RenwuModel>();
+                DatagridModel gridModel = new DatagridModel();
                 gridModel.list = models;
                 gridModel.count = count;
                 resultModel.data = gridModel;
@@ -233,7 +189,7 @@ namespace Coldew.Website.Controllers
                 int count;
                 var models = WebHelper.RenwuFuwu.GetWanchengdeRenwu(WebHelper.CurrentUserAccount, liuchengMobanId, wanchengKaishiShijian, wanchengJieshuShijian, zhaiyao, start, size, out count)
                     .Select(x => new RenwuModel(x, this, this.CurrentUser));
-                DatagridModel<RenwuModel> gridModel = new DatagridModel<RenwuModel>();
+                DatagridModel gridModel = new DatagridModel();
                 gridModel.list = models;
                 gridModel.count = count;
                 resultModel.data = gridModel;
@@ -260,7 +216,7 @@ namespace Coldew.Website.Controllers
                 int count;
                 List<RenwuXinxi> xingdongList = WebHelper.RenwuFuwu.GetZhipaideRenwu(WebHelper.CurrentUserAccount, start, size, out count);
 
-                DatagridModel<RenwuModel> gridModel = new DatagridModel<RenwuModel>();
+                DatagridModel gridModel = new DatagridModel();
                 gridModel.list = xingdongList.Select(x => new RenwuModel(x, this, this.CurrentUser));
                 gridModel.count = count;
                 resultModel.data = gridModel;
@@ -289,11 +245,12 @@ namespace Coldew.Website.Controllers
             return Json(resultModel, JsonRequestBehavior.AllowGet);
         }
 
-        public FileContentResult Liuchengtu(string liuchengId)
+        public ActionResult Faqi(string objectCode, string formCode)
         {
-            byte[] bytes = WebHelper.LiuchengFuwu.GetPngLiuchengtu(liuchengId);
-            FileContentResult result = new FileContentResult(bytes, "image/png");
-            return result;
+            FormInfo formInfo = WebHelper.FormService.GetFormByCode(objectCode, formCode);
+            this.ViewBag.formInfo = formInfo;
+
+            return View();
         }
     }
 }

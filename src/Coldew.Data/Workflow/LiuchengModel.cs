@@ -11,7 +11,7 @@ namespace Coldew.Data
 
         public virtual string Guid { set; get; }
 
-        public virtual int MobanId { set; get; }
+        public virtual string MobanId { set; get; }
 
         public virtual string Mingcheng { set; get; }
 

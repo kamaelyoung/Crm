@@ -11,10 +11,10 @@ namespace Coldew.Core.Workflow
 {
     public class Renwu
     {
-        Yinqing _yingqing;
+        LiuchengYinqing _yingqing;
 
-        public Renwu(int id, string guid, string bianhao, User yongyouren, User chuliren, User shijiChuliren, 
-            DateTime? chuliShijian, RenwuZhuangtai zhuangtai, RenwuChuliJieguo? chuliJieguo, string chuliShuoming, Yinqing yingqing)
+        public Renwu(int id, string guid, User yongyouren, User chuliren, User shijiChuliren, 
+            DateTime? chuliShijian, RenwuZhuangtai zhuangtai, RenwuChuliJieguo? chuliJieguo, string chuliShuoming, LiuchengYinqing yingqing)
         {
             this.Id = id;
             this.Guid = guid;
@@ -23,7 +23,6 @@ namespace Coldew.Core.Workflow
             this.Zhuangtai = zhuangtai;
             this.ChuliShijian = chuliShijian;
             this.ChuliShuoming = chuliShuoming;
-            this.Bianhao = bianhao;
             this.Yongyouren = yongyouren;
             this.ChuliJieguo = chuliJieguo;
             this._yingqing = yingqing;
@@ -39,8 +38,6 @@ namespace Coldew.Core.Workflow
         public int Id { private set; get; }
 
         public string Guid { private set; get; }
-
-        public string Bianhao { private set; get; }
 
         public User Yongyouren { private set; get; }
 
@@ -60,7 +57,7 @@ namespace Coldew.Core.Workflow
 
         private object _lock = new object();
 
-        public virtual void Chuli(User chuliren, RenwuChuliJieguo chuliJieguo, string shuoming)
+        public virtual void Wancheng(User chuliren, string shuoming)
         {
             lock (_lock)
             {
@@ -73,14 +70,12 @@ namespace Coldew.Core.Workflow
                 model.ShijiChuliren = chuliren.Account;
                 model.ChuliShuoming = shuoming;
                 model.Zhuangtai = (int)RenwuZhuangtai.Wanchengle;
-                model.ChuliJieguo = (int)chuliJieguo;
                 NHibernateHelper.CurrentSession.Update(model);
                 NHibernateHelper.CurrentSession.Flush();
 
                 this.ChuliShijian = DateTime.Now;
                 this.ShijiChuliren = chuliren;
                 this.ChuliShuoming = shuoming;
-                this.ChuliJieguo = chuliJieguo;
                 this.Zhuangtai = RenwuZhuangtai.Wanchengle;
 
                 if (this.XingdongChulihou != null)
@@ -156,7 +151,7 @@ namespace Coldew.Core.Workflow
                 Chuliren = Chuliren.MapUserInfo(),
                 Xingdong = this.Xingdong.Map(),
                 Zhuangtai = this.Zhuangtai,
-                Bianhao = this.Bianhao
+                Bianhao = this.Xingdong.Code
             };
         }
     }

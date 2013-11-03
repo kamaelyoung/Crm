@@ -16,7 +16,7 @@ namespace Coldew.Core.Workflow
     public class Liucheng
     {
         public Liucheng(int id, string guid, string mingcheng, User faqiren, DateTime faqiShijian, 
-            DateTime? jieshuShijian, LiuchengZhuangtai zhuangtai, bool jinjide, string zhaiyao, Yinqing yinqing)
+            DateTime? jieshuShijian, LiuchengZhuangtai zhuangtai, bool jinjide, string zhaiyao, LiuchengYinqing yinqing)
         {
             this.Id = id;
             this.Guid = guid;
@@ -31,7 +31,7 @@ namespace Coldew.Core.Workflow
             this.Yinqing = yinqing;
         }
 
-        public Yinqing Yinqing { private set; get; }
+        public LiuchengYinqing Yinqing { private set; get; }
 
         private object _lock = new object();
 
@@ -66,22 +66,20 @@ namespace Coldew.Core.Workflow
 
         public event TEventHanlder<Liucheng, Xingdong> XingdongChuangjianhou;
 
-        public Xingdong ChuangjianXingdong(string bianhao, string mingcheng, bool tuihuide, XingdongLeixing leixing, string zhaiyao, DateTime? qiwangWanchengShijian)
+        public Xingdong ChuangjianXingdong(string code, string name, string zhaiyao, DateTime? qiwangWanchengShijian)
         {
             lock (_lock)
             {
                 XingdongModel model = new XingdongModel();
                 model.LiuchengId = this.Id;
                 model.Guid = System.Guid.NewGuid().ToString();
-                model.Bianhao = bianhao;
+                model.Code = code;
+                model.Name = name;
                 model.KaishiShijian = DateTime.Now;
-                model.Tuihuide = tuihuide;
-                model.Mingcheng = mingcheng;
                 model.QiwangWanchengShijian = qiwangWanchengShijian;
                 model.Zhaiyao = zhaiyao;
                 model.Jinjide = this.Jinjide;
                 model.Zhuangtai = (int)XingdongZhuangtai.Chulizhong;
-                model.Leixing = (int)leixing;
                 int id = (int)NHibernateHelper.CurrentSession.Save(model);
                 Xingdong renwu = this.ChuangjianXingdong(model);
                 if (this.XingdongChuangjianhou != null)
@@ -94,40 +92,39 @@ namespace Coldew.Core.Workflow
         }
 
         internal Xingdong ChuangjianXingdong(XingdongModel model)
-        {
-            XingdongWanchengJieguo? wanchengJieguo = null;
-            if (model.WanchengJieguo.HasValue)
-            {
-                wanchengJieguo = (XingdongWanchengJieguo)model.WanchengJieguo.Value;
-            }
-            Xingdong xingdong = new Xingdong(model.Id, model.Guid, model.Bianhao, model.Mingcheng, model.Jinjide, model.Tuihuide,
+        {   
+            Xingdong xingdong = new Xingdong(model.Id, model.Guid, model.Code, model.Name, model.Jinjide, 
                     model.KaishiShijian, model.QiwangWanchengShijian, model.WanchengShijian, model.Zhaiyao, 
-                    (XingdongZhuangtai)model.Zhuangtai, wanchengJieguo, (XingdongLeixing)model.Leixing, this.Yinqing);
+                    (XingdongZhuangtai)model.Zhuangtai, this.Yinqing);
             xingdong.Shanchuhou += new TEventHanlder<Xingdong>(Xingdong_Shanchuhou);
             List<Xingdong> renwuList = this._xingdongList.ToList();
             xingdong.liucheng = this;
-            xingdong.Wanchenghou += new TEventHanlder<Xingdong>(Renwu_Wanchenghou);
             renwuList.Add(xingdong);
             this._xingdongList = renwuList;
             return xingdong;
         }
 
-        void Renwu_Wanchenghou(Xingdong xingdong)
-        {
-            if (xingdong.Leixing == XingdongLeixing.Jieshu && xingdong.WanchengJieguo.Value == XingdongWanchengJieguo.Tongguo)
-            {
-                this.Wancheng();
-            }
-        }
-
-        public Xingdong GetRenwu(int id)
+        public Xingdong GetXingdong(int id)
         {
             return this._xingdongList.Find(x => x.Id == id);
         }
 
-        public Xingdong GetRenwu(string guid)
+        public Xingdong GetXingdong(string guid)
         {
             return this._xingdongList.Find(x => x.Guid == guid);
+        }
+
+        public Renwu GetRenwu(string renwuId)
+        {
+            foreach (Xingdong renwu in this.XingdongList)
+            {
+                Renwu xingdong = renwu.RenwuList.Find(x => x.Guid == renwuId);
+                if (xingdong != null)
+                {
+                    return xingdong;
+                }
+            }
+            return null;
         }
 
         void Xingdong_Shanchuhou(Xingdong args)
@@ -159,23 +156,6 @@ namespace Coldew.Core.Workflow
             this.Zhuangtai = LiuchengZhuangtai.Wanchengle;
         }
 
-        public void Chexiao()
-        {
-            Xingdong xingdong = this._xingdongList.Find(x => x.Zhuangtai == XingdongZhuangtai.Chulizhong);
-            if (xingdong.Leixing == XingdongLeixing.Kaishi)
-            {
-                this.Shanchu(this.Faqiren);
-            }
-            else if (this._xingdongList.Count == 2 && xingdong.RenwuList.Count(x => x.Zhuangtai == RenwuZhuangtai.Wanchengle) == 0)
-            {
-                this.Shanchu(this.Faqiren);
-            }
-            else
-            {
-                throw new LiuchengChexiaoException();
-            }
-        }
-
         public event TEventHanlder<Liucheng> Shanchuhou;
 
         public void Shanchu(User shanchuren)
@@ -190,11 +170,6 @@ namespace Coldew.Core.Workflow
             {
                 this.Shanchuhou(this);
             }
-        }
-
-        public byte[] GetLiuchengtu()
-        {
-            return this.Moban.ShengchengLiuchengtu(this);
         }
 
         internal void Jiazai()

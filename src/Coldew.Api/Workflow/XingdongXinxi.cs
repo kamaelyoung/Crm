@@ -16,9 +16,9 @@ namespace Coldew.Api.Workflow
 
         public string LiuchengMingcheng { set; get; }
 
-        public string Bianhao { set; get; }
+        public string Code { set; get; }
 
-        public string Mingcheng { set; get; }
+        public string Name { set; get; }
 
         public bool Jinjide { set; get; }
 
@@ -40,9 +40,5 @@ namespace Coldew.Api.Workflow
         public string Zhaiyao { set; get; }
 
         public XingdongZhuangtai Zhuangtai { set; get; }
-
-        public bool Tuihuide { set; get; }
-
-        public XingdongLeixing Leixing { set; get; }
     }
 }

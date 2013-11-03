@@ -4,23 +4,29 @@ using System.Linq;
 using System.Web;
 using Coldew.Api.Workflow;
 using Coldew.Api.Organization;
+using Coldew.Website.Controllers;
 
 namespace Coldew.Website.Models
 {
     public class LiuchengMobanModel
     {
-        public LiuchengMobanModel(LiuchengMobanXinxi liucheng, UserInfo currentUser)
+        public LiuchengMobanModel(LiuchengMobanXinxi liucheng, UserInfo currentUser, WorkflowController controller)
         {
-            this.id = liucheng.Id;
-            this.guid = liucheng.Guid;
+            this.id = liucheng.ID;
             this.mingcheng = liucheng.Mingcheng;
-            this.faqiUrl = string.Format(string.Format("{0}?id={1}&uid={2}", liucheng.FaqiUrl, liucheng.Guid, currentUser.ID));
+            this.faqiUrl = controller.Url.Action("Faqi", new { objectCode = liucheng.ObjectCode, formCode = liucheng.FaqiFormCode });
             this.shuoming = liucheng.Shuoming;
         }
 
-        public int id;
 
-        public string guid;
+        public LiuchengMobanModel(LiuchengMobanXinxi liucheng, UserInfo currentUser)
+        {
+            this.id = liucheng.ID;
+            this.mingcheng = liucheng.Mingcheng;
+            this.shuoming = liucheng.Shuoming;
+        }
+
+        public string id;
 
         public string mingcheng;
 

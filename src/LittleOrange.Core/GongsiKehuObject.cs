@@ -8,10 +8,10 @@ using Coldew.Data;
 
 namespace LittleOrange.Core
 {
-    public class CustomerObject : ColdewObject
+    public class GongsiKehuObject : ColdewObject
     {
         LittleOrangeManager _crmManager;
-        public CustomerObject(string id, string code, string name, LittleOrangeManager crmManager)
+        public GongsiKehuObject(string id, string code, string name, LittleOrangeManager crmManager)
             :base(id, code, name, crmManager)
         {
             this._crmManager = crmManager;
@@ -24,7 +24,7 @@ namespace LittleOrange.Core
 
         protected override MetadataManager CreateMetadataManager(ColdewManager coldewManager)
         {
-            return new CustomerManager(this, coldewManager.OrgManager);
+            return new GongsiKehuManager(this, coldewManager.OrgManager);
         }
 
     }

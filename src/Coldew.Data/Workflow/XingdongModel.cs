@@ -13,9 +13,9 @@ namespace Coldew.Data
 
         public virtual int LiuchengId { set; get; }
 
-        public virtual string Bianhao { set ; get; }
+        public virtual string Code { set; get; }
 
-        public virtual string Mingcheng { set; get; }
+        public virtual string Name { set; get; }
 
         public virtual bool Jinjide { set; get; } 
 

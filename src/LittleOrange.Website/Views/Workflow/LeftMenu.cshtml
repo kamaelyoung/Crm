@@ -2,12 +2,10 @@
 @using Coldew.Website;
 @using Coldew.Website.Models;
 @{
-    string shenqingLiuchengCaidanClass = this.ViewBag.LiuchengCaidan == LiuchengCaidan.FaqiLiucheng ? "class='active'" : "";
-    string liuchengDaibandeCaidanClass =  this.ViewBag.LiuchengCaidan == LiuchengCaidan.Daibande ? "class='active'" : "";
-    string liuchengYibandeCaidanClass =  this.ViewBag.LiuchengCaidan == LiuchengCaidan.Yibande ? "class='active'" : "";
-    string liuchengGuidangdeCaidanClass = this.ViewBag.LiuchengCaidan == LiuchengCaidan.Guidangde ? "class='active'" : "";
-    string liuchengShengqingdeCaidanClass = this.ViewBag.LiuchengCaidan == LiuchengCaidan.Faqide ? "class='active'" : "";
-    string liuchengZhipaideCaidanClass = this.ViewBag.LiuchengCaidan == LiuchengCaidan.Zhipaide ? "class='active'" : "";
+    string shenqingLiuchengCaidanClass = this.ViewBag.LiuchengCaidan == "FaqiLiucheng" ? "class='active'" : "";
+    string liuchengDaibandeCaidanClass = this.ViewBag.LiuchengCaidan == "Daibande" ? "class='active'" : "";
+    string liuchengYibandeCaidanClass = this.ViewBag.LiuchengCaidan == "Yibande" ? "class='active'" : "";
+    string liuchengGuidangdeCaidanClass = this.ViewBag.LiuchengCaidan == "Guidangde" ? "class='active'" : "";
 }
 <ul class="nav nav-list">
     <li class="nav-header">流程</li>
@@ -15,6 +13,4 @@
     <li @this.Html.Raw(liuchengDaibandeCaidanClass)><a href="@this.Url.Action("Daibande")">待办的任务</a></li>
     <li @this.Html.Raw(liuchengYibandeCaidanClass)><a href="@this.Url.Action("Yibande")">已办的任务</a></li>
     <li @this.Html.Raw(liuchengGuidangdeCaidanClass)><a href="@this.Url.Action("Guidangde")">归档的任务</a></li>
-    <li @this.Html.Raw(liuchengShengqingdeCaidanClass)><a href="@this.Url.Action("Faqide")">发起的流程</a></li>
-    <li @this.Html.Raw(liuchengZhipaideCaidanClass)><a href="@this.Url.Action("Zhipaide")">指派的任务</a></li>
 </ul>

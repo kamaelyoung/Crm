@@ -109,6 +109,10 @@
     <Content Include="Views\Workflow\DaibandeRenwuSousuoPopover.cshtml" />
     <Content Include="Views\Workflow\LiuchengtuDialog.cshtml" />
     <Content Include="Views\Workflow\WanchengdeRenwuSousuoPopover.cshtml" />
+    <Content Include="Views\Org\Group.cshtml" />
+    <Content Include="Views\Workflow\Faqi.cshtml" />
+    <Content Include="Views\Workflow\FaqiForm.cshtml" />
+    <Content Include="Views\Workflow\SelectDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />
@@ -262,21 +266,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\Error.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Steup\CustomerArea.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Steup\CustomerType.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Steup\Extend.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Steup\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Steup\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />

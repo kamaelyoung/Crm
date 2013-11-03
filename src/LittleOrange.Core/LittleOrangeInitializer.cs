@@ -50,6 +50,8 @@ namespace LittleOrange.Core
                     this.InitConfig();
                     this.InitZiranren();
                     this.InitGongsiKehu();
+                    this.InitFahuo();
+                    this.InitLiuchengMoban();
                 }
             }
             catch(Exception ex)
@@ -205,14 +207,14 @@ namespace LittleOrange.Core
                 viewColumns.Add(new GridViewColumnSetupInfo { FieldId = field.ID, Width = 80 });
             }
 
-            GridView manageView = cobject.GridViewManager.Create(GridViewType.Manage, "", "医药公司客户管理", this._admin, true, true, 1, "", viewColumns);
-            GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏医药公司客户", this._admin, true, true, 2, "", viewColumns);
+            GridView manageView = cobject.GridViewManager.Create(GridViewType.Manage, "", "公司客户管理", this._admin, true, true, 1, "", viewColumns);
+            GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏公司客户", this._admin, true, true, 2, "", viewColumns);
         }
 
         private void InitFahuo()
         {
             this._coldewManager.Logger.Info("init fahuo");
-            ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货", LittleOrangeObjectConstCode.Object_GongsiKehu);
+            ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货", LittleOrangeObjectConstCode.Object_Fahuo);
             Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "产品名称", "", true, true, true, 1, "");
             Field guigeField = cobject.CreateStringField("guige", "规格", "", false, true, true, 2, "");
             Field shengchanQiyeField = cobject.CreateStringField("shengchanQiye", "生产企业", "", false, true, true, 3, "");
@@ -246,6 +248,8 @@ namespace LittleOrange.Core
             baseSectuibInputs.Add(new Input(modifiedTimeField, 15));
 
             Form detailsForm = cobject.FormManager.Create(FormConstCode.DetailsFormCode, "发货信息", sections, null);
+            Form faqiFahuoLiuchengForm = cobject.FormManager.Create(LittleOrangeObjectConstCode.Form_Code_FaHuo_Faqi, "发货信息", sections, null);
+            Form faqiFahuoShenheForm = cobject.FormManager.Create(LittleOrangeObjectConstCode.Form_Code_FaHuo_Shenhe, "发货信息", sections, null);
 
             List<GridViewColumnSetupInfo> viewColumns = new List<GridViewColumnSetupInfo>();
             foreach (Field field in cobject.GetFields().Take(8))
@@ -256,5 +260,12 @@ namespace LittleOrange.Core
             GridView manageView = cobject.GridViewManager.Create(GridViewType.Manage, "", "发货管理", this._admin, true, true, 1, "", viewColumns);
             GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏发货", this._admin, true, true, 2, "", viewColumns);
         }
+
+        private void InitLiuchengMoban()
+        {
+            this._coldewManager.LiuchengYinqing.LiuchengMobanManager.Create("fahuo_liucheng", "发货流程", 
+                LittleOrangeObjectConstCode.Object_Fahuo, LittleOrangeObjectConstCode.Form_Code_FaHuo_Faqi, "");
+        }
+
     }
 }

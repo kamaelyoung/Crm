@@ -11,11 +11,18 @@ namespace LittleOrange.ConsoleApplication
     {
         static void Main(string[] args)
         {
-            IApplicationContext ctx = ContextRegistry.GetContext();
+            try
+            {
+                IApplicationContext ctx = ContextRegistry.GetContext();
 
-            Console.Out.WriteLine("Server listening...");
+                Console.Out.WriteLine("Server listening...");
 
-            Console.ReadLine();
+                Console.ReadLine();
+            }
+            catch(Exception ex)
+            {
+                Console.Write(ex.ToString());
+            }
         }
     }
 }

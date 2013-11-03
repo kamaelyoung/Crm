@@ -10,26 +10,22 @@ namespace Coldew.Core.Workflow
 {
     public class Xingdong
     {
-        Yinqing _yingqing;
+        LiuchengYinqing _yingqing;
 
-        public Xingdong(int id, string guid, string bianhao, string mingcheng, bool jinjide, bool shiTuihuide, DateTime kaishiShjian,
-            DateTime? qiwangWanchengShijian, DateTime? wanchengShijian, string zhaiyao, XingdongZhuangtai zhuangtai, 
-            XingdongWanchengJieguo? wanchengJieguo, XingdongLeixing leixing, Yinqing yingqing)
+        public Xingdong(int id, string guid, string code, string name, bool jinjide, DateTime kaishiShjian,
+            DateTime? qiwangWanchengShijian, DateTime? wanchengShijian, string zhaiyao, XingdongZhuangtai zhuangtai, LiuchengYinqing yingqing)
         {
-            this.Bianhao = bianhao;
+            this.Code = code;
+            this.Name = name;
             this.Id = id;
             this.Guid = guid;
             this.KaishiShijian = kaishiShjian;
-            this.Mingcheng = mingcheng;
             this.QiwangWanchengShijian = qiwangWanchengShijian;
             this.WanchengShijian = wanchengShijian;
             this.Zhaiyao = zhaiyao;
             this._renwuList = new List<Renwu>();
             this.Zhuangtai = zhuangtai;
             this.Jinjide = jinjide;
-            this.Tuihuide = shiTuihuide;
-            this.WanchengJieguo = wanchengJieguo;
-            this.Leixing = leixing;
             this._yingqing = yingqing;
         }
 
@@ -39,9 +35,9 @@ namespace Coldew.Core.Workflow
 
         public Liucheng liucheng { internal protected set; get; }
 
-        public string Bianhao { protected set; get; }
+        public string Code { protected set; get; }
 
-        public string Mingcheng { protected set; get; }
+        public string Name { protected set; get; }
 
         public bool Jinjide { protected set; get; }
 
@@ -73,21 +69,14 @@ namespace Coldew.Core.Workflow
 
         public XingdongZhuangtai Zhuangtai { protected set; get; }
 
-        public XingdongWanchengJieguo? WanchengJieguo { protected set; get; }
-
-        public bool Tuihuide { protected set; get; }
-
-        public XingdongLeixing Leixing { protected set; get; }
-
         private object _lock = new object();
 
-        public Renwu ChuangjianRenwu(User chuliren, string bianhao)
+        public Renwu ChuangjianRenwu(User chuliren)
         {
             lock (this._lock)
             {
                 RenwuModel model = new RenwuModel();
                 model.Guid = System.Guid.NewGuid().ToString();
-                model.Bianhao = bianhao;
                 model.Chuliren = chuliren.Account;
                 model.XingdongId = this.Id;
                 model.Yongyouren = chuliren.Account;
@@ -114,7 +103,7 @@ namespace Coldew.Core.Workflow
             {
                 chuliJieguo = (RenwuChuliJieguo)model.ChuliJieguo.Value;
             }
-            Renwu renwu = new Renwu(model.Id, model.Guid, model.Bianhao, yongyouren, chuliren, shijiChuliren,
+            Renwu renwu = new Renwu(model.Id, model.Guid, yongyouren, chuliren, shijiChuliren,
                 model.ChuliShijian, (RenwuZhuangtai)model.Zhuangtai, chuliJieguo, model.ChuliShuoming, this._yingqing);
             List<Renwu> renwuList = this.RenwuList;
             renwu.Xingdong = this;
@@ -125,18 +114,16 @@ namespace Coldew.Core.Workflow
 
         public virtual event TEventHanlder<Xingdong> Wanchenghou;
 
-        public void Wancheng(XingdongWanchengJieguo jieguo)
+        public void Wancheng()
         {
             XingdongModel model = NHibernateHelper.CurrentSession.Get<XingdongModel>(this.Id);
             model.WanchengShijian = DateTime.Now;
             model.Zhuangtai = (int)XingdongZhuangtai.Wanchengle;
-            model.WanchengJieguo = (int)jieguo;
             NHibernateHelper.CurrentSession.Update(model);
             NHibernateHelper.CurrentSession.Flush();
 
             this.WanchengShijian = model.WanchengShijian;
             this.Zhuangtai = XingdongZhuangtai.Wanchengle;
-            this.WanchengJieguo = jieguo;
 
             if (this.Wanchenghou != null)
             {
@@ -170,20 +157,18 @@ namespace Coldew.Core.Workflow
         {
             return new XingdongXinxi
             {
-                Bianhao = this.Bianhao,
+                Code = this.Code,
+                Name = this.Name,
                 Id = this.Id,
                 Guid = this.Guid,
                 Jinjide = this.Jinjide,
                 KaishiShijian = this.KaishiShijian,
-                Mingcheng = this.Mingcheng,
                 QiwangWanchengShijian = this.QiwangWanchengShijian,
                 liucheng = this.liucheng.Map(),
                 LiuchengMingcheng = this.liucheng.Mingcheng,
-                Tuihuide = this.Tuihuide,
                 WanchengShijian = this.WanchengShijian,
                 Zhaiyao = this.Zhaiyao,
-                Zhuangtai = this.Zhuangtai,
-                Leixing = this.Leixing
+                Zhuangtai = this.Zhuangtai
             };
         }
     }

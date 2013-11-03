@@ -2,54 +2,24 @@
 @using Coldew.Website.Models;
 @using Coldew.Api;
 @{
-    ViewBag.Title = "组织管理";
+    ViewBag.Title = "用户组管理";
     Layout = "~/Views/Setup/Layout.cshtml";
-    this.ViewBag.LeftMenu = "OrgAdmin";
+    this.ViewBag.LeftMenu = "Group";
 }
-<script type="text/javascript" src='@this.Url.Content("~/js/positionManager.js")'></script>
-<script type="text/javascript" src='@this.Url.Content("~/js/positionCreateDialog.js")'></script>
-<script type="text/javascript" src='@this.Url.Content("~/js/positoinEditDialog.js")'></script>
-<script type="text/javascript" src='@this.Url.Content("~/js/userCreateDialog.js")'></script>
-<script type="text/javascript" src='@this.Url.Content("~/js/userEditDialog.js")'></script>
-<script type="text/javascript" src='@this.Url.Content("~/js/resetPasswordDialog.js")'></script>
-<script type="text/javascript" src='@this.Url.Content("~/js/positionSelectDialog.js")'></script>
+
 <div class="row-fluid">
     <div class="span3" id="positionManager">
-        <div class="btn-toolbar" style="margin-top: 0">
-            <button class="btn btnCreatePosition" title="创建职位" ><i class="icon-plus"></i>创建</button>
-            <button class="btn btnEditPositoin" title="修改职位" ><i class="icon-edit"></i>修改</button>
-            <button class="btn btnDeletePosition" title="删除职位" ><i class="icon-trash"></i>删除</button>  
-        </div>
         <div class="positionTree">
             
-        </div>
-        <div class="positionCreateDialog">
-            @{this.Html.RenderPartial("PositoinCreateDialog");}
-        </div>
-        <div class="positoinEditDialog">
-            @{this.Html.RenderPartial("PositoinEditDialog");}
         </div>
     </div>
     <div class="span9">
         <div class="btn-toolbar" style="margin-top: 0">
-            <button id="btnCreateUser" class="btn" title="创建用户" ><i class="icon-plus"></i>创建</button>
-            <button id="btnEditUser" disabled="disabled" class="btn" title="编辑用户" ><i class="icon-edit"></i>编辑</button>
-            <button id="btnResetPassword" disabled="disabled" class="btn" title="重置用户密码" ><i class="icon-edit"></i>重置密码</button>
-            <button id="btnMoveUser" disabled="disabled"  class="btn" title="移动用户" ><i class="icon-move"></i>移动</button>
-            <button id="btnLockUser" disabled="disabled" title="锁定用户" class="btn"><i class="icon-lock"></i>锁定</button>
-            <button id="btnActivateUser" disabled="disabled" title="激活用户" class="btn"><i class="icon-lock"></i>解锁</button>
+            <button id="btnAddUser" class="btn" title="添加用户" ><i class="icon-plus"></i>添加用户</button>
+            <button id="btnRemoveUser" disabled="disabled" class="btn" title="移除用户" ><i class="icon-remove"></i>移除用户</button>
         </div>
         <div id="userCreateDialog">
             @{this.Html.RenderPartial("UserCreateDialog");}
-        </div>
-        <div id="userEditDialog">
-            @{this.Html.RenderPartial("UserEditDialog");}
-        </div>
-        <div id="resetPasswordDialog">
-            @{this.Html.RenderPartial("ResetPasswordDialog");}
-        </div>
-        <div id="positionSelectDialog">
-            @{this.Html.RenderPartial("PositionSelectDialog");}
         </div>
         <div id="userGrid">
                 
@@ -84,10 +54,7 @@
     var userGrid = $("#userGrid").datagrid({
 		columns:[
 			{title: "帐号", width: 100, field:"account"},
-			{title: "姓名", width: 100, field:"name"},
-			{title: "职位", width: 150, field:"position"},
-			{title: "邮件地址", width: 250, field:"email"},
-			{title: "状态", width: 150, field:"status"}
+			{title: "姓名", width: 100, field:"name"}
 		],
         height: "auto",
 		canSort: false,
@@ -224,3 +191,4 @@
         return false;
     });
 </script>
+

@@ -20,10 +20,9 @@ namespace Coldew.Website.Models
             {
                 this.jieshuShijian = liucheng.JieshuShijian.Value.ToString();
             }
-            this.liuchengtuUrl = string.Format("{0}?liuchengId={1}", controller.Url.Content("~/liucheng/Liuchengtu"), liucheng.Guid);
             this.mingcheng = liucheng.Mingcheng;
             this.zhuangtai = this.Map(liucheng.Zhuangtai);
-            this.url = string.Format("{0}?liuchengId={1}&uid={2}", liucheng.Liucheng.GuidangUrl, liucheng.Guid, currentUser.ID);
+            //this.url = string.Format("{0}?liuchengId={1}&uid={2}", liucheng.Liucheng.GuidangUrl, liucheng.Guid, currentUser.ID);
             this.zhaiyao = liucheng.Zhaiyao;
         }
 
@@ -42,8 +41,6 @@ namespace Coldew.Website.Models
         public string guid;
 
         public string mingcheng;
-
-        public string liuchengtuUrl;
 
         public string faqiren;
 

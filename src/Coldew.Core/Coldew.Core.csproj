@@ -163,16 +163,13 @@
     <Compile Include="Organization\VirtualGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FunctionMetadataRelatedValue.cs" />
-    <Compile Include="Workflow\DemoLiuchengBiaodan.cs" />
-    <Compile Include="Workflow\DemoLiuchengMoban.cs" />
-    <Compile Include="Workflow\DemoLiuchengYinqing.cs" />
-    <Compile Include="Workflow\FuwuThrowingLogger.cs" />
     <Compile Include="Workflow\Helper.cs" />
     <Compile Include="Workflow\JianglaiRenwuZhipai.cs" />
     <Compile Include="Workflow\JianglaiZhipaiManager.cs" />
     <Compile Include="Workflow\Liucheng.cs" />
     <Compile Include="Workflow\LiuchengFuwu.cs" />
     <Compile Include="Workflow\LiuchengMoban.cs" />
+    <Compile Include="Workflow\LiuchengMobanManager.cs" />
     <Compile Include="Workflow\Liuchengtu.cs" />
     <Compile Include="Workflow\Zhipai.cs" />
     <Compile Include="Workflow\ZhipaiManager.cs" />
@@ -180,7 +177,7 @@
     <Compile Include="Workflow\RenwuFuwu.cs" />
     <Compile Include="Workflow\TEventHanlder.cs" />
     <Compile Include="Workflow\Xingdong.cs" />
-    <Compile Include="Workflow\Yinqing.cs" />
+    <Compile Include="Workflow\LiuchengYinqing.cs" />
     <Compile Include="Workflow\YinqingFuwu.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -212,11 +209,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Workflow\Images\begin.gif" />
-    <EmbeddedResource Include="Workflow\Images\buzhou.gif" />
-    <EmbeddedResource Include="Workflow\Images\end.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

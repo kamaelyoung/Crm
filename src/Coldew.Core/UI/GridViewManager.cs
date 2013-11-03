@@ -56,7 +56,8 @@ namespace Coldew.Core
                 ColumnsJson = columnJson,
                 IsShared = isShared,
                 SearchExpression = searchExpressionJson,
-                Code = code
+                Code = code,
+                Index = index
             };
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();

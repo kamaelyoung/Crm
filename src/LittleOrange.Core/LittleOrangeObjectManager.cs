@@ -17,12 +17,14 @@ namespace LittleOrange.Core
 
         protected override ColdewObject Create(string id, string code, string name)
         {
-            if (code == LittleOrangeObjectConstCode.Object_GongsiKehu ||
-                code == LittleOrangeObjectConstCode.Object_Ziranren)
+            if (code == LittleOrangeObjectConstCode.Object_GongsiKehu )
             {
-                return new CustomerObject(id, code, name, this._crmManager);
+                return new GongsiKehuObject(id, code, name, this._crmManager);
             }
-
+            else if (code == LittleOrangeObjectConstCode.Object_Ziranren)
+            {
+                return new ZhiranrenObject(id, code, name, this._crmManager);
+            }
             return base.Create(id, code, name);
         }
     }

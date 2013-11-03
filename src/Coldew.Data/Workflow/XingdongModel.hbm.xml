@@ -8,8 +8,8 @@
         </id>
         <property name="Guid" type="String" column="xingdong_guid"></property>
         <property name="LiuchengId" type="Int32" column="shili_id"></property>
-        <property name="Bianhao" type="String" column="xingdong_bianhao"></property>
-        <property name="Mingcheng" type="String" column="xingdong_mingcheng"></property>
+        <property name="Code" type="String" column="code"></property>
+        <property name="Name" type="String" column="name"></property>
         <property name="Jinjide" type="bool" column="xingdong_jinjide"></property>
         <property name="KaishiShijian" type="DateTime" column="xingdong_kaishiShijian"></property>
         <property name="QiwangWanchengShijian" type="DateTime" column="xingdong_qiwangWanchengShijian"></property>

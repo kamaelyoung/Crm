@@ -1,0 +1,46 @@
+﻿@using Coldew.Api.UI;
+@using Coldew.Api;
+@using Coldew.Website;
+@{
+    FormInfo formInfo = this.ViewBag.formInfo;
+    ColdewInput crmInput = WebHelper.ColdewInputFactory.CreateInput(true);
+}
+@foreach (SectionInfo sectionInfo in formInfo.Sections)
+{
+<fieldset>
+    <legend>@sectionInfo.Title</legend>
+    @for (int count = 0; count < sectionInfo.Inputs.Count; ++count)
+    {
+        if (count % sectionInfo.ColumnCount == 0)
+        {
+            @this.Html.Raw("<div class='row-fluid'>");
+        }
+        FieldInfo field = sectionInfo.Inputs[count].Field;
+    <div class="span6">
+    <div class="control-group">
+        <label class="control-label" >
+        @if (string.IsNullOrEmpty(field.Tip))
+        {
+            @field.Name
+        }
+        else{
+            @string.Format("{0}({1})", field.Name, field.Tip)
+        }
+        @if (field.Required) { 
+            <font style="color: Red">*</font>
+        }
+        </label>
+        <div class="controls">
+            @crmInput.Input(field)
+        </div>
+    </div>
+    </div>
+        if (count % sectionInfo.ColumnCount == 1 ||
+            count == sectionInfo.Inputs.Count - 1)
+        {
+            @this.Html.Raw("</div>");
+        }
+    }
+</fieldset>
+}
+
