@@ -27,7 +27,7 @@ namespace LittleOrange.Core
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
 
-            Customer metadata = new Customer(model.ID, propertys, this.ColdewObject);
+            GongsiKehu metadata = new GongsiKehu(model.ID, propertys, this.ColdewObject);
             return metadata;
         }
 
@@ -38,7 +38,7 @@ namespace LittleOrange.Core
             IList<GongsiKehuModel> models = NHibernateHelper.CurrentSession.QueryOver<GongsiKehuModel>().List();
             foreach (GongsiKehuModel model in models)
             {
-                Customer metadata = new Customer(model.ID, MetadataPropertyListHelper.GetPropertys(model.PropertysJson, this.ColdewObject), this.ColdewObject);
+                GongsiKehu metadata = new GongsiKehu(model.ID, MetadataPropertyListHelper.GetPropertys(model.PropertysJson, this.ColdewObject), this.ColdewObject);
 
                 metadatas.Add(metadata);
             }

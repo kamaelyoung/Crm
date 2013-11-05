@@ -51,7 +51,7 @@ namespace LittleOrange.Core
                     this.InitZiranren();
                     this.InitGongsiKehu();
                     this.InitFahuo();
-                    this.InitLiuchengMoban();
+                    this.InitFahuoLiucheng();
                 }
             }
             catch(Exception ex)
@@ -216,6 +216,19 @@ namespace LittleOrange.Core
             this._coldewManager.Logger.Info("init fahuo");
             ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货", LittleOrangeObjectConstCode.Object_Fahuo);
             Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "产品名称", "", true, true, true, 1, "");
+            Field shengfenField = cobject.CreateStringField("shengfen", "省份", "", false, true, true, 1, "");
+            Field diquField = cobject.CreateStringField("diqu", "地区", "", false, true, true, 1, "");
+            Field fahuoRiqiField = cobject.CreateDateField("fahuoRiqi", "发货日期", "", false, true, true, 1, true);
+            Field huikuanRiqiField = cobject.CreateDateField("huikuanRiqi", "汇款日期", "", false, true, true, 1, false);
+            Field huikuanJineField = cobject.CreateNumberField("huikuanJine", "汇款金额", "", false, true, true, 1, null, null, null, 2);
+            Field huikuanLeixingField = cobject.CreateStringField("huikuanLeixing", "汇款类型", "", false, true, true, 1, "");
+            Field huikuanDanweiField = cobject.CreateStringField("huikuanDanwei", "汇款单位", "", false, true, true, 1, "");
+            Field daokuanDanweiField = cobject.CreateStringField("daokuanDanwei", "到款单位", "", false, true, true, 1, "");
+            Field kaipiaoDanweiField = cobject.CreateStringField("kaipiaoDanwei", "开票单位", "", false, true, true, 1, "");
+            Field shouhuoDizhiField = cobject.CreateStringField("shouhuoDizhi", "收货地址", "", false, true, true, 1, "");
+            Field shouhuorenField = cobject.CreateStringField("shouhuoren", "收货人及电话", "", false, true, true, 1, "");
+            Field suihuoFudaiField = cobject.CreateTextField("suihuoFudai", "随货附带", "", false, true, true, 1, "");
+            Field beizhuField = cobject.CreateTextField("beizhu", "备注", "", false, true, true, 1, "");
             Field guigeField = cobject.CreateStringField("guige", "规格", "", false, true, true, 2, "");
             Field shengchanQiyeField = cobject.CreateStringField("shengchanQiye", "生产企业", "", false, true, true, 3, "");
             Field danweiField = cobject.CreateStringField("danwei", "单位", "", false, true, true, 4, "");
@@ -248,8 +261,6 @@ namespace LittleOrange.Core
             baseSectuibInputs.Add(new Input(modifiedTimeField, 15));
 
             Form detailsForm = cobject.FormManager.Create(FormConstCode.DetailsFormCode, "发货信息", sections, null);
-            Form faqiFahuoLiuchengForm = cobject.FormManager.Create(LittleOrangeObjectConstCode.Form_Code_FaHuo_Faqi, "发货信息", sections, null);
-            Form faqiFahuoShenheForm = cobject.FormManager.Create(LittleOrangeObjectConstCode.Form_Code_FaHuo_Shenhe, "发货信息", sections, null);
 
             List<GridViewColumnSetupInfo> viewColumns = new List<GridViewColumnSetupInfo>();
             foreach (Field field in cobject.GetFields().Take(8))
@@ -261,10 +272,47 @@ namespace LittleOrange.Core
             GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏发货", this._admin, true, true, 2, "", viewColumns);
         }
 
-        private void InitLiuchengMoban()
+        private void InitFahuoLiucheng()
         {
-            this._coldewManager.LiuchengYinqing.LiuchengMobanManager.Create("fahuo_liucheng", "发货流程", 
-                LittleOrangeObjectConstCode.Object_Fahuo, LittleOrangeObjectConstCode.Form_Code_FaHuo_Faqi, "");
+            this._coldewManager.Logger.Info("init fahuo liucheng");
+            ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货流程", "fahuo_liucheng");
+            Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "流程名称", "", true, true, true, 1, "");
+            Field shengfenField = cobject.CreateStringField("shengfen", "省份", "", false, true, true, 1, "");
+            Field diquField = cobject.CreateStringField("diqu", "地区", "", false, true, true, 1, "");
+            Field fahuoRiqiField = cobject.CreateDateField("fahuoRiqi", "发货日期", "", false, true, true, 1, true);
+            Field huikuanRiqiField = cobject.CreateDateField("huikuanRiqi", "汇款日期", "", false, true, true, 1, false);
+            Field huikuanJineField = cobject.CreateNumberField("huikuanJine", "汇款金额", "", false, true, true, 1, null, null, null, 2);
+            Field huikuanLeixingField = cobject.CreateStringField("huikuanLeixing", "汇款类型", "", false, true, true, 1, "");
+            Field huikuanDanweiField = cobject.CreateStringField("huikuanDanwei", "汇款单位", "", false, true, true, 1, "");
+            Field daokuanDanweiField = cobject.CreateStringField("daokuanDanwei", "到款单位", "", false, true, true, 1, "");
+            Field kaipiaoDanweiField = cobject.CreateStringField("kaipiaoDanwei", "开票单位", "", false, true, true, 1, "");
+            Field shouhuoDizhiField = cobject.CreateStringField("shouhuoDizhi", "收货地址", "", false, true, true, 1, "");
+            Field shouhuorenField = cobject.CreateStringField("shouhuoren", "收货人及电话", "", false, true, true, 1, "");
+            Field suihuoFudaiField = cobject.CreateTextField("suihuoFudai", "随货附带", "", false, true, true, 1, "");
+            Field chanpinListField = cobject.CreateStringField("chanpinList", "产品信息", "", false, true, true, 1, "");
+            Field beizhuField = cobject.CreateTextField("beizhu", "备注", "", false, true, true, 1, "");
+            Field guigeField = cobject.CreateStringField("guige", "规格", "", false, true, true, 2, "");
+            Field creatorField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_CREATOR, "创建人", "", true, false, false, 16, true);
+            Field createTimeField = cobject.CreateDateField(ColdewObjectCode.FIELD_NAME_CREATE_TIME, "创建时间", "", false, false, false, 17, true);
+            Field modifiedUserField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, "修改人", "", true, false, false, 18, true);
+            Field modifiedTimeField = cobject.CreateDateField(ColdewObjectCode.FIELD_NAME_MODIFIED_TIME, "修改时间", "", false, false, false, 19, true);
+
+            List<Input> baseSectuibInputs = new List<Input>();
+            foreach (Field field in cobject.GetFields())
+            {
+                baseSectuibInputs.Add(new Input(field, field.Index));
+            }
+
+            List<GridViewColumnSetupInfo> viewColumns = new List<GridViewColumnSetupInfo>();
+            foreach (Field field in cobject.GetFields().Take(8))
+            {
+                viewColumns.Add(new GridViewColumnSetupInfo { FieldId = field.ID, Width = 80 });
+            }
+
+            GridView manageView = cobject.GridViewManager.Create(GridViewType.Manage, "", "发货流程管理", this._admin, true, true, 1, "", viewColumns);
+            GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏发货流程", this._admin, true, true, 2, "", viewColumns);
+
+            this._coldewManager.LiuchengYinqing.LiuchengMobanManager.Create("fahuo_liucheng", "发货流程", cobject, "~/FahuoLiucheng", "");
         }
 
     }

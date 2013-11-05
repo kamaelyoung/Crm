@@ -266,14 +266,6 @@ namespace Coldew.Core
             return false;
         }
 
-        internal void Delete()
-        {
-            MetadataModel model = NHibernateHelper.CurrentSession.Get<MetadataModel>(this.ID);
-
-            NHibernateHelper.CurrentSession.Delete(model);
-            NHibernateHelper.CurrentSession.Flush();
-        }
-
         public virtual MetadataInfo Map()
         {
             return new MetadataInfo()

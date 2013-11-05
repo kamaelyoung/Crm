@@ -33,7 +33,7 @@ namespace Coldew.Website.Models
 
             this.zhuangtaiMingcheng = this.Map(renwu.Zhuangtai);
             this.zhuangtai = renwu.Zhuangtai;
-            //this.url = string.Format("{0}?renwuId={1}&uid={2}", renwu.Xingdong.liucheng.Liucheng.RenwuUrl, renwu.Guid, currentUser.ID);
+            this.url = string.Format("{0}?renwuId={1}&uid={2}", renwu.Xingdong.liucheng.Liucheng.TransferUrl, renwu.Guid, currentUser.ID);
             this.faqiren = renwu.Xingdong.liucheng.Faqiren.Name;
             this.chuliren = renwu.Chuliren.Name;
             this.wanchengShuoming = renwu.ChuliShuoming;

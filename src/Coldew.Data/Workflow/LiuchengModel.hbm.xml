@@ -14,6 +14,7 @@
         <property name="JieshuShijian" type="DateTime" column="liucheng_jieshuShijian"></property>
         <property name="Zhuangtai" type="Int32" column="liucheng_zhuangtai"></property>
         <property name="Jinjide" type="bool" column="liucheng_jinjide"></property>
+        <property name="BiaodanId" type="String" column="biaodan_id"></property>
         <property name="Zhaiyao" type="String" length="20000" column="liucheng_zhaiyao"></property>
     </class>
 </hibernate-mapping>

@@ -9,6 +9,8 @@ namespace Coldew.Api
     {
         ColdewObjectInfo GetFormById(string objectId);
 
+        ColdewObjectInfo GetFormByCode(string objectCode);
+
         List<ColdewObjectInfo> GetForms();
 
         FieldInfo GetField(int fieldId);

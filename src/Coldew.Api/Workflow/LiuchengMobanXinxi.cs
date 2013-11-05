@@ -14,9 +14,7 @@ namespace Coldew.Api.Workflow
 
         public string Mingcheng {  set; get; }
 
-        public string ObjectCode {  set; get; }
-
-        public string FaqiFormCode {  set; get; }
+        public string TransferUrl { set; get; }
 
         public string Shuoming { set; get; }
     }

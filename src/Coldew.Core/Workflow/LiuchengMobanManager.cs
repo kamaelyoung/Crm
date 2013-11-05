@@ -13,18 +13,20 @@ namespace Coldew.Core.Workflow
     {
         ReaderWriterLock _lock;
         List<LiuchengMoban> _mobanList;
+        ColdewObjectManager _objectManager;
         LiuchengYinqing _yinqing;
 
-        public LiuchengMobanManager(LiuchengYinqing yinqing)
+        public LiuchengMobanManager(LiuchengYinqing yinqing, ColdewObjectManager objectManager)
         {
             this._lock = new ReaderWriterLock();
             this._mobanList = new List<LiuchengMoban>();
+            this._objectManager = objectManager;
             this._yinqing = yinqing;
 
             this.Load();
         }
 
-        public LiuchengMoban Create(string code, string name, string objectCode, string faqiFormCode, string remark)
+        public LiuchengMoban Create(string code, string name, ColdewObject cobject, string transferUrl, string remark)
         {
             this._lock.AcquireWriterLock(0);
             try
@@ -33,9 +35,9 @@ namespace Coldew.Core.Workflow
                 LiuchengMobanModel model = new LiuchengMobanModel();
                 model.Code = code;
                 model.Name = name;
+                model.ColdewObjectCode = cobject.Code;
                 model.Remark = remark;
-                model.ObjectCode = objectCode;
-                model.FaqiFormCode = faqiFormCode;
+                model.TransferUrl = transferUrl;
                 NHibernateHelper.CurrentSession.Save(model);
                 NHibernateHelper.CurrentSession.Flush();
 
@@ -88,7 +90,9 @@ namespace Coldew.Core.Workflow
 
         private LiuchengMoban Create(LiuchengMobanModel model)
         {
-            LiuchengMoban moban = new LiuchengMoban(model.ID,  model.Code, model.Name, model.ObjectCode, model.FaqiFormCode, model.Remark, this._yinqing);
+            ColdewObject cobject = this._objectManager.GetFormByCode(model.ColdewObjectCode);
+
+            LiuchengMoban moban = new LiuchengMoban(model.ID, model.Code, model.Name, model.TransferUrl, model.Remark, this._yinqing, cobject);
             this._mobanList.Add(moban);
             return moban;
         }

@@ -12,16 +12,19 @@ namespace Coldew.Core.Workflow
 {
     public class LiuchengMoban
     {
-        public LiuchengMoban(string id, string code, string mingcheng, string objectCode, string faqiFormCode, string shuoming, LiuchengYinqing yinqing)
+
+        public LiuchengMoban(string id, string code, string mingcheng, string transferUrl, string shuoming, LiuchengYinqing yinqing, ColdewObject cobject)
         {
             this.ID = id;
             this.Mingcheng = mingcheng;
-            this.ObjectCode = objectCode;
-            this.FaqiFormCode = faqiFormCode;
+            this.TransferUrl = transferUrl;
             this.Shuoming = shuoming;
             this.Yinqing = yinqing;
+            this.BiandanManager = cobject.MetadataManager;
             this._shiliList = new List<Liucheng>();
         }
+
+        public MetadataManager BiandanManager { protected set; get; }
 
         public LiuchengYinqing Yinqing { internal set; get; }
 
@@ -31,9 +34,7 @@ namespace Coldew.Core.Workflow
 
         public string Mingcheng { protected set; get; }
 
-        public string ObjectCode { protected set; get; }
-
-        public string FaqiFormCode { protected set; get; }
+        public string TransferUrl { protected set; get; }
 
         public string Shuoming { protected set; get; }
 
@@ -49,7 +50,7 @@ namespace Coldew.Core.Workflow
 
         private object _lock = new object();
 
-        public Liucheng FaqiLiucheng(User faqiren, string zhaiyao, bool jinjide)
+        public Liucheng FaqiLiucheng(User faqiren, string zhaiyao, bool jinjide, Metadata biaodan)
         {
             lock (this._lock)
             {
@@ -62,6 +63,7 @@ namespace Coldew.Core.Workflow
                 model.Zhuangtai = (int)LiuchengZhuangtai.Chulizhong;
                 model.Zhaiyao = zhaiyao;
                 model.Jinjide = jinjide;
+                model.BiaodanId = biaodan.ID;
                 int id = (int)NHibernateHelper.CurrentSession.Save(model);
                 Liucheng liucheng = this.ChuangjianLiucheng(model);
                 return liucheng;
@@ -75,8 +77,9 @@ namespace Coldew.Core.Workflow
 
         internal Liucheng ChuangjianLiucheng(LiuchengModel model)
         {
-            Liucheng liucheng = new Liucheng(model.Id, model.Guid, model.Mingcheng, this.Yinqing.GetYonghu(model.Faqiren), 
-                model.FaqiShijian, model.JieshuShijian, (LiuchengZhuangtai)model.Zhuangtai, model.Jinjide, model.Zhaiyao, this.Yinqing);
+            Metadata biaodan = this.BiandanManager.GetById(model.BiaodanId);
+            Liucheng liucheng = new Liucheng(model.Id, model.Guid, model.Mingcheng, this.Yinqing.GetYonghu(model.Faqiren),
+                model.FaqiShijian, model.JieshuShijian, (LiuchengZhuangtai)model.Zhuangtai, model.Jinjide, model.Zhaiyao, biaodan, this.Yinqing);
             liucheng.Shanchuhou += new TEventHanlder<Liucheng>(Liucheng_Shanchuhou);
             List<Liucheng> shiliList = this._shiliList.ToList();
             liucheng.Moban = this;
@@ -161,8 +164,7 @@ namespace Coldew.Core.Workflow
                 ID = this.ID,
                 Mingcheng = this.Mingcheng,
                 Code = this.Code,
-                FaqiFormCode = this.FaqiFormCode,
-                ObjectCode = this.ObjectCode,
+                TransferUrl = this.TransferUrl,
                 Shuoming = this.Shuoming
             };
         }

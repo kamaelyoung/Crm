@@ -5,12 +5,13 @@ using System.Text;
 using Coldew.Core.Organization;
 using Newtonsoft.Json;
 using Coldew.Core;
+using LittleOrange.Data;
 
 namespace LittleOrange.Core
 {
-    public class Customer : Metadata
+    public class GongsiKehu : Metadata
     {
-        public Customer(string id, List<MetadataProperty> propertys, ColdewObject form)
+        public GongsiKehu(string id, List<MetadataProperty> propertys, ColdewObject form)
             : base(id, propertys, form)
         {
 
@@ -56,6 +57,22 @@ namespace LittleOrange.Core
             }
 
             return false;
+        }
+
+        protected override void UpdateDB(List<MetadataProperty> propertys)
+        {
+            GongsiKehuModel model = NHibernateHelper.CurrentSession.Get<GongsiKehuModel>(this.ID);
+            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
+
+            NHibernateHelper.CurrentSession.Update(model);
+        }
+
+        protected override void DeleteDB()
+        {
+            GongsiKehuModel model = NHibernateHelper.CurrentSession.Get<GongsiKehuModel>(this.ID);
+
+            NHibernateHelper.CurrentSession.Delete(model);
+            NHibernateHelper.CurrentSession.Flush();
         }
     }
 }

@@ -4,32 +4,29 @@
     
     ViewBag.Title = "待办的任务";
     Layout = "~/Views/Workflow/Layout.cshtml";
-    this.ViewBag.LiuchengCaidan = LiuchengCaidan.Daibande;
+    this.ViewBag.LiuchengCaidan = "Daibande";
 }
 
-<div id="daibanDiv" class="span10">
-    <div class="row-fluid">
-        <div class="span2">
-            <p class="lead">待办的任务</p>
-        </div>
-        <div class="span10">
-            <button id="btnDakaiSousuo" class="btn"><i class="icon-search"></i>查询</button>
-            <button id="btnZhipai" class="btn" disabled="disabled"><i class="icon-tasks"></i>指派选定任务</button>
-            <button id="btnZhipaiSuoyou" class="btn"><i class="icon-tasks"></i>指派所有任务</button>
-            <button id="btnJianglaiZhipai" class="btn "><i class="icon-tasks"></i>将来指派</button>  
-        </div>
+<div class="row-fluid">
+    <div class="span2">
+        <p class="lead">待办的任务</p>
     </div>
-
-    <div id="renwuGrid">
-                
+    <div class="span10">
+        <button id="btnDakaiSousuo" class="btn"><i class="icon-search"></i>查询</button>
+        <button id="btnZhipai" class="btn" disabled="disabled"><i class="icon-tasks"></i>指派选定任务</button>
+        <button id="btnZhipaiSuoyou" class="btn"><i class="icon-tasks"></i>指派所有任务</button>
+        <button id="btnJianglaiZhipai" class="btn "><i class="icon-tasks"></i>将来指派</button>  
     </div>
-        
-    <div id="pager" class="pull-right" style="height: 30px">
-            
-    </div>
-    @{this.Html.RenderPartial("DaibandeRenwuSousuoPopover");}
-        
 </div>
+
+<div id="renwuGrid">
+                
+</div>
+        
+<div id="pager" class="pull-right" style="height: 30px">
+            
+</div>
+@{this.Html.RenderPartial("DaibandeRenwuSousuoPopover");}
 <div class="liuchengtuDialog">
     @{this.Html.RenderPartial("LiuchengtuDialog");}
 </div>
@@ -140,7 +137,7 @@
             $.extend(args, _sousuoXinxi);
         }
         btnZhipai.prop("disabled", true);
-        $.get("@this.Url.Action("DaibandeRenwu")", args, function(model){
+        $.get("@this.Url.Action("DaibanRenwu")", args, function(model){
             if(model.result == 0){
                 $("#renwuGrid").datagrid("option", "data", model.data.list);
                 $("#pager").pager("option", "pageInfo", {start: start, size: 20, count: model.data.count})

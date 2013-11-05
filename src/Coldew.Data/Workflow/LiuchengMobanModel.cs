@@ -13,11 +13,9 @@ namespace Coldew.Data
 
         public virtual string Name { set; get; }
 
-        public virtual string ObjectCode { set; get; }
+        public virtual string ColdewObjectCode { set; get; }
 
-        public virtual string FaqiFormCode { set; get; }
-
-        public virtual string BuzhouListJson { set; get; }
+        public virtual string TransferUrl { set; get; }
 
         public virtual string Remark { set; get; }
     }

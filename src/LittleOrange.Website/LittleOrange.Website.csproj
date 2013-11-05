@@ -69,6 +69,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\FahuoLiuchengController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -110,9 +111,7 @@
     <Content Include="Views\Workflow\LiuchengtuDialog.cshtml" />
     <Content Include="Views\Workflow\WanchengdeRenwuSousuoPopover.cshtml" />
     <Content Include="Views\Org\Group.cshtml" />
-    <Content Include="Views\Workflow\Faqi.cshtml" />
-    <Content Include="Views\Workflow\FaqiForm.cshtml" />
-    <Content Include="Views\Workflow\SelectDialog.cshtml" />
+    <Content Include="Views\FahuoLiucheng\Faqi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />
@@ -271,9 +270,7 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Fahuo\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coldew.Api\Coldew.Api.csproj">

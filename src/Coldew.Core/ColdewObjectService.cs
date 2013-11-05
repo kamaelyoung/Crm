@@ -26,6 +26,16 @@ namespace Coldew.Core
             return null;
         }
 
+        public ColdewObjectInfo GetFormByCode(string objectCode)
+        {
+            ColdewObject form = this._coldewManager.ObjectManager.GetFormByCode(objectCode);
+            if (form != null)
+            {
+                return form.Map();
+            }
+            return null;
+        }
+
         public List<ColdewObjectInfo> GetForms()
         {
             List<ColdewObject> forms = this._coldewManager.ObjectManager.GetForms();

@@ -14,7 +14,17 @@ namespace Coldew.Website.Models
         {
             this.id = liucheng.ID;
             this.mingcheng = liucheng.Mingcheng;
-            this.faqiUrl = controller.Url.Action("Faqi", new { objectCode = liucheng.ObjectCode, formCode = liucheng.FaqiFormCode });
+            string transferUrl = controller.Url.Content(liucheng.TransferUrl);
+            string faqiUrl = "";
+            if (transferUrl.IndexOf("?") > -1)
+            {
+                faqiUrl = string.Format("{0}&mobanId={1}", transferUrl, this.id);
+            }
+            else
+            {
+                faqiUrl = string.Format("{0}?mobanId={1}", transferUrl, this.id);
+            }
+            this.faqiLink = string.Format("<a target='_blank' href='{0}'>{1}</a>", faqiUrl, this.mingcheng);
             this.shuoming = liucheng.Shuoming;
         }
 
@@ -30,7 +40,7 @@ namespace Coldew.Website.Models
 
         public string mingcheng;
 
-        public string faqiUrl;
+        public string faqiLink;
 
         public string shuoming;
     }

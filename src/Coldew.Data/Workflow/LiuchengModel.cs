@@ -25,6 +25,8 @@ namespace Coldew.Data
 
         public virtual bool Jinjide { set; get; }
 
+        public virtual string BiaodanId { set; get; }
+
         public virtual string Zhaiyao { set; get; }
     }
 }

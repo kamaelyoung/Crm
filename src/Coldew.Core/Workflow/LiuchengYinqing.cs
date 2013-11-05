@@ -22,7 +22,7 @@ namespace Coldew.Core.Workflow
         {
             this.Logger = coldewManager.Logger;
             this._coldewManager = coldewManager;
-            this.LiuchengMobanManager = new LiuchengMobanManager(this);
+            this.LiuchengMobanManager = new LiuchengMobanManager(this, this._coldewManager.ObjectManager);
             this.JianglaiZhipaiManager = new Workflow.JianglaiZhipaiManager(this._coldewManager.OrgManager);
             this.ZhipaiManager = new Workflow.ZhipaiManager(this._coldewManager.OrgManager);
 

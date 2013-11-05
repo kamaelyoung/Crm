@@ -50,6 +50,7 @@
     <Compile Include="GridViewColumnModel.cs" />
     <Compile Include="GridViewModel.cs" />
     <Compile Include="InputModel.cs" />
+    <Compile Include="Workflow\BiaodanModel.cs" />
     <Compile Include="Workflow\JianglaiRenwuZhipaiModel.cs" />
     <Compile Include="ListFieldConfigModel.cs" />
     <Compile Include="Workflow\LiuchengModel.cs" />
@@ -141,6 +142,9 @@
     <EmbeddedResource Include="Workflow\LiuchengModel.hbm.xml" />
     <EmbeddedResource Include="Workflow\RenwuModel.hbm.xml" />
     <EmbeddedResource Include="Workflow\XingdongModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Workflow\BiaodanModel.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
