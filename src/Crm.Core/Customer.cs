@@ -8,13 +8,14 @@ using Crm.Api;
 using Crm.Api.Exceptions;
 using Newtonsoft.Json;
 using Coldew.Core;
+using Coldew.Core.DataServices;
 
 namespace Crm.Core
 {
     public class Customer : Metadata
     {
-        public Customer(string id, List<MetadataProperty> propertys, ColdewObject form)
-            : base(id, propertys, form)
+        public Customer(string id, List<MetadataProperty> propertys, ColdewObject form, MetadataDataService dataService)
+            : base(id, propertys, form, dataService)
         {
 
         }
@@ -38,22 +39,6 @@ namespace Crm.Core
         }
 
         public List<User> SalesUsers { get { return this.SalesUsersValue.Users; } }
-
-        protected override void UpdateDB(List<MetadataProperty> propertys)
-        {
-            CustomerModel model = NHibernateHelper.CurrentSession.Get<CustomerModel>(this.ID);
-            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
-
-            NHibernateHelper.CurrentSession.Update(model);
-        }
-
-        protected override void DeleteDB()
-        {
-            CustomerModel model = NHibernateHelper.CurrentSession.Get<CustomerModel>(this.ID);
-
-            NHibernateHelper.CurrentSession.Delete(model);
-            NHibernateHelper.CurrentSession.Flush();
-        }
 
         public override bool CanPreview(User user)
         {

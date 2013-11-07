@@ -79,6 +79,7 @@
     <Compile Include="CustomerManager.cs" />
     <Compile Include="CrmInitializer.cs" />
     <Compile Include="CustomerObject.cs" />
+    <Compile Include="CustomerDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ContractExpiringSearcher.cs" />
     <Compile Include="ActivityObject.cs" />

@@ -26,12 +26,13 @@ namespace LittleOrange.Website.Controllers
                 return this.RedirectToAction("Faqi", new { mobanId = mobanId });
             }
             RenwuXinxi renwu = WebHelper.RenwuFuwu.GetRenwu(liuchengId, renwuId);
-            if (renwu.Bianhao == "caiwu_shenhe")
+            if (renwu.Zhuangtai == RenwuZhuangtai.Wanchengle)
             {
-                if (renwu.Zhuangtai == RenwuZhuangtai.Chulizhong)
-                {
-                   return this.RedirectToAction("Caiwu", new { renwuId = renwuId, liuchengId = liuchengId });
-                }
+                return this.RedirectToAction("Mingxi", new { renwuId = renwuId, liuchengId = liuchengId });
+            }
+            else if (renwu.Bianhao == "caiwu_shenhe")
+            {
+                return this.RedirectToAction("Caiwu", new { renwuId = renwuId, liuchengId = liuchengId });
             }
             return View();
         }
@@ -49,14 +50,14 @@ namespace LittleOrange.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("fahuo_liucheng");
+                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("FahuoLiucheng");
                 JObject biandanInfo = JsonConvert.DeserializeObject<JObject>(biaodanJson);
 
                 PropertySettingDictionary propertys = ExtendHelper.MapPropertySettingDictionary(biandanInfo);
-                propertys.Add("name", "发货流程");
+                propertys.Add("name", "发货流程"+ DateTime.Now.ToString());
                 MetadataInfo biaodan = WebHelper.MetadataService.Create(objectInfo.ID, this.CurrentUser.Account, propertys);
 
-                LiuchengXinxi liucheng = WebHelper.LiuchengFuwu.FaqiLiucheng(mobanId, this.CurrentUser.Account, false, "", biaodan.ID);
+                LiuchengXinxi liucheng = WebHelper.LiuchengFuwu.FaqiLiucheng(mobanId, "caiwu_faqi", "发起", "", this.CurrentUser.Account, false, "", biaodan.ID);
                 WebHelper.RenwuFuwu.ChuangjianXingdong(liucheng.Guid, "caiwu_shenhe", "财务审核", new List<string> { "admin" }, "", null);
             }
             catch (Exception ex)
@@ -86,7 +87,7 @@ namespace LittleOrange.Website.Controllers
             {
                 LiuchengXinxi liucheng = WebHelper.LiuchengFuwu.GetLiucheng(liuchengId);
 
-                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("fahuo_liucheng");
+                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("FahuoLiucheng");
                 JObject biandanInfo = JsonConvert.DeserializeObject<JObject>(biaodanJson);
 
                 PropertySettingDictionary propertys = ExtendHelper.MapPropertySettingDictionary(biandanInfo);
@@ -102,6 +103,22 @@ namespace LittleOrange.Website.Controllers
                 WebHelper.Logger.Error(ex.Message, ex);
             }
             return Json(resultModel, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult Mingxi(string renwuId, string liuchengId)
+        {
+            LiuchengXinxi liucheng = WebHelper.LiuchengFuwu.GetLiucheng(liuchengId);
+
+            return View(liucheng.Biaodan);
+        }
+
+        [HttpGet]
+        public ActionResult Details(string metadataId, string objectId)
+        {
+            MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(objectId, metadataId);
+
+            return View("Mingxi", metadataInfo);
         }
     }
 }

@@ -65,6 +65,8 @@
     <Compile Include="CreateEventArgs.cs" />
     <Compile Include="ColdewConfigManager.cs" />
     <Compile Include="ColdewConfigService.cs" />
+    <Compile Include="DataServices\MetadataDataService.cs" />
+    <Compile Include="DataServices\TModelMetadataDataService.cs" />
     <Compile Include="MetadataEnumerable.cs" />
     <Compile Include="Search\DateRecentlySearchExpression.cs" />
     <Compile Include="Search\MetadataExpressionSearcher.cs" />
@@ -210,6 +212,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

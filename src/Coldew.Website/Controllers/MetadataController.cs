@@ -272,18 +272,25 @@ namespace Coldew.Website.Controllers
             this.ViewBag.coldewObject = coldewObject;
 
             FormInfo formInfo = WebHelper.FormService.GetForm(objectId, FormConstCode.DetailsFormCode);
-            this.ViewBag.formInfo = formInfo;
-
-            Dictionary<RelatedObjectInfo, List<MetadataInfo>> relateds = new Dictionary<RelatedObjectInfo, List<MetadataInfo>>();
-            foreach (RelatedObjectInfo relatedObject in formInfo.Relateds)
+            if (formInfo != null)
             {
-                List<MetadataInfo> relatedList = WebHelper.MetadataService.GetRelatedMetadatas(relatedObject.Object.ID, objectId, metadataId, "");
-                relateds.Add(relatedObject, relatedList);
+                this.ViewBag.formInfo = formInfo;
+
+                Dictionary<RelatedObjectInfo, List<MetadataInfo>> relateds = new Dictionary<RelatedObjectInfo, List<MetadataInfo>>();
+                foreach (RelatedObjectInfo relatedObject in formInfo.Relateds)
+                {
+                    List<MetadataInfo> relatedList = WebHelper.MetadataService.GetRelatedMetadatas(relatedObject.Object.ID, objectId, metadataId, "");
+                    relateds.Add(relatedObject, relatedList);
+                }
+                this.ViewBag.relateds = relateds;
+                MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(objectId, metadataId);
+                this.ViewBag.metadataInfo = metadataInfo;
+                return View();
             }
-            this.ViewBag.relateds = relateds;
-            MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(objectId, metadataId);
-            this.ViewBag.metadataInfo = metadataInfo;
-            return View();
+            else
+            {
+                return this.RedirectToAction("Details", coldewObject.Code, new { objectId = objectId, metadataId = metadataId });
+            }
         }
 
         [HttpPost]

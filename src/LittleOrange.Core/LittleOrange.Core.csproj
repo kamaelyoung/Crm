@@ -58,17 +58,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GongsiKehuColdewObject.cs" />
     <Compile Include="GongsiKehu.cs" />
-    <Compile Include="ZiranrenManager.cs" />
-    <Compile Include="ZhiranrenObject.cs" />
+    <Compile Include="GongsiKehuDataService.cs" />
     <Compile Include="LittleOrangeInitializer.cs" />
     <Compile Include="LittleOrangeManager.cs" />
     <Compile Include="LittleOrangeObjectConstCode.cs" />
     <Compile Include="LittleOrangeObjectManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GongsiKehuManager.cs" />
-    <Compile Include="GongsiKehuObject.cs" />
-    <Compile Include="Ziranren.cs" />
+    <Compile Include="ZiranrenColdewObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coldew.Api\Coldew.Api.csproj">

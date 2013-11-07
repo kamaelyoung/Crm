@@ -9,6 +9,7 @@ using log4net.Util;
 using Coldew.Core.Organization;
 using Coldew.Api.Exceptions;
 using Coldew.Core.UI;
+using Coldew.Core.DataServices;
 
 namespace Coldew.Core
 {
@@ -37,7 +38,7 @@ namespace Coldew.Core
 
         protected virtual MetadataManager CreateMetadataManager(ColdewManager coldewManager)
         {
-            return new MetadataManager(this, coldewManager.OrgManager);
+            return new MetadataManager(this, new MetadataDataService(this), coldewManager.OrgManager);
         }
 
         protected virtual FormManager CreateFormManager(ColdewManager coldewManager)
@@ -143,7 +144,6 @@ namespace Coldew.Core
             MetadataFieldConfigModel configModel = new MetadataFieldConfigModel { FormCode = formCode };
             return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.Metadata, JsonConvert.SerializeObject(configModel));
         }
-
 
         public Field CreateStringField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string defaultValue)
         {
@@ -393,6 +393,7 @@ namespace Coldew.Core
             {
                 ID = this.ID,
                 Name = this.Name,
+                Code = this.Code,
                 Fields = this._fields.Select(x => x.Map()).ToList()
             };
         }

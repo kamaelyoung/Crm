@@ -49,13 +49,17 @@ namespace Coldew.Core.Workflow
             return liuchengList.Select(x => x.Map()).ToList();
         }
 
-        public LiuchengXinxi FaqiLiucheng(string liuchengMobanId, string faqirenAccount, bool jinjide, string zhaiyao, string biaodanId)
+        public LiuchengXinxi FaqiLiucheng(string liuchengMobanId, string code, string name, string shuoming, string faqirenAccount, bool jinjide, string zhaiyao, string biaodanId)
         {
             User user = this._coldewManger.OrgManager.UserManager.GetUserByAccount(faqirenAccount);
             LiuchengMoban moban = this._yinqing.LiuchengMobanManager.GetMobanById(liuchengMobanId);
             Metadata biaodan = moban.BiandanManager.GetById(biaodanId);
 
             Liucheng liucheng = moban.FaqiLiucheng(user, zhaiyao, jinjide, biaodan);
+            Xingdong xingdong = liucheng.ChuangjianXingdong(code, name, zhaiyao, null);
+            Renwu renwu = xingdong.ChuangjianRenwu(user);
+            renwu.Wancheng(user, shuoming);
+            xingdong.Wancheng();
             return liucheng.Map();
         }
 

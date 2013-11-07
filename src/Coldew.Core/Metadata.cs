@@ -8,16 +8,20 @@ using Newtonsoft.Json.Linq;
 using Coldew.Api;
 using Coldew.Data;
 using Coldew.Api.Exceptions;
+using Coldew.Core.DataServices;
 
 namespace Coldew.Core
 {
     public class Metadata
     {
-        public Metadata(string id, List<MetadataProperty> propertys, ColdewObject form)
+        MetadataDataService _dataService;
+
+        public Metadata(string id, List<MetadataProperty> propertys, ColdewObject form, MetadataDataService dataService)
         {
             this.ID = id;
             this._propertys = propertys.ToDictionary(x => x.Field.Code);
             this.ColdewObject = form;
+            this._dataService = dataService;
             this.InitPropertys();
         }
 
@@ -41,7 +45,7 @@ namespace Coldew.Core
             {
                 propertys.Remove(property);
 
-                this.UpdateDB(propertys);
+                this._dataService.Update(this.ID, propertys);
 
                 this._propertys = propertys.ToDictionary(x => x.Field.Code);
                 this.BuildContent();
@@ -153,20 +157,12 @@ namespace Coldew.Core
                 }
             }
 
-            this.UpdateDB(this._propertys.Values.ToList());
+            this._dataService.Update(this.ID, this._propertys.Values.ToList());
 
             this.InitPropertys();
             this.BuildContent();
 
             this.OnPropertyChanged(dictionary);
-        }
-
-        protected virtual void UpdateDB(List<MetadataProperty> propertys)
-        {
-            MetadataModel model = NHibernateHelper.CurrentSession.Get<MetadataModel>(this.ID);
-            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
-
-            NHibernateHelper.CurrentSession.Update(model);
         }
 
         public virtual List<MetadataProperty> GetPropertys()
@@ -210,20 +206,12 @@ namespace Coldew.Core
                 this.Deleting(this, opUser);
             }
 
-            this.DeleteDB();
+            this._dataService.Delete(this.ID);
 
             if (this.Deleted != null)
             {
                 this.Deleted(this, opUser);
             }
-        }
-
-        protected virtual void DeleteDB()
-        {
-            MetadataModel model = NHibernateHelper.CurrentSession.Get<MetadataModel>(this.ID);
-
-            NHibernateHelper.CurrentSession.Delete(model);
-            NHibernateHelper.CurrentSession.Flush();
         }
 
         public virtual bool CanPreview(User user)

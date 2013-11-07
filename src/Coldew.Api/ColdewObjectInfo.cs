@@ -10,6 +10,8 @@ namespace Coldew.Api
     {
         public string ID { set; get; }
 
+        public string Code { set; get; }
+
         public string Name { set; get; }
 
         public List<FieldInfo> Fields { set; get; }

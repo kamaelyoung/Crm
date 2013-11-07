@@ -19,11 +19,11 @@ namespace LittleOrange.Core
         {
             if (code == LittleOrangeObjectConstCode.Object_GongsiKehu )
             {
-                return new GongsiKehuObject(id, code, name, this._crmManager);
+                return new GongsiKehuColdewObject(id, code, name, this._crmManager);
             }
             else if (code == LittleOrangeObjectConstCode.Object_Ziranren)
             {
-                return new ZhiranrenObject(id, code, name, this._crmManager);
+                return new ZiranrenColdewObject(id, code, name, this._crmManager);
             }
             return base.Create(id, code, name);
         }

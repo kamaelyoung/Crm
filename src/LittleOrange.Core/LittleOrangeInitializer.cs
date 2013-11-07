@@ -275,7 +275,7 @@ namespace LittleOrange.Core
         private void InitFahuoLiucheng()
         {
             this._coldewManager.Logger.Info("init fahuo liucheng");
-            ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货流程", "fahuo_liucheng");
+            ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货流程", "FahuoLiucheng");
             Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "流程名称", "", true, true, true, 1, "");
             Field shengfenField = cobject.CreateStringField("shengfen", "省份", "", false, true, true, 1, "");
             Field diquField = cobject.CreateStringField("diqu", "地区", "", false, true, true, 1, "");
@@ -312,7 +312,7 @@ namespace LittleOrange.Core
             GridView manageView = cobject.GridViewManager.Create(GridViewType.Manage, "", "发货流程管理", this._admin, true, true, 1, "", viewColumns);
             GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏发货流程", this._admin, true, true, 2, "", viewColumns);
 
-            this._coldewManager.LiuchengYinqing.LiuchengMobanManager.Create("fahuo_liucheng", "发货流程", cobject, "~/FahuoLiucheng", "");
+            this._coldewManager.LiuchengYinqing.LiuchengMobanManager.Create("FahuoLiucheng", "发货流程", cobject, "~/FahuoLiucheng", "");
         }
 
     }

@@ -112,6 +112,8 @@
     <Content Include="Views\Workflow\WanchengdeRenwuSousuoPopover.cshtml" />
     <Content Include="Views\Org\Group.cshtml" />
     <Content Include="Views\FahuoLiucheng\Faqi.cshtml" />
+    <Content Include="Views\FahuoLiucheng\Mingxi.cshtml" />
+    <Content Include="Views\FahuoLiucheng\Caiwu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />

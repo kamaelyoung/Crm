@@ -8,6 +8,7 @@ using Coldew.Core.Organization;
 using Coldew.Api;
 using System.Threading;
 using Coldew.Api.Exceptions;
+using Coldew.Core.DataServices;
 
 namespace Coldew.Core
 {
@@ -18,14 +19,16 @@ namespace Coldew.Core
         protected List<Metadata> _metadataList;
         OrganizationManagement _orgManger;
         protected ReaderWriterLock _lock;
+        protected MetadataDataService _dataService;
 
-        public MetadataManager(ColdewObject form, OrganizationManagement orgManger)
+        public MetadataManager(ColdewObject cobject, MetadataDataService dataService, OrganizationManagement orgManger)
         {
             this._metadataDicById = new Dictionary<string, Metadata>();
             this._metadataDicByName = new Dictionary<string, Metadata>();
             this._metadataList = new List<Metadata>();
             this._orgManger = orgManger;
-            this.ColdewObject = form;
+            this.ColdewObject = cobject;
+            this._dataService = dataService;
             this._lock = new ReaderWriterLock();
             this.FavoriteManager = new MetadataFavoriteManager(this, orgManger);
             this.ColdewObject.FieldDeleted += new TEventHandler<Core.ColdewObject, Field>(ColdewObject_FieldDeleted);
@@ -81,7 +84,7 @@ namespace Coldew.Core
                 }
 
                 List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
-                Metadata metadata = this.CreateAndSaveDB(propertys);
+                Metadata metadata = this._dataService.Create(propertys);
 
                 this._metadataDicById.Add(metadata.ID, metadata);
                 this._metadataDicByName.Add(metadata.Name, metadata);
@@ -94,17 +97,6 @@ namespace Coldew.Core
             {
                 this._lock.ReleaseWriterLock();
             }
-        }
-
-        protected virtual Metadata CreateAndSaveDB(List<MetadataProperty> propertys)
-        {
-            MetadataModel model = new MetadataModel();
-            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
-            model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
-            NHibernateHelper.CurrentSession.Flush();
-
-            Metadata metadata = new Metadata(model.ID, propertys, this.ColdewObject);
-            return metadata;
         }
 
         protected virtual void BindEvent(Metadata metadata)
@@ -244,23 +236,9 @@ namespace Coldew.Core
             }
         }
 
-        protected virtual List<Metadata> LoadFromDB()
-        {
-            List<Metadata> metadatas = new List<Metadata>();
-
-            IList<MetadataModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataModel>().List();
-            foreach (MetadataModel model in models)
-            {
-                Metadata metadata = new Metadata(model.ID, MetadataPropertyListHelper.GetPropertys(model.PropertysJson, this.ColdewObject), this.ColdewObject);
-
-                metadatas.Add(metadata);
-            }
-            return metadatas;
-        }
-
         internal virtual void Load()
         {
-            List<Metadata> metadatas = this.LoadFromDB();
+            List<Metadata> metadatas = this._dataService.LoadFromDB();
             foreach (Metadata metadata in metadatas)
             {
                 this._metadataDicById.Add(metadata.ID, metadata);
