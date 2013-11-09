@@ -5,6 +5,7 @@ using System.Text;
 using log4net;
 using Coldew.Core.Organization;
 using Coldew.Core.Workflow;
+using Coldew.Core.MetadataPermission;
 
 namespace Coldew.Core
 {
@@ -22,6 +23,7 @@ namespace Coldew.Core
         protected virtual void Init()
         {
             this.OrgManager = new OrganizationManagement();
+            this.MetadataPermissionManager = new MetadataEntityPermissionManager(this.OrgManager);
             this.ObjectManager = this.CreateFormManager();
             this.ConfigManager = new ColdewConfigManager(this);
             this.LiuchengYinqing = new LiuchengYinqing(this);
@@ -43,6 +45,8 @@ namespace Coldew.Core
         public OrganizationManagement OrgManager { set; get; }
 
         public ColdewObjectManager ObjectManager { set; get; }
+
+        public MetadataEntityPermissionManager MetadataPermissionManager { set; get; }
 
         public ColdewConfigManager ConfigManager { set; get; }
 

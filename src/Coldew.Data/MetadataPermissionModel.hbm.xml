@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Coldew.Data" assembly="Coldew.Data">
+    <class name="MetadataPermissionModel" table="coldew_metadata_permission">
+        <id name="MetadataId" type="string" column="metadata_id">
+            <generator class="assigned">
+            </generator>
+        </id>
+        <property name="PermissionJson" type="String" column="perm_json"></property>
+    </class>
+</hibernate-mapping>

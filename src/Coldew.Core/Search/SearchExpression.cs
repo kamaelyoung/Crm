@@ -15,6 +15,6 @@ namespace Coldew.Core
 
         public Field Field { set; get; }
 
-        public abstract bool Compare(Metadata metadata);
+        public abstract bool Compare(User opUser, Metadata metadata);
     }
 }

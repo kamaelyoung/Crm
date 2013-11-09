@@ -18,6 +18,7 @@ namespace Coldew.Core.DataServices
         {
             MetadataModel model = new MetadataModel();
             model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
+            model.ObjectId = this._cobject.ID;
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
 
@@ -45,7 +46,7 @@ namespace Coldew.Core.DataServices
         {
             List<Metadata> metadatas = new List<Metadata>();
 
-            IList<MetadataModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataModel>().List();
+            IList<MetadataModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataModel>().Where(x => x.ObjectId == this._cobject.ID).List();
             foreach (MetadataModel model in models)
             {
                 Metadata metadata = this.Create(model.ID, model.PropertysJson);
@@ -58,7 +59,7 @@ namespace Coldew.Core.DataServices
         public virtual Metadata Create(string id, string propertysJson)
         {
             List<MetadataProperty> propertys = MetadataPropertyListHelper.GetPropertys(propertysJson, this._cobject);
-            Metadata metadata = new Metadata(id, propertys, this._cobject, this);
+            Metadata metadata = new Metadata(id, propertys, this._cobject);
             return metadata;
         }
     }

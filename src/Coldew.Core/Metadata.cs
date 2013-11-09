@@ -9,19 +9,17 @@ using Coldew.Api;
 using Coldew.Data;
 using Coldew.Api.Exceptions;
 using Coldew.Core.DataServices;
+using Coldew.Core.MetadataPermission;
 
 namespace Coldew.Core
 {
     public class Metadata
     {
-        MetadataDataService _dataService;
-
-        public Metadata(string id, List<MetadataProperty> propertys, ColdewObject form, MetadataDataService dataService)
+        public Metadata(string id, List<MetadataProperty> propertys, ColdewObject cobject)
         {
             this.ID = id;
             this._propertys = propertys.ToDictionary(x => x.Field.Code);
-            this.ColdewObject = form;
-            this._dataService = dataService;
+            this.ColdewObject = cobject;
             this.InitPropertys();
         }
 
@@ -45,7 +43,7 @@ namespace Coldew.Core
             {
                 propertys.Remove(property);
 
-                this._dataService.Update(this.ID, propertys);
+                this.ColdewObject.DataService.Update(this.ID, propertys);
 
                 this._propertys = propertys.ToDictionary(x => x.Field.Code);
                 this.BuildContent();
@@ -139,8 +137,13 @@ namespace Coldew.Core
             }
         }
 
-        public virtual void SetPropertys(PropertySettingDictionary dictionary)
+        public virtual void SetPropertys(User opUser, PropertySettingDictionary dictionary)
         {
+            if (!this.CanModify(opUser))
+            {
+                throw new ColdewException("没有权限修改该客户!");
+            }
+
             this.OnPropertyChanging(dictionary);
 
             List<MetadataProperty> modifyPropertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
@@ -157,7 +160,7 @@ namespace Coldew.Core
                 }
             }
 
-            this._dataService.Update(this.ID, this._propertys.Values.ToList());
+            this.ColdewObject.DataService.Update(this.ID, this._propertys.Values.ToList());
 
             this.InitPropertys();
             this.BuildContent();
@@ -206,12 +209,36 @@ namespace Coldew.Core
                 this.Deleting(this, opUser);
             }
 
-            this._dataService.Delete(this.ID);
+            this.ColdewObject.DataService.Delete(this.ID);
 
             if (this.Deleted != null)
             {
                 this.Deleted(this, opUser);
             }
+        }
+
+        public virtual bool CanModify(User user)
+        {
+            if (user.Role == Api.Organization.UserRole.Administrator)
+            {
+                return true;
+            }
+
+            if (user == this.Creator)
+            {
+                return true;
+            }
+
+            if (this.Creator.IsMySuperior(user, true))
+            {
+                return true;
+            }
+
+            if (this.ColdewObject.PermissionManager.HasValue(user, MetadataPermissionValue.Modify, this))
+            {
+                return true;
+            }
+            return false;
         }
 
         public virtual bool CanPreview(User user)
@@ -231,6 +258,10 @@ namespace Coldew.Core
                 return true;
             }
 
+            if (this.ColdewObject.PermissionManager.HasValue(user, MetadataPermissionValue.View, this))
+            {
+                return true;
+            }
             return false;
         }
 
@@ -247,6 +278,11 @@ namespace Coldew.Core
             }
 
             if (this.Creator.IsMySuperior(user, true))
+            {
+                return true;
+            }
+
+            if (this.ColdewObject.PermissionManager.HasValue(user, MetadataPermissionValue.Delete, this))
             {
                 return true;
             }

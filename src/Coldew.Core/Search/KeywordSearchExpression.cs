@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Coldew.Api;
+using Coldew.Core.Organization;
 
 namespace Coldew.Core
 {
@@ -16,7 +17,7 @@ namespace Coldew.Core
             this._keywordRegexs = RegexHelper.GetRegexes(keyword);
         }
 
-        public override bool Compare(Metadata metadata)
+        public override bool Compare(User opUser, Metadata metadata)
         {
             MetadataProperty property = metadata.GetProperty(this.Field.Code);
             if (property != null)

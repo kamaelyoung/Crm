@@ -55,21 +55,24 @@ namespace Coldew.Website.Controllers
             return Json(resultModel, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult SousuoYonghu(string bumenId, string keyword)
+        public ActionResult SousuoYonghu(string bumenId, string zhanghaoHuoXingming, bool? baohanXiajiBumen, int start, int size)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                if (string.IsNullOrEmpty(keyword))
+                int count;
+                UserFilterInfo filterInfo = new UserFilterInfo();
+                filterInfo.AccountOrName = zhanghaoHuoXingming;
+                filterInfo.OrganizationId = bumenId;
+                filterInfo.OrganizationType = OrganizationType.Position;
+                if (baohanXiajiBumen.HasValue)
                 {
-                    IList<UserInfo> users = WebHelper.UserService.GetUsersInPosition(bumenId);
-                    resultModel.data = users.Select(x => new UserGridModel(x));
+                    filterInfo.Recursive = baohanXiajiBumen.Value;
                 }
-                else
-                {
-                    IList<UserInfo> users = WebHelper.UserService.SearchUser(keyword);
-                    resultModel.data = users.Select(x => new UserGridModel(x));
-                }
+                IList<UserInfo> modelList = WebHelper.UserService.SearchUser(filterInfo);
+                var userModels = modelList.Skip(start).Take(size).Select(x => new UserGridModel(x)).ToList();
+                DatagridModel model = new DatagridModel { list = userModels, count = modelList.Count };
+                resultModel.data = model;
             }
             catch (Exception ex)
             {

@@ -69,8 +69,8 @@ namespace Coldew.Core
         {
             ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User opUser = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
-            Metadata customer = form.MetadataManager.GetById(customerId);
-            customer.SetPropertys(propertys);
+            Metadata metadata = form.MetadataManager.GetById(customerId);
+            metadata.SetPropertys(opUser, propertys);
         }
 
         public void Delete(string objectId, string opUserAccount, List<string> customerIds)

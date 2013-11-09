@@ -59,13 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activity.cs" />
-    <Compile Include="ActivityManager.cs" />
+    <Compile Include="ActivityDataService.cs" />
     <Compile Include="Contact.cs" />
-    <Compile Include="ContactManager.cs" />
+    <Compile Include="ContactDataService.cs" />
     <Compile Include="ContactObject.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="ContractExpiredSearcher.cs" />
-    <Compile Include="ContractManager.cs" />
+    <Compile Include="ContractDataService.cs" />
     <Compile Include="CrmObjectManager.cs" />
     <Compile Include="CrmGridViewManager.cs" />
     <Compile Include="CrmManager.cs" />

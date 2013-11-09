@@ -66,7 +66,7 @@ namespace Coldew.Core.Organization
         public IList<PositionInfo> GetChildPositions(string positionId)
         {
             Position position = this.OrganizationManager.PositionManager.GetPositionById(positionId);
-            return position.SelfChildren.Select(x => x.MapPositionInfo()).ToList();
+            return position.Children.Select(x => x.MapPositionInfo()).ToList();
         }
 
         public IList<PositionInfo> GetPositionsByDepartmentId(string departmentId)

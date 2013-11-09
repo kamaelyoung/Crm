@@ -9,6 +9,8 @@ namespace Coldew.Data
     {
         public virtual string ID { get; set; }
 
+        public virtual string ObjectId { get; set; }
+
         public virtual string PropertysJson { get; set; }
     }
 }

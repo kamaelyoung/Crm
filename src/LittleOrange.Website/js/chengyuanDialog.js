@@ -102,7 +102,7 @@
                 this._yonghuGrid = this.element.find(".yonghuGrid");
                 this._yonghuGridPager = this.element.find(".yonghuGridPager");
                 var thiz = this;
-                $.get($.gzlApiBaseUrl + "Chengyuan/DingjiBumen", null, function(resultModel){
+                $.get($.baseUrl + "Chengyuan/DingjiBumen", null, function(resultModel){
                     if(resultModel.result == 0)
                     {
                         thiz._bumenTree.tree({
@@ -157,7 +157,7 @@
 	        },
             _jiazaiBumen: function(treenode){
                 var bumenId = treenode.treenode("option", "id");
-                $.get($.gzlApiBaseUrl + "Chengyuan/XiajiBumen", {bumenId: bumenId}, function(resultModel){
+                $.get($.baseUrl + "Chengyuan/XiajiBumen", {bumenId: bumenId}, function(resultModel){
                     if(resultModel.result == 0){
                         if(resultModel.data && resultModel.data.length){
                             $.each(resultModel.data, function(i, nodeData){
@@ -177,7 +177,7 @@
                 $.extend(args, sousuoXinxi);
                 args.start = start;
                 args.size = 20;
-                $.get($.gzlApiBaseUrl + "Chengyuan/SousuoYonghu", args, function(resultModel){
+                $.get($.baseUrl + "Chengyuan/SousuoYonghu", args, function(resultModel){
                     if(resultModel.result == 0){
                         thiz._yonghuGrid.datagrid("option", "data", resultModel.data.list);
                         thiz._yonghuGridPager.pager({pageInfo: {start: start, size: 20, count: resultModel.data.count}});

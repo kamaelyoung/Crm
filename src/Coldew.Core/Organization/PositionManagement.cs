@@ -167,7 +167,7 @@ namespace Coldew.Core.Organization
                 }
                 lock (_updateLockObject)
                 {
-                    foreach (Position child in position.SelfChildren)
+                    foreach (Position child in position.Children)
                     {
                         if (child.PositionType != OrganizationType.ManagerPosition)
                         {

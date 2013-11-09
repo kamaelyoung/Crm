@@ -27,6 +27,8 @@ namespace Coldew.Core.Organization
             }
         }
 
+        public EveryoneGroup Everyone { private set; get; }
+
         private bool _loaded;
 
         private void Load()
@@ -156,23 +158,7 @@ namespace Coldew.Core.Organization
 
         private Group Create(GroupType groupType, GroupModel model)
         {
-            Group group = null;
-            if (groupType == GroupType.Everyone)
-            {
-                group = new EveryoneGroup(model, this._orgMnger);
-            }
-            else if (groupType == GroupType.Virtual)
-            {
-                group = new VirtualGroup(model, this._orgMnger);
-            }
-            else if (groupType == GroupType.System)
-            {
-                group = new SystemGroup(model, this._orgMnger);
-            }
-            else
-            {
-                group = new Group(model, this._orgMnger);
-            }
+            Group group = new Group(model, this._orgMnger);
             return group;
         }
 

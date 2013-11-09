@@ -4,29 +4,49 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using Coldew.Data.Organization;
+using Coldew.Api.Organization;
 
 namespace Coldew.Core.Organization
 {
-    public class EveryoneGroup : VirtualGroup
+    public class EveryoneGroup : Member
     {
-        OrganizationManagement _organizationManager;
-        public EveryoneGroup(GroupModel groupModel, OrganizationManagement organizationManager)
-            : base(groupModel, organizationManager)
+        OrganizationManagement _orgManager;
+        public EveryoneGroup(OrganizationManagement orgManager)
         {
-            this._organizationManager = organizationManager;
+            this.ID = "Everyone";
+            this.Name = "Everyone";
+            this._orgManager = orgManager;
         }
 
-        public override ReadOnlyCollection<User> Users
+        /// <summary>
+        /// 组名称
+        /// </summary>
+        public virtual string Name { get; protected set; }
+
+
+        public override MemberType Type
         {
-            get
-            {
-                return this._organizationManager
-                    .UserManager
-                    .Users
-                    .Where(x => x != this._organizationManager.System)
-                    .ToList()
-                    .AsReadOnly();
-            }
+            get { return MemberType.Group; }
+        }
+
+        public override List<Member> GetParents()
+        {
+            return new List<Member>();
+        }
+
+        public override List<Member> GetChildren()
+        {
+            return new List<Member>();
+        }
+
+        public override List<User> GetUsers(bool recursive)
+        {
+            return this._orgManager.UserManager.Users.ToList();
+        }
+
+        public override bool Contains(User user)
+        {
+            return true;
         }
     }
 }

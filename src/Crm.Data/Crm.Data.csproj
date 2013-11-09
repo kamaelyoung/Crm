@@ -62,6 +62,12 @@
   <ItemGroup>
     <EmbeddedResource Include="ContractModel.hbm.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coldew.Data\Coldew.Data.csproj">
+      <Project>{47EA2B39-B843-497F-88FD-136964A12577}</Project>
+      <Name>Coldew.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

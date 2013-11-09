@@ -15,14 +15,9 @@ namespace Crm.Core
 
         }
 
-        protected override FormManager CreateFormManager(ColdewManager coldewManager)
+        protected override Coldew.Core.DataServices.MetadataDataService CreateDataService()
         {
-            return base.CreateFormManager(coldewManager);
-        }
-
-        protected override MetadataManager CreateMetadataManager(ColdewManager coldewManager)
-        {
-            return new ContactManager(this, coldewManager.OrgManager);
+            return new ContactDataService(this);
         }
 
     }

@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    namespace="Coldew.Data" assembly="Coldew.Data">
-    <class name="MetadataModel" table="crm_metadata">
+    <class name="MetadataModel" table="coldew_metadata">
         <id name="ID" type="string" column="metadata_id">
             <generator class="uuid.hex">
             </generator>
         </id>
+        <property name="ObjectId" type="String" column="object_id"></property>
         <property name="PropertysJson" type="String" length="20000" column="metedata_propertysJson"></property>
     </class>
 </hibernate-mapping>

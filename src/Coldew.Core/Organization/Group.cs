@@ -13,7 +13,7 @@ namespace Coldew.Core.Organization
     /// <summary>
     /// 用户组
     /// </summary>
-    public class Group
+    public class Group : Member
     {
         public Group(GroupModel groupModel, OrganizationManagement orgMnger)
         {
@@ -48,6 +48,37 @@ namespace Coldew.Core.Organization
         private OrganizationManagement _orgMnger;
 
         private bool _memberLoaded;
+
+        /// <summary>
+        /// 组名称
+        /// </summary>
+        public virtual string Name { get; protected set; }
+
+        /// <summary>
+        /// 是否个人用户组
+        /// </summary>
+        public virtual Boolean IsPersonal
+        {
+            get
+            {
+                return this.GroupType == GroupType.Personal;
+            }
+        }
+
+        public virtual Boolean IsSystem
+        {
+            get
+            {
+                return this.GroupType == GroupType.System;
+            }
+        }
+
+        public virtual GroupType GroupType { get; protected set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public virtual string Remark { get; protected set; }
 
         private List<User> _groupUsers;
         private List<User> _GroupUsers
@@ -164,38 +195,7 @@ namespace Coldew.Core.Organization
             }
         }
 
-        /// <summary>
-        /// ID
-        /// </summary>
-        public virtual string ID { get; private set; }
-
-        /// <summary>
-        /// 组名称
-        /// </summary>
-        public virtual string Name { get; private set; }
-
-        /// <summary>
-        /// 是否个人用户组
-        /// </summary>
-        public virtual Boolean IsPersonal
-        {
-            get
-            {
-                return this.GroupType == GroupType.Personal;
-            }
-        }
-
-        public virtual Boolean IsSystem
-        {
-            get
-            {
-                return this.GroupType == GroupType.System;
-            }
-        }
-
         public virtual DateTime CreateTime { get; private set; }
-
-        public virtual GroupType GroupType { get; protected set; }
 
         /// <summary>
         /// 创建人ID
@@ -214,10 +214,10 @@ namespace Coldew.Core.Organization
             }
         }
 
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public virtual string Remark { get; private set; }
+        public override MemberType Type
+        {
+            get { return MemberType.Group; }
+        }
 
         /// <summary>
         /// 修改信息之前
@@ -742,6 +742,26 @@ namespace Coldew.Core.Organization
             }
             NHibernateHelper.CurrentSession.Delete(model);
             NHibernateHelper.CurrentSession.Flush();
+        }
+
+        public override List<User> GetUsers(bool recursive)
+        {
+            return this.Users.ToList();
+        }
+
+        public override List<Member> GetParents()
+        {
+            return new List<Member>();
+        }
+
+        public override List<Member> GetChildren()
+        {
+            return new List<Member>();
+        }
+
+        public override bool Contains(User user)
+        {
+            return this.Users.Contains(user);
         }
     }
 }

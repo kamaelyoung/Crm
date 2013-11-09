@@ -51,6 +51,7 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldType.cs" />
     <Compile Include="ColdewObjectInfo.cs" />
+    <Compile Include="MetadataPermissionValue.cs" />
     <Compile Include="UI\FormConstCode.cs" />
     <Compile Include="UI\FormInfo.cs" />
     <Compile Include="GridViewColumnInfo.cs" />

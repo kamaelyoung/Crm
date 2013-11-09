@@ -13,8 +13,8 @@ namespace Crm.Core
 {
     public class Contact : Metadata
     {
-        public Contact(string id, List<MetadataProperty> propertys, ColdewObject form)
-            : base(id, propertys, form)
+        public Contact(string id, List<MetadataProperty> propertys, ColdewObject form, ContactDataService dataService)
+            : base(id, propertys, form, dataService)
         {
 
         }
@@ -27,21 +27,6 @@ namespace Crm.Core
                 MetadataRelatedValue value = property.Value as MetadataRelatedValue;
                 return value.Metadata as Customer;
             }
-        }
-
-        protected override void UpdateDB(List<MetadataProperty> propertys)
-        {
-            ContactModel model = NHibernateHelper.CurrentSession.Get<ContactModel>(this.ID);
-            model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
-            NHibernateHelper.CurrentSession.Update(model);
-        }
-
-        protected override void DeleteDB()
-        {
-            ContactModel model = NHibernateHelper.CurrentSession.Get<ContactModel>(this.ID);
-
-            NHibernateHelper.CurrentSession.Delete(model);
-            NHibernateHelper.CurrentSession.Flush();
         }
 
         public override bool CanPreview(User user)

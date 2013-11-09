@@ -11,7 +11,7 @@ using Coldew.Api.Organization;
 
 namespace Coldew.Core.Organization
 {
-    public class Position 
+    public class Position : Member
     {
         public Position(PositionModel model, OrganizationManagement orgMnger)
         {
@@ -33,11 +33,6 @@ namespace Coldew.Core.Organization
         }
 
         OrganizationManagement _orgMnger;
-
-        /// <summary>
-        /// ID
-        /// </summary>
-        public virtual string ID { get; private set; }
 
         /// <summary>
         /// 职位名称
@@ -125,7 +120,7 @@ namespace Coldew.Core.Organization
             {
                 
 
-                return this.SelfChildren
+                return this.Children
                     .Where(p => p.PositionType == OrganizationType.ManagerPosition)
                     .Select(p => p.Department)
                     .ToList()
@@ -157,7 +152,7 @@ namespace Coldew.Core.Organization
         {
             get
             {
-                return SelfChildren
+                return Children
                     .Where(x => x.PositionType == OrganizationType.Position)
                     .ToList()
                     .AsReadOnly();
@@ -165,14 +160,6 @@ namespace Coldew.Core.Organization
         }
 
         public virtual ReadOnlyCollection<Position> Children
-        {
-            get
-            {
-                return SelfChildren.ToList().AsReadOnly();
-            }
-        }
-
-        public virtual ReadOnlyCollection<Position> SelfChildren
         {
             get
             {
@@ -260,7 +247,7 @@ namespace Coldew.Core.Organization
 
             if (this.Parent != null && changeInfo.Name != this.Name)
             {
-                Position position = this.Parent.SelfChildren.FirstOrDefault(x => x.Name == changeInfo.Name);
+                Position position = this.Parent.Children.FirstOrDefault(x => x.Name == changeInfo.Name);
                 if (position != null)
                 {
                     throw new PositionNameReapeatException();
@@ -302,12 +289,12 @@ namespace Coldew.Core.Organization
 
         public virtual bool SelfChildrenHasUser()
         {
-            return this.SelfChildren.Any(x => x.Users.Count > 0 || x.SelfChildrenHasUser());
+            return this.Children.Any(x => x.Users.Count > 0 || x.SelfChildrenHasUser());
         }
 
         public virtual bool SelfChildrenHasLogoffedUser()
         {
-            return this.SelfChildren.Any(x => x.LogoffedUsers.Count > 0 || x.SelfChildrenHasLogoffedUser());
+            return this.Children.Any(x => x.LogoffedUsers.Count > 0 || x.SelfChildrenHasLogoffedUser());
         }
 
         public PositionInfo MapPositionInfo()
@@ -320,8 +307,49 @@ namespace Coldew.Core.Organization
                 PositionType = this.PositionType,
                 Remark = this.Remark,
                 DepartmentId = Department == null ? null : Department.ID,
-                HaveChildren=this.SelfChildren.Count>0?true:false
+                HaveChildren=this.Children.Count>0?true:false
             };
+        }
+
+        public override MemberType Type
+        {
+            get { return MemberType.Position; }
+        }
+
+        public override List<Member> GetParents()
+        {
+            if (this.Parent != null)
+            {
+                return new List<Member> { this.Parent };
+            }
+            return new List<Member>();
+        }
+
+        public override List<Member> GetChildren()
+        {
+            List<Member> members = new List<Member>();
+
+            foreach (Position position in this.Children)
+            {
+                members.Add(position);
+            }
+
+            return members;
+        }
+
+        public override List<User> GetUsers(bool recursive)
+        {
+            List<User> users = this.Users.ToList();
+            if (recursive)
+            {
+                users.AddRange(this.Children.SelectMany(x => x.Users).ToList());
+            }
+            return users.Distinct().ToList();
+        }
+
+        public override bool Contains(User user)
+        {
+            return this.Users.Contains(user);
         }
     }
 }

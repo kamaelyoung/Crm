@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Coldew.Core;
 using Coldew.Core.UI;
+using Coldew.Core.DataServices;
 
 namespace Crm.Core
 {
@@ -15,14 +16,9 @@ namespace Crm.Core
 
         }
 
-        protected override FormManager CreateFormManager(ColdewManager coldewManager)
+        protected override MetadataDataService CreateDataService()
         {
-            return base.CreateFormManager(coldewManager);
-        }
-
-        protected override MetadataManager CreateMetadataManager(ColdewManager coldewManager)
-        {
-            return new ActivityManager(this, coldewManager.OrgManager);
+            return new ActivityDataService(this);
         }
 
     }

@@ -10,6 +10,7 @@ using Coldew.Core.Organization;
 using Coldew.Api.Exceptions;
 using Coldew.Core.UI;
 using Coldew.Core.DataServices;
+using Coldew.Core.MetadataPermission;
 
 namespace Coldew.Core
 {
@@ -17,7 +18,6 @@ namespace Coldew.Core
     {
         ReaderWriterLock _lock;
         private List<Field> _fields;
-        protected ColdewManager _coldewManager;
 
         public ColdewObject(string id, string code, string name, ColdewManager coldewManager)
         {
@@ -30,15 +30,24 @@ namespace Coldew.Core
                 this._fields = new List<Field>();
             }
             this._lock = new ReaderWriterLock();
-            this._coldewManager = coldewManager;
+            this.ColdewManager = coldewManager;
+            this.PermissionManager = new PermissionManager(this);
             this.MetadataManager = this.CreateMetadataManager(coldewManager);
             this.GridViewManager = this.CreateGridViewManager(coldewManager);
             this.FormManager = this.CreateFormManager(coldewManager);
+            this.DataService = this.CreateDataService();
         }
+
+        public ColdewManager ColdewManager { private set; get; }
 
         protected virtual MetadataManager CreateMetadataManager(ColdewManager coldewManager)
         {
-            return new MetadataManager(this, new MetadataDataService(this), coldewManager.OrgManager);
+            return new MetadataManager(this, coldewManager.OrgManager);
+        }
+
+        protected virtual MetadataDataService CreateDataService()
+        {
+            return new MetadataDataService(this);
         }
 
         protected virtual FormManager CreateFormManager(ColdewManager coldewManager)
@@ -62,6 +71,10 @@ namespace Coldew.Core
         public GridViewManager GridViewManager { private set; get; }
 
         public FormManager FormManager { private set; get; }
+
+        internal MetadataDataService DataService { private set; get; }
+
+        public PermissionManager PermissionManager { private set; get; }
 
         public StringField NameField
         {
@@ -278,13 +291,13 @@ namespace Coldew.Core
                     return new DateField(newInfo, dateFieldConfigModel.DefaultValueIsToday);
                 case FieldType.User:
                     UserFieldConfigModel userFieldConfigModel = JsonConvert.DeserializeObject<UserFieldConfigModel>(model.Config);
-                    return new UserField(newInfo, userFieldConfigModel.defaultValueIsCurrent, this._coldewManager.OrgManager.UserManager);
+                    return new UserField(newInfo, userFieldConfigModel.defaultValueIsCurrent, this.ColdewManager.OrgManager.UserManager);
                 case FieldType.UserList:
                     UserFieldConfigModel userListFieldConfigModel = JsonConvert.DeserializeObject<UserFieldConfigModel>(model.Config);
-                    return new UserListField(newInfo, userListFieldConfigModel.defaultValueIsCurrent, this._coldewManager.OrgManager.UserManager);
+                    return new UserListField(newInfo, userListFieldConfigModel.defaultValueIsCurrent, this.ColdewManager.OrgManager.UserManager);
                 case FieldType.Metadata:
                     MetadataFieldConfigModel metadataFieldConfigModel = JsonConvert.DeserializeObject<MetadataFieldConfigModel>(model.Config);
-                    return new MetadataField(newInfo, this._coldewManager.ObjectManager.GetFormByCode(metadataFieldConfigModel.FormCode));
+                    return new MetadataField(newInfo, this.ColdewManager.ObjectManager.GetFormByCode(metadataFieldConfigModel.FormCode));
             }
             throw new ArgumentException("type");
         }

@@ -16,7 +16,7 @@ namespace Coldew.Core.Organization
     /// <summary>
     /// 用户
     /// </summary>
-    public class User
+    public class User : Member
     {
         OrganizationManagement _orgMnger;
 
@@ -55,11 +55,6 @@ namespace Coldew.Core.Organization
             this.LastLoginIp = model.LastLoginIp;
             this.Remark = model.Remark;
         }
-
-        /// <summary>
-        /// ID
-        /// </summary>
-        public virtual string ID { get; private set; }
 
         /// <summary>
         /// 用户名
@@ -489,6 +484,50 @@ namespace Coldew.Core.Organization
                 userInfo.MainDepartmentName = this.MainDepartment.Name;
             }
             return userInfo;
+        }
+
+        public override MemberType Type
+        {
+            get { return MemberType.User; }
+        }
+
+        public override List<Member> GetParents()
+        {
+            if (this.MainPosition == null)
+            {
+                return new List<Member>();
+            }
+            List<Member> members = new List<Member>();
+            foreach (User user in this.MainPosition.Parent.Users)
+            {
+                members.Add(user);
+            }
+            return members;
+        }
+
+        public override List<Member> GetChildren()
+        {
+            if (this.MainPosition == null)
+            {
+                return new List<Member>();
+            }
+            
+            List<Member> members = new List<Member>();
+            foreach (Position position in this.MainPosition.Children)
+            {
+                members.AddRange(position.Users);
+            }
+            return members;
+        }
+
+        public override List<User> GetUsers(bool recursive)
+        {
+            return new List<User> { this};
+        }
+
+        public override bool Contains(User user)
+        {
+            return this == user;
         }
     }
 }

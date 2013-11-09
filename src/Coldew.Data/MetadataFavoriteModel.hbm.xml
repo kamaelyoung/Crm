@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    namespace="Coldew.Data" assembly="Coldew.Data">
-    <class name="MetadataFavoriteModel" table="crm_customerFavorite">
+    <class name="MetadataFavoriteModel" table="coldew_customerFavorite">
         <id name="ID" type="int" column="favorite_id">
             <generator class="native">
             </generator>

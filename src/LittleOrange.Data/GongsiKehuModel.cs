@@ -6,10 +6,8 @@ using Coldew.Data;
 
 namespace LittleOrange.Data
 {
-    public class GongsiKehuModel : MetadataModel
+    public class GongsiKehuModel : TModelMetadataModel
     {
-        public virtual string ID { set; get; }
-
-        public virtual string PropertysJson { get; set; }
+        
     }
 }

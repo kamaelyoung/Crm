@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    namespace="Coldew.Data" assembly="Coldew.Data">
-    <class name="ConfigModel" table="crm_config">
+    <class name="ConfigModel" table="coldew_config">
         <id name="Name" column="config_name">
             <generator class="assigned"/>
         </id>

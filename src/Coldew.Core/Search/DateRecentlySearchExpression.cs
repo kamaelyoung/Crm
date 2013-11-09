@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Coldew.Api.Exceptions;
 using Coldew.Api;
+using Coldew.Core.Organization;
 
 namespace Coldew.Core.Search
 {
@@ -18,7 +19,7 @@ namespace Coldew.Core.Search
             this._endDays = endDays;
         }
 
-        public override bool Compare(Metadata metadata)
+        public override bool Compare(User opUser, Metadata metadata)
         {
             MetadataProperty property = metadata.GetProperty(this.Field.Code);
             if (property != null)

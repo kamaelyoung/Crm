@@ -19,16 +19,14 @@ namespace Coldew.Core
         protected List<Metadata> _metadataList;
         OrganizationManagement _orgManger;
         protected ReaderWriterLock _lock;
-        protected MetadataDataService _dataService;
 
-        public MetadataManager(ColdewObject cobject, MetadataDataService dataService, OrganizationManagement orgManger)
+        public MetadataManager(ColdewObject cobject, OrganizationManagement orgManger)
         {
             this._metadataDicById = new Dictionary<string, Metadata>();
             this._metadataDicByName = new Dictionary<string, Metadata>();
             this._metadataList = new List<Metadata>();
             this._orgManger = orgManger;
             this.ColdewObject = cobject;
-            this._dataService = dataService;
             this._lock = new ReaderWriterLock();
             this.FavoriteManager = new MetadataFavoriteManager(this, orgManger);
             this.ColdewObject.FieldDeleted += new TEventHandler<Core.ColdewObject, Field>(ColdewObject_FieldDeleted);
@@ -84,7 +82,7 @@ namespace Coldew.Core
                 }
 
                 List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
-                Metadata metadata = this._dataService.Create(propertys);
+                Metadata metadata = this.ColdewObject.DataService.Create(propertys);
 
                 this._metadataDicById.Add(metadata.ID, metadata);
                 this._metadataDicByName.Add(metadata.Name, metadata);
@@ -211,7 +209,7 @@ namespace Coldew.Core
             this._lock.AcquireReaderLock(0);
             try
             {
-                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(x));
+                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(user, x));
                 var metadatas = metadatasEnumer.OrderBy(orderBy).ToList();
                 totalCount = metadatas.Count;
                 return metadatas.Skip(skipCount).Take(takeCount).ToList();
@@ -227,7 +225,7 @@ namespace Coldew.Core
             this._lock.AcquireReaderLock(0);
             try
             {
-                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(x));
+                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(user, x));
                 return metadatasEnumer.OrderBy(orderBy).ToList();
             }
             finally
@@ -238,7 +236,7 @@ namespace Coldew.Core
 
         internal virtual void Load()
         {
-            List<Metadata> metadatas = this._dataService.LoadFromDB();
+            List<Metadata> metadatas = this.ColdewObject.DataService.LoadFromDB();
             foreach (Metadata metadata in metadatas)
             {
                 this._metadataDicById.Add(metadata.ID, metadata);

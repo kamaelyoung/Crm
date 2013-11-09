@@ -7,7 +7,7 @@ using Coldew.Data;
 namespace Coldew.Core.DataServices
 {
     public class TModelMetadataDataService<TModel> : MetadataDataService 
-        where TModel :MetadataModel 
+        where TModel :TModelMetadataModel 
     {
         public TModelMetadataDataService(ColdewObject cobject)
             : base(cobject)
@@ -17,7 +17,7 @@ namespace Coldew.Core.DataServices
 
         public override Metadata Create(List<MetadataProperty> propertys)
         {
-            TModel model = default(TModel);
+            TModel model = Activator.CreateInstance<TModel>();
             model.PropertysJson = MetadataPropertyListHelper.ToPropertyModelJson(propertys);
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
@@ -54,13 +54,6 @@ namespace Coldew.Core.DataServices
                 metadatas.Add(metadata);
             }
             return metadatas;
-        }
-
-        public virtual Metadata Create(string id, string propertysJson)
-        {
-            List<MetadataProperty> propertys = MetadataPropertyListHelper.GetPropertys(propertysJson, this._cobject);
-            Metadata metadata = new Metadata(id, propertys, this._cobject, this);
-            return metadata;
         }
     }
 }

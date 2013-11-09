@@ -10,7 +10,7 @@ using Coldew.Api.Organization;
 
 namespace Coldew.Core.Organization
 {
-    public class Department
+    public class Department : Member
     {
         OrganizationManagement _orgMnger;
 
@@ -34,11 +34,6 @@ namespace Coldew.Core.Organization
             this.Name = name;
             this.Remark = remark;
         }
-
-        /// <summary>
-        /// ID
-        /// </summary>
-        public virtual string ID { get; private set; }
 
         /// <summary>
         /// 上级部门
@@ -257,6 +252,43 @@ namespace Coldew.Core.Organization
                 Name = this.Name,
                 Remark = this.Remark
             };
+        }
+
+        public override MemberType Type
+        {
+            get { return MemberType.Department; }
+        }
+
+        public override List<Member> GetParents()
+        {
+            if(this.Parent == null)
+            {
+                return new List<Member>();
+            }
+
+            return new List<Member> { this.Parent };
+        }
+
+        public override List<Member> GetChildren()
+        {
+            List<Member> members = new List<Member>();
+            members.AddRange(this.Children);
+            return members;
+        }
+
+        public override List<User> GetUsers(bool recursive)
+        {
+            List<User> users = this.Users.ToList();
+            if (recursive)
+            {
+                users.AddRange(this.Children.SelectMany(x => x.Users).ToList());
+            }
+            return users.Distinct().ToList();
+        }
+
+        public override bool Contains(User user)
+        {
+            return this.Users.Contains(user);
         }
     }
 }

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Coldew.Data;
 
 namespace Crm.Data
 {
-    public class ActivityModel
+    public class ActivityModel : TModelMetadataModel
     {
-        public virtual string ID { set; get; }
-
-        public virtual string PropertysJson { get; set; }
+        
     }
 }

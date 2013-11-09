@@ -49,6 +49,7 @@ namespace Coldew.Core.Organization
                         Role = UserRole.Administrator,
                         Status = UserStatus.Normal
                     });
+
                 }
             }
             catch(Exception ex)

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Coldew.Api;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Coldew.Core.Organization;
 
 namespace Coldew.Core.Search
 {
@@ -41,7 +42,7 @@ namespace Coldew.Core.Search
             }
         }
 
-        public override bool Accord(Metadata metadata)
+        public override bool Accord(User opUser, Metadata metadata)
         {
             if (this._keywordRegexs.Any(regex => !regex.IsMatch(metadata.Content)))
             {
@@ -49,7 +50,7 @@ namespace Coldew.Core.Search
             }
             foreach (SearchExpression expression in this._expressions)
             {
-                if (!expression.Compare(metadata))
+                if (!expression.Compare(opUser, metadata))
                 {
                     return false;
                 }
@@ -63,6 +64,7 @@ namespace Coldew.Core.Search
             return expression;
         }
 
+        private const string OperationUserToken = "${operationUser}";
         public static MetadataExpressionSearcher Parse(string expression, ColdewObject form)
         {
             if (string.IsNullOrEmpty(expression))
@@ -131,13 +133,28 @@ namespace Coldew.Core.Search
                             expressions.Add(new DateRecentlySearchExpression(field, startDays, endDays));
                         }
                         break;
+                    case FieldType.User:
+                        if (jProperty.Value.ToString().Equals(OperationUserToken, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            expressions.Add(new OperationUserExpression(field));
+                        }
+                        else
+                        {
+                            expressions.Add(new KeywordSearchExpression(field, jProperty.Value.ToString()));
+                        }
+                        break;
                     default:
                         string keywordPropertyValue = jProperty.Value.ToString();
                         expressions.Add(new KeywordSearchExpression(field, keywordPropertyValue));
                         break;
                 }
             }
-            MetadataExpressionSearcher seracher = new MetadataExpressionSearcher(jObject["keyword"].ToString(), expressions, form);
+            string keyword = "";
+            if (jObject["keyword"] != null)
+            {
+                keyword = jObject["keyword"].ToString();
+            }
+            MetadataExpressionSearcher seracher = new MetadataExpressionSearcher(keyword, expressions, form);
             seracher.expression = expression;
             return seracher;
         }

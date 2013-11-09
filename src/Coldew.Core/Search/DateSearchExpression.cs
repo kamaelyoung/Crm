@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Coldew.Api.Exceptions;
 using Coldew.Api;
+using Coldew.Core.Organization;
 
 namespace Coldew.Core
 {
@@ -17,7 +18,7 @@ namespace Coldew.Core
             this._range = new DateRange(start, end);
         }
 
-        public override bool Compare(Metadata metadata)
+        public override bool Compare(User opUser, Metadata metadata)
         {
             MetadataProperty property = metadata.GetProperty(this.Field.Code);
             if (property != null)

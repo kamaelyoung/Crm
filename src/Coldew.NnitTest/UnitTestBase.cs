@@ -29,6 +29,7 @@ namespace Coldew.NnitTest
             User2 = this.Org.UserManager.Create(this.Org.System, new UserCreateInfo { Account = "user2", Password = "edoc2", Name = "user2", MainPositionId = this.Org.PositionManager.TopPosition.ID });
             User3 = this.Org.UserManager.Create(this.Org.System, new UserCreateInfo { Account = "user3", Password = "edoc2", Name = "user3", MainPositionId = this.Org.PositionManager.TopPosition.ID });
             User4 = this.Org.UserManager.Create(this.Org.System, new UserCreateInfo { Account = "user4", Password = "edoc2", Name = "user4", MainPositionId = this.Org.PositionManager.TopPosition.ID });
+            User5 = this.Org.UserManager.Create(this.Org.System, new UserCreateInfo { Account = "user5", Password = "edoc2", Name = "user5", MainPositionId = this.Org.PositionManager.TopPosition.ID });
 
             this.Admin = this.Org.UserManager.GetUserByAccount("admin");
 
@@ -44,6 +45,7 @@ namespace Coldew.NnitTest
         protected User User2 { set; get; }
         protected User User3 { set; get; }
         protected User User4 { set; get; }
+        protected User User5 { set; get; }
 
         public ILog Logger { private set; get; }
 
