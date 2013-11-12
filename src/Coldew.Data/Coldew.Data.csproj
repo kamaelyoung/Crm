@@ -50,8 +50,7 @@
     <Compile Include="GridViewColumnModel.cs" />
     <Compile Include="GridViewModel.cs" />
     <Compile Include="InputModel.cs" />
-    <Compile Include="MemberPermissionValueJsonModel.cs" />
-    <Compile Include="MetadataPermissionModel.cs" />
+    <Compile Include="MetadataEntityPermissionModel.cs" />
     <Compile Include="MetadataPermissionStrategyModel.cs" />
     <Compile Include="Workflow\BiaodanModel.cs" />
     <Compile Include="Workflow\JianglaiRenwuZhipaiModel.cs" />
@@ -69,7 +68,6 @@
     <Compile Include="Organization\FunctionModel.cs" />
     <Compile Include="Organization\GroupMemberModel.cs" />
     <Compile Include="Organization\GroupModel.cs" />
-    <Compile Include="Organization\MemberFunctionModel.cs" />
     <Compile Include="Organization\OperationLogModel.cs" />
     <Compile Include="Organization\PositionModel.cs" />
     <Compile Include="Organization\SignInLogModel.cs" />
@@ -80,7 +78,6 @@
     <Compile Include="Workflow\XingdongModel.cs" />
     <Compile Include="Workflow\LiuchengMobanModel.cs" />
     <Compile Include="MetadataModel.cs" />
-    <Compile Include="MemberPermissionStrategyValueJsonModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FieldModel.hbm.xml" />
@@ -110,11 +107,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Organization\GroupModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Organization\MemberFunctionModel.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Organization\OperationLogModel.hbm.xml" />
@@ -152,7 +144,7 @@
     <EmbeddedResource Include="Workflow\BiaodanModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MetadataPermissionModel.hbm.xml" />
+    <EmbeddedResource Include="MetadataEntityPermissionModel.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MetadataPermissionStrategyModel.hbm.xml" />

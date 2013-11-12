@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Coldew.Api;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -22,7 +23,7 @@ namespace Coldew.Core
             }
         }
 
-        public override string PersistenceValue
+        public override JToken PersistenceValue
         {
             get 
             {

@@ -19,7 +19,7 @@ namespace Crm.Core
         public override Metadata Create(string id, string propertysJson)
         {
             List<MetadataProperty> propertys = MetadataPropertyListHelper.GetPropertys(propertysJson, this._cobject);
-            Customer metadata = new Customer(id, propertys, this._cobject, this);
+            Customer metadata = new Customer(id, propertys, this._cobject);
             return metadata;
         }
     }

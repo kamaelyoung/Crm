@@ -245,13 +245,13 @@ $.widget( "ui.datagrid", {
 		return this._rows;
 	},
 	getRowsData: function(){
-		return $.map(this._rows, function(i, row){
-			row.datarow("option", "data");
+		return $.map(this._rows, function(row){
+			return row.datarow("option", "data");
 		});
 	},
-	deleteSelectedRow: function(){
+	deleteSelectedRows: function(){
 		var self = this;
-		var selectRows = this.getSelectedRow();
+		var selectRows = this.getSelectedRows();
 		$.each(selectRows, function(i, row){
 			self.deleteRow(row)
 		});

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Coldew.Core;
+using Coldew.Core.Organization;
 
 namespace Crm.Core
 {
@@ -13,7 +14,7 @@ namespace Crm.Core
 
         }
 
-        public override bool Accord(Metadata metadata)
+        public override bool Accord(User user, Metadata metadata)
         {
             Contract contract = metadata as Contract;
             if (contract == null)

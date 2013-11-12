@@ -254,5 +254,12 @@ namespace Coldew.Core.Workflow
             }
             return xingdong.Map();
         }
+
+        public void WanchengXingdong(string liuchengId, string xingdongId)
+        {
+            Liucheng liucheng = this._yinqing.LiuchengMobanManager.GetLiucheng(liuchengId);
+            Xingdong xingdong = liucheng.GetXingdong(xingdongId);
+            xingdong.Wancheng();
+        }
     }
 }

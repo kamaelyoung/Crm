@@ -13,9 +13,9 @@
     </div>
     <div class="span10">
         <button id="btnDakaiSousuo" class="btn"><i class="icon-search"></i>查询</button>
-        <button id="btnZhipai" class="btn" disabled="disabled"><i class="icon-tasks"></i>指派选定任务</button>
+        @*<button id="btnZhipai" class="btn" disabled="disabled"><i class="icon-tasks"></i>指派选定任务</button>
         <button id="btnZhipaiSuoyou" class="btn"><i class="icon-tasks"></i>指派所有任务</button>
-        <button id="btnJianglaiZhipai" class="btn "><i class="icon-tasks"></i>将来指派</button>  
+        <button id="btnJianglaiZhipai" class="btn "><i class="icon-tasks"></i>将来指派</button>  *@
     </div>
 </div>
 
@@ -26,18 +26,41 @@
 <div id="pager" class="pull-right" style="height: 30px">
             
 </div>
-@{this.Html.RenderPartial("DaibandeRenwuSousuoPopover");}
-<div class="liuchengtuDialog">
-    @{this.Html.RenderPartial("LiuchengtuDialog");}
-</div>
 <div id="chengyuanDialog">
     @{this.Html.RenderAction("Dialog", "chengyuan");}
 </div>
  <div id="jianglaiZhipaiDialog">
-    @{this.Html.RenderAction("JianglaiZhipaiDialog");}
+    @{this.Html.RenderPartial("JianglaiZhipaiDialog");}
  </div>
+@{this.Html.RenderPartial("DaibandeRenwuSousuoPopover");}
  
 <script language="javascript" type="text/javascript">
+    var renwuGrid = $("#renwuGrid").datagrid({
+		columns:[
+			{title: "编号", width: 30, field:"liuchengId"},
+			{title: "流程名", width: 180, field:"liuchengMingcheng", render: function(row, args){
+                var span = $("<span></span>");
+				span.append("<a href='" + args.data.url + "'>"+args.value+"</a>");
+                span.append(args.data.icons);
+                return span;
+			}},
+			{title: "步骤名", width: 100, field:"mingcheng"},
+			{title: "发起人", width: 60, field:"faqiren"},
+			{title: "开始时间", width: 150, field:"kaishiShijian"},
+			{title: "摘要", width: 200, field:"zhaiyao"}
+		],
+        height: "auto",
+		canSort: false,
+		singleSelect: false,
+		showNumberRow: true,
+        selectedRow: function(){
+            btnZhipai.prop("disabled", false);
+        },
+        unselectedRow: function(){
+            var rows = renwuGrid.datagrid("getSelectedRows");
+            btnZhipai.prop("disabled", rows.length == 0);
+        }
+	});
     var chengyuanDialog = $("#chengyuanDialog").chengyuanDialog();
     $.chengyuanDialog = chengyuanDialog;
     var jianglaiZhipaiDialog = $("#jianglaiZhipaiDialog").jianglaiZhipaiDialog({zhipaiUrl: '@this.Url.Action("JianglaiZhipai")'});
@@ -92,38 +115,7 @@
     });
     var liuchengtuDialog = $(".liuchengtuDialog").liuchengtuDialog();
 
-    var renwuGrid = $("#renwuGrid").datagrid({
-		columns:[
-			{title: "编号", width: 30, field:"liuchengId"},
-			{title: "流程名", width: 180, field:"liuchengMingcheng", render: function(row, args){
-                var span = $("<span></span>");
-				span.append("<a target='_blank' href='" + args.data.url + "'>"+args.value+"</a>");
-                var liuchengtu = $("<a href='#'><img src='/img/icon-liuchengtu.gif' title='流程图' /></a>")
-                    .click(function(){
-                        liuchengtuDialog.liuchengtuDialog("xianshi", args.data.liuchengtuUrl);
-                        return false;
-                    });
-                span.append(liuchengtu);
-                span.append(args.data.icons);
-                return span;
-			}},
-			{title: "步骤名", width: 100, field:"mingcheng"},
-			{title: "发起人", width: 60, field:"faqiren"},
-			{title: "开始时间", width: 150, field:"kaishiShijian"},
-			{title: "摘要", width: 200, field:"zhaiyao"}
-		],
-        height: "auto",
-		canSort: false,
-		singleSelect: false,
-		showNumberRow: true,
-        selectedRow: function(){
-            btnZhipai.prop("disabled", false);
-        },
-        unselectedRow: function(){
-            var rows = renwuGrid.datagrid("getSelectedRows");
-            btnZhipai.prop("disabled", rows.length == 0);
-        }
-	});
+    
 
     $("#pager").pager({change: function(event, args){
         jiazaiRenwu(_sousuoXinxi, args.start);

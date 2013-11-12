@@ -13,8 +13,8 @@ namespace Crm.Core
 {
     public class Contract : Metadata
     {
-        public Contract(string id, List<MetadataProperty> propertys, ColdewObject form, ContractDataService dataService)
-            : base(id, propertys, form, dataService)
+        public Contract(string id, List<MetadataProperty> propertys, ColdewObject form)
+            : base(id, propertys, form)
         {
 
         }

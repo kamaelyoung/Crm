@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Coldew.Api;
 using Coldew.Api.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -21,7 +22,7 @@ namespace Coldew.Core
 
         public abstract dynamic OrderValue { get; }
 
-        public abstract string PersistenceValue { get; }
+        public abstract JToken PersistenceValue { get; }
 
         public abstract string ShowValue { get; }
 

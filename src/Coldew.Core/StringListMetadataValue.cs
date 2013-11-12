@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Coldew.Api;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -22,9 +24,20 @@ namespace Coldew.Core
             }
         }
 
-        public override string PersistenceValue
+        public override JToken PersistenceValue
         {
-            get { return string.Join(",", this.StringList); }
+            get
+            {
+                JArray jarray = new JArray();
+                if (this.StringList != null)
+                {
+                    foreach (string str in this.StringList)
+                    {
+                        jarray.Add(str);
+                    }
+                }
+                return jarray;
+            }
         }
 
         public override string ShowValue

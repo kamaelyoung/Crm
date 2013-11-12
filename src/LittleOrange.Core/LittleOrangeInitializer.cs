@@ -14,6 +14,7 @@ namespace LittleOrange.Core
     public class LittleOrangeInitializer
     {
         User _admin;
+        Group adminGroup;
         ColdewManager _coldewManager;
         public LittleOrangeInitializer(ColdewManager crmManager)
         {
@@ -46,6 +47,9 @@ namespace LittleOrange.Core
                         Status = UserStatus.Normal,
                         MainPositionId = this._coldewManager.OrgManager.PositionManager.TopPosition.ID
                     });
+
+                    this.adminGroup = this._coldewManager.OrgManager.GroupManager.Create(this._admin, new GroupCreateInfo { GroupType = GroupType.Group, Name = "管理员" });
+                    
 
                     this.InitConfig();
                     this.InitZiranren();
@@ -136,6 +140,10 @@ namespace LittleOrange.Core
 
             GridView manageView = cobject.GridViewManager.Create(GridViewType.Manage, "", "自然人客户管理", this._admin, true, true, 1, "", viewColumns);
             GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏自然人客户", this._admin, true, true, 2, "", viewColumns);
+
+            List<Member> members = new List<Member>();
+            members.Add(this._coldewManager.OrgManager.Everyone);
+            this._coldewManager.OrgManager.FunctionManager.Create(cobject.ID, cobject.Name, "", "", 1, members);
         }
 
         private void InitGongsiKehu()
@@ -209,33 +217,34 @@ namespace LittleOrange.Core
 
             GridView manageView = cobject.GridViewManager.Create(GridViewType.Manage, "", "公司客户管理", this._admin, true, true, 1, "", viewColumns);
             GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏公司客户", this._admin, true, true, 2, "", viewColumns);
+
+            List<Member> members = new List<Member>();
+            members.Add(this._coldewManager.OrgManager.Everyone);
+            this._coldewManager.OrgManager.FunctionManager.Create(cobject.ID, cobject.Name, "", "", 1, members);
         }
 
         private void InitFahuo()
         {
             this._coldewManager.Logger.Info("init fahuo");
-            ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货", LittleOrangeObjectConstCode.Object_Fahuo);
+            ColdewObject cobject = this._coldewManager.ObjectManager.Create("订单总表", "dingdanZhongbiao");
             Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "产品名称", "", true, true, true, 1, "");
+            Field yewuyuanField = cobject.CreateStringField("yewuyuan", "业务员", "", true, true, true, 1, "");
             Field shengfenField = cobject.CreateStringField("shengfen", "省份", "", false, true, true, 1, "");
             Field diquField = cobject.CreateStringField("diqu", "地区", "", false, true, true, 1, "");
             Field fahuoRiqiField = cobject.CreateDateField("fahuoRiqi", "发货日期", "", false, true, true, 1, true);
+            Field guigeField = cobject.CreateStringField("guige", "规格", "", false, true, true, 2, "");
+            Field shengchanQiyeField = cobject.CreateStringField("shengchanQiye", "生产企业", "", false, true, true, 3, "");
+            Field zongshuliangField = cobject.CreateStringField("zongshuliang", "总数量", "", false, true, true, 5, "");
+            Field chengbenjiaField = cobject.CreateStringField("chengbenjia", "成本价", "", false, true, true, 5, "");
+            Field xiaoshoujiaField = cobject.CreateStringField("xiaoshoujia", "销售价", "", false, true, true, 5, "");
+            Field chukujiaField = cobject.CreateStringField("chukujia", "出库单价", "", false, true, true, 5, "");
+            Field zongjineField = cobject.CreateStringField("zongjine", "总金额", "", false, true, true, 7, "");
             Field huikuanRiqiField = cobject.CreateDateField("huikuanRiqi", "汇款日期", "", false, true, true, 1, false);
             Field huikuanJineField = cobject.CreateNumberField("huikuanJine", "汇款金额", "", false, true, true, 1, null, null, null, 2);
-            Field huikuanLeixingField = cobject.CreateStringField("huikuanLeixing", "汇款类型", "", false, true, true, 1, "");
             Field huikuanDanweiField = cobject.CreateStringField("huikuanDanwei", "汇款单位", "", false, true, true, 1, "");
             Field daokuanDanweiField = cobject.CreateStringField("daokuanDanwei", "到款单位", "", false, true, true, 1, "");
             Field kaipiaoDanweiField = cobject.CreateStringField("kaipiaoDanwei", "开票单位", "", false, true, true, 1, "");
-            Field shouhuoDizhiField = cobject.CreateStringField("shouhuoDizhi", "收货地址", "", false, true, true, 1, "");
-            Field shouhuorenField = cobject.CreateStringField("shouhuoren", "收货人及电话", "", false, true, true, 1, "");
-            Field suihuoFudaiField = cobject.CreateTextField("suihuoFudai", "随货附带", "", false, true, true, 1, "");
             Field beizhuField = cobject.CreateTextField("beizhu", "备注", "", false, true, true, 1, "");
-            Field guigeField = cobject.CreateStringField("guige", "规格", "", false, true, true, 2, "");
-            Field shengchanQiyeField = cobject.CreateStringField("shengchanQiye", "生产企业", "", false, true, true, 3, "");
-            Field danweiField = cobject.CreateStringField("danwei", "单位", "", false, true, true, 4, "");
-            Field zongshuliangField = cobject.CreateStringField("zongshuliang", "总数量", "", false, true, true, 5, "");
-            Field kaipiaoDanjiaField = cobject.CreateStringField("kaipiaoDanjia", "开票单价", "", false, true, true, 6, "");
-            Field zongjineField = cobject.CreateStringField("zongjine", "总金额", "", false, true, true, 7, "");
-            Field jianshuField = cobject.CreateStringField("jianshu", "件数", "", false, true, true, 9, "");
             Field creatorField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_CREATOR, "创建人", "", true, false, false, 16, true);
             Field createTimeField = cobject.CreateDateField(ColdewObjectCode.FIELD_NAME_CREATE_TIME, "创建时间", "", false, false, false, 17, true);
             Field modifiedUserField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, "修改人", "", true, false, false, 18, true);
@@ -245,9 +254,7 @@ namespace LittleOrange.Core
             baseSectuibInputs.Add(new Input(nameField, 1));
             baseSectuibInputs.Add(new Input(guigeField, 2));
             baseSectuibInputs.Add(new Input(shengchanQiyeField, 3));
-            baseSectuibInputs.Add(new Input(danweiField, 4));
             baseSectuibInputs.Add(new Input(zongshuliangField, 5));
-            baseSectuibInputs.Add(new Input(kaipiaoDanjiaField, 6));
             baseSectuibInputs.Add(new Input(zongjineField, 7));
             List<Section> sections = new List<Section>();
             sections.Add(new Section("基本信息", 2, baseSectuibInputs));
@@ -276,7 +283,7 @@ namespace LittleOrange.Core
         {
             this._coldewManager.Logger.Info("init fahuo liucheng");
             ColdewObject cobject = this._coldewManager.ObjectManager.Create("发货流程", "FahuoLiucheng");
-            Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "流程名称", "", true, true, true, 1, "");
+            Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "公司", "", false, true, true, 1, "");
             Field shengfenField = cobject.CreateStringField("shengfen", "省份", "", false, true, true, 1, "");
             Field diquField = cobject.CreateStringField("diqu", "地区", "", false, true, true, 1, "");
             Field fahuoRiqiField = cobject.CreateDateField("fahuoRiqi", "发货日期", "", false, true, true, 1, true);
@@ -289,9 +296,10 @@ namespace LittleOrange.Core
             Field shouhuoDizhiField = cobject.CreateStringField("shouhuoDizhi", "收货地址", "", false, true, true, 1, "");
             Field shouhuorenField = cobject.CreateStringField("shouhuoren", "收货人及电话", "", false, true, true, 1, "");
             Field suihuoFudaiField = cobject.CreateTextField("suihuoFudai", "随货附带", "", false, true, true, 1, "");
-            Field chanpinListField = cobject.CreateStringField("chanpinList", "产品信息", "", false, true, true, 1, "");
+            Field chanpinListField = cobject.CreateJsonField("chanpinList", "产品信息", "", false, true, true, 1);
             Field beizhuField = cobject.CreateTextField("beizhu", "备注", "", false, true, true, 1, "");
             Field guigeField = cobject.CreateStringField("guige", "规格", "", false, true, true, 2, "");
+            Field liuchengIdField = cobject.CreateStringField("liuchengId", "流程ID", "", false, true, true, 2, "");
             Field creatorField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_CREATOR, "创建人", "", true, false, false, 16, true);
             Field createTimeField = cobject.CreateDateField(ColdewObjectCode.FIELD_NAME_CREATE_TIME, "创建时间", "", false, false, false, 17, true);
             Field modifiedUserField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, "修改人", "", true, false, false, 18, true);

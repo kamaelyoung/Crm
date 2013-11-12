@@ -22,7 +22,7 @@ namespace Coldew.Website.Controllers
         {
             if (string.IsNullOrEmpty(returnUrl))
             {
-                List<ColdewObjectInfo> forms = WebHelper.ColdewObjectService.GetForms();
+                List<ColdewObjectInfo> forms = WebHelper.ColdewObjectService.GetForms(WebHelper.CurrentUserAccount);
                 returnUrl = this.Url.Action("Index", "Metadata", new { objectId = forms[0].ID });
             }
             ControllerResultModel resultModel = new ControllerResultModel();

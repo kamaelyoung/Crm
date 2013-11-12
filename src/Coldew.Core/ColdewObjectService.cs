@@ -36,10 +36,18 @@ namespace Coldew.Core
             return null;
         }
 
-        public List<ColdewObjectInfo> GetForms()
+        public List<ColdewObjectInfo> GetForms(string userAccount)
         {
+            User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
             List<ColdewObject> forms = this._coldewManager.ObjectManager.GetForms();
-            return forms.Select(x => x.Map()).ToList();
+            return forms.Where(x => {
+                Function function = this._coldewManager.OrgManager.FunctionManager.GetFunctionInfoById(x.ID);
+                if (function == null)
+                {
+                    return true;
+                }
+                return function.HasPermission(user);
+            }).Select(x => x.Map()).ToList();
         }
 
         public FieldInfo CreateStringField(string objectId, string name, bool required, string defaultValue, int index)

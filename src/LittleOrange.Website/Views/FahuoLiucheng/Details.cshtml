@@ -1,0 +1,58 @@
+﻿@using Coldew.Api.UI;
+@using Coldew.Api;
+@using Coldew.Website;
+@{
+    ColdewObjectInfo objectInfo = this.ViewBag.objectInfo;
+    ColdewInput crmInput = WebHelper.ColdewInputFactory.CreateInput(false);
+}
+<fieldset>
+        <legend>基本信息</legend>
+        <div class='row-fluid'>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("name"))
+            </div>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("shengfen"))
+            </div>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("diqu"))
+            </div>
+        </div>
+        <div class='row-fluid'>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("fahuoRiqi"))
+            </div>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("huikuanRiqi"))
+            </div>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("huikuanJine"))
+            </div>
+        </div>
+        <div class='row-fluid'>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("huikuanLeixing"))
+            </div>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("huikuanDanwei"))
+            </div>
+            <div class="span4">
+                @crmInput.Input(objectInfo.GetField("daokuanDanwei"))
+            </div>
+        </div>
+        <div class='row-fluid'>
+            <div class="span12">
+                @crmInput.Input(objectInfo.GetField("kaipiaoDanwei"))
+            </div>
+        </div>
+        <div class='row-fluid'>
+            <div class="span12">
+                @crmInput.Input(objectInfo.GetField("shouhuoDizhi"))
+            </div>
+        </div>
+        <div class='row-fluid'>
+            <div class="span12">
+                @crmInput.Input(objectInfo.GetField("shouhuoren"))
+            </div>
+        </div>
+    </fieldset>

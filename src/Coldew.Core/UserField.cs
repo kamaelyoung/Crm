@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Coldew.Api;
 using Coldew.Core.Organization;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -29,12 +30,12 @@ namespace Coldew.Core
 
         public bool DefaultValueIsCurrent { set; get; }
 
-        public override MetadataValue CreateMetadataValue(string value)
+        public override MetadataValue CreateMetadataValue(JToken value)
         {
             User user = null;
-            if (!string.IsNullOrEmpty(value))
+            if (value != null)
             {
-                user = this._userManager.GetUserByAccount(value);
+                user = this._userManager.GetUserByAccount(value.ToString());
             }
             return new UserMetadataValue(user, this);
         }

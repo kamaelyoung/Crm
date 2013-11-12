@@ -9,7 +9,7 @@
         <property name="Name" type="String" column="func_name"></property>
         <property name="Url" type="String" column="func_url"></property>
         <property name="IconClass" type="String" column="func_iconClass"></property>
-        <property name="ParentId" type="String" column="func_parentId"></property>
         <property name="Sort" type="int" column="func_sort"></property>
+        <property name="OwnerMemberIds" type="String" length="20000" column="func_ownerMemberIds"></property>
     </class>
 </hibernate-mapping>

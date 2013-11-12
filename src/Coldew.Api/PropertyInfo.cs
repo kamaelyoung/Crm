@@ -10,6 +10,8 @@ namespace Coldew.Api
     {
         public string Code { set; get; }
 
+        public string Type { set; get; }
+
         public string ShowValue { set; get; }
 
         public dynamic EditValue { set; get; }

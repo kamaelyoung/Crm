@@ -23,9 +23,9 @@ namespace Crm.Core
             return base.CreateFormManager(coldewManager);
         }
 
-        protected override MetadataManager CreateMetadataManager(ColdewManager coldewManager)
+        protected override Coldew.Core.DataServices.MetadataDataService CreateDataService()
         {
-            return new CustomerManager(this, new CustomerDataService(this), coldewManager.OrgManager);
+            return new CustomerDataService(this);
         }
 
         public Field CreateCustomerAreaField(string code, string name, bool required, bool canModify, bool canInput, int index)

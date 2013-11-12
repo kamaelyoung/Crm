@@ -35,6 +35,8 @@ namespace Coldew.Api.Workflow
 
         RenwuXinxi WanchengRenwu(string liuchengId, string chulirenAccount, string renwuId, string shuoming);
 
+        void WanchengXingdong(string liuchengId, string xingdongId);
+
         XingdongXinxi ChuangjianXingdong(string liuchengId, string code, string name, List<string> chulirenAccounts, string zhaiyao, DateTime? qiwangWanchengShijian);
     }
 }

@@ -5,6 +5,7 @@ using System.Web;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using Coldew.Api;
+using Newtonsoft.Json;
 
 namespace Crm.Website.Models
 {
@@ -16,9 +17,13 @@ namespace Crm.Website.Models
             foreach (PropertyInfo propertyInfo in customerInfo.Propertys)
             {
                 JToken token = null;
-                if (propertyInfo.EditValue is IEnumerable)
+                if (propertyInfo.Type == FieldType.UserList || propertyInfo.Type == FieldType.CheckboxList)
                 {
                     token = new JArray(propertyInfo.EditValue);
+                }
+                else if (propertyInfo.Type == FieldType.Json)
+                {
+                    token = JsonConvert.DeserializeObject(propertyInfo.EditValue);
                 }
                 else
                 {

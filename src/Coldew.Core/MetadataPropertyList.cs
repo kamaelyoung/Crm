@@ -5,6 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Coldew.Data;
 using Coldew.Api;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -12,18 +13,25 @@ namespace Coldew.Core
     {
         public static string ToPropertyModelJson(List<MetadataProperty> propertys)
         {
-            List<MetadataPropertyModel> propertyModels = propertys.Select(x => new MetadataPropertyModel { FieldId = x.Field.ID, Value = x.Value.PersistenceValue }).ToList();
-            return JsonConvert.SerializeObject(propertyModels);
+            JObject jobject = new JObject();
+            foreach (MetadataProperty property in propertys)
+            {
+                jobject.Add(property.Field.ID.ToString(), property.Value.PersistenceValue);
+            }
+            return JsonConvert.SerializeObject(jobject);
         }
 
-        public static List<MetadataProperty> MapPropertys(PropertySettingDictionary dictionary, ColdewObject form)
+        public static List<MetadataProperty> MapPropertys(JObject jobject, ColdewObject form)
         {
             List<MetadataProperty> propertys = new List<MetadataProperty>();
-            foreach (KeyValuePair<string, string> pair in dictionary)
+            foreach (JProperty property in jobject.Properties())
             {
-                Field field = form.GetFieldByCode(pair.Key);
-                MetadataValue metadataValue = field.CreateMetadataValue(pair.Value);
-                propertys.Add(new MetadataProperty(metadataValue));
+                Field field = form.GetFieldByCode(property.Name);
+                if (field != null)
+                {
+                    MetadataValue metadataValue = field.CreateMetadataValue(property.Value);
+                    propertys.Add(new MetadataProperty(metadataValue));
+                }
             }
 
             return propertys;
@@ -31,14 +39,14 @@ namespace Coldew.Core
 
         public static List<MetadataProperty> GetPropertys(string propertysJson, ColdewObject form)
         {
-            List<MetadataPropertyModel> propertyModels = JsonConvert.DeserializeObject<List<MetadataPropertyModel>>(propertysJson);
+            JObject propertyModels = JsonConvert.DeserializeObject<JObject>(propertysJson);
             List<MetadataProperty> propertys = new List<MetadataProperty>();
-            foreach (MetadataPropertyModel propertyModel in propertyModels)
+            foreach (JProperty property in propertyModels.Properties())
             {
-                Field field = form.GetFieldById(propertyModel.FieldId);
+                Field field = form.GetFieldById(int.Parse(property.Name));
                 if (field != null)
                 {
-                    MetadataValue metadataValue = field.CreateMetadataValue(propertyModel.Value);
+                    MetadataValue metadataValue = field.CreateMetadataValue(property.Value);
                     propertys.Add(new MetadataProperty(metadataValue));
                 }
             }

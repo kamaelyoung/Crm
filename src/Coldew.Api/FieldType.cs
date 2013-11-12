@@ -17,5 +17,6 @@ namespace Coldew.Api
         public const string User = "User";
         public const string UserList = "UserList";
         public const string Metadata = "Metadata";
+        public const string Json = "Json";
     }
 }

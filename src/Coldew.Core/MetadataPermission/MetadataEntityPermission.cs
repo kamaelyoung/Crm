@@ -11,68 +11,25 @@ namespace Coldew.Core.MetadataPermission
 {
     public class MetadataEntityPermission
     {
-
-        List<MetadataMemberPermissionValue> _values;
-
-        public MetadataEntityPermission(string metadataId, List<MetadataMemberPermissionValue> values)
+        public MetadataEntityPermission(string id, string metadataId, MetadataMember member, MetadataPermissionValue value)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
+            this.ID = id;
             this.MetadataId = metadataId;
-            this._values = values;
+            this.Member = member;
+            this.Value = value;
         }
+
+        public string ID { private set; get; }
 
         public string MetadataId { private set; get; }
 
-        public void SetValues(List<MetadataMemberPermissionValue> values)
+        public MetadataPermissionValue Value { private set; get; }
+
+        public MetadataMember Member { private set; get; }
+
+        public virtual bool HasValue(Metadata metadata, User user, MetadataPermissionValue value)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
-
-            List<MemberPermissionValueJsonModel> valueModels = new List<MemberPermissionValueJsonModel>();
-            foreach(MetadataMemberPermissionValue permission in this._values)
-            {
-                valueModels.Add(new MemberPermissionValueJsonModel{ memberId = permission.Member.ID, value = (int)permission.Value });    
-            }
-
-            MetadataPermissionModel model = NHibernateHelper.CurrentSession.Get<MetadataPermissionModel>(this.MetadataId);
-            model.PermissionJson = JsonConvert.SerializeObject(valueModels);
-
-            NHibernateHelper.CurrentSession.Update(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            this._values = values;
-        }
-
-        public bool HasValue(User user, MetadataPermissionValue value)
-        {
-            foreach (MetadataMemberPermissionValue permission in this._values)
-            {
-                if (permission.Member.Contains(user) && permission.Value.HasFlag(value))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public MetadataPermissionValue GetValue(User user)
-        {
-            int value = 0;
-
-            foreach (MetadataMemberPermissionValue permission in this._values)
-            {
-                if (permission.Member.Contains(user))
-                {
-                    value = value | (int)permission.Value;
-                }
-            }
-
-            return (MetadataPermissionValue)value;
+            return this.Member.Contains(metadata, user) && this.Value.HasFlag(value);
         }
     }
 }

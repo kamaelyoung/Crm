@@ -151,7 +151,7 @@ namespace Coldew.Website.Controllers
                 ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
                 foreach (JObject model in importModels)
                 {
-                    PropertySettingDictionary propertys = new PropertySettingDictionary();
+                    JObject propertys = new JObject();
                     List<FieldInfo> fieldInfos = coldewObject.Fields.Where(x => x.CanInput).ToList();
                     foreach (FieldInfo filed in fieldInfos)
                     {
@@ -159,7 +159,7 @@ namespace Coldew.Website.Controllers
                     }
                     try
                     {
-                        WebHelper.MetadataService.Create(objectId, WebHelper.CurrentUserAccount, propertys);
+                        WebHelper.MetadataService.Create(objectId, WebHelper.CurrentUserAccount, JsonConvert.SerializeObject(propertys));
 
                         model["importResult"] = true;
                         model["importMessage"] = "导入成功";
@@ -220,8 +220,7 @@ namespace Coldew.Website.Controllers
             try
             {
                 JObject model = JsonConvert.DeserializeObject<JObject>(json);
-                PropertySettingDictionary propertys = ExtendHelper.MapPropertySettingDictionary(model);
-                WebHelper.MetadataService.Create(objectId, WebHelper.CurrentUserAccount, propertys);
+                WebHelper.MetadataService.Create(objectId, WebHelper.CurrentUserAccount, json);
             }
             catch (Exception ex)
             {
@@ -245,16 +244,13 @@ namespace Coldew.Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditPost(string objectId, string json)
+        public ActionResult EditPost(string objectId, string metadataId, string json)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
                 JObject model = JsonConvert.DeserializeObject<JObject>(json);
-                PropertySettingDictionary propertys = ExtendHelper.MapPropertySettingDictionary(model);
-                string id = propertys["id"];
-                propertys.Remove("id");
-                WebHelper.MetadataService.Modify(objectId, WebHelper.CurrentUserAccount, id, propertys);
+                WebHelper.MetadataService.Modify(objectId, WebHelper.CurrentUserAccount, metadataId, json);
             }
             catch (Exception ex)
             {

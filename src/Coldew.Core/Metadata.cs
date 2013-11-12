@@ -118,10 +118,10 @@ namespace Coldew.Core
 
         protected Dictionary<string, MetadataProperty> _propertys;
 
-        public event TEventHandler<Metadata, PropertySettingDictionary> PropertyChanging;
-        public event TEventHandler<Metadata, PropertySettingDictionary> PropertyChanged;
+        public event TEventHandler<Metadata, JObject> PropertyChanging;
+        public event TEventHandler<Metadata, JObject> PropertyChanged;
 
-        protected virtual void OnPropertyChanging(PropertySettingDictionary dictionary)
+        protected virtual void OnPropertyChanging(JObject dictionary)
         {
             if (this.PropertyChanging != null)
             {
@@ -129,7 +129,7 @@ namespace Coldew.Core
             }
         }
 
-        protected virtual void OnPropertyChanged(PropertySettingDictionary dictionary)
+        protected virtual void OnPropertyChanged(JObject dictionary)
         {
             if (this.PropertyChanged != null)
             {
@@ -137,16 +137,16 @@ namespace Coldew.Core
             }
         }
 
-        public virtual void SetPropertys(User opUser, PropertySettingDictionary dictionary)
+        public virtual void SetPropertys(User opUser, JObject jobject)
         {
             if (!this.CanModify(opUser))
             {
                 throw new ColdewException("没有权限修改该客户!");
             }
 
-            this.OnPropertyChanging(dictionary);
+            this.OnPropertyChanging(jobject);
 
-            List<MetadataProperty> modifyPropertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
+            List<MetadataProperty> modifyPropertys = MetadataPropertyListHelper.MapPropertys(jobject, this.ColdewObject);
 
             foreach (MetadataProperty modifyproperty in modifyPropertys)
             {
@@ -165,7 +165,7 @@ namespace Coldew.Core
             this.InitPropertys();
             this.BuildContent();
 
-            this.OnPropertyChanged(dictionary);
+            this.OnPropertyChanged(jobject);
         }
 
         public virtual List<MetadataProperty> GetPropertys()

@@ -9,13 +9,13 @@ using Coldew.Api;
 using System.Threading;
 using Coldew.Api.Exceptions;
 using Coldew.Core.DataServices;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
     public class MetadataManager
     {
         protected Dictionary<string, Metadata> _metadataDicById;
-        protected Dictionary<string, Metadata> _metadataDicByName;
         protected List<Metadata> _metadataList;
         OrganizationManagement _orgManger;
         protected ReaderWriterLock _lock;
@@ -23,7 +23,6 @@ namespace Coldew.Core
         public MetadataManager(ColdewObject cobject, OrganizationManagement orgManger)
         {
             this._metadataDicById = new Dictionary<string, Metadata>();
-            this._metadataDicByName = new Dictionary<string, Metadata>();
             this._metadataList = new List<Metadata>();
             this._orgManger = orgManger;
             this.ColdewObject = cobject;
@@ -52,40 +51,35 @@ namespace Coldew.Core
 
         public MetadataFavoriteManager FavoriteManager { private set; get; }
 
-        protected virtual void OnCreating(User creator, PropertySettingDictionary dictionary)
+        protected virtual void OnCreating(User creator, JObject jobject)
         {
 
         }
 
-        public Metadata Create(User creator, PropertySettingDictionary dictionary)
+        public Metadata Create(User creator, JObject jobject)
         {
             this._lock.AcquireWriterLock(0);
             try
             {
-                this.OnCreating(creator, dictionary);
-                dictionary.Add(ColdewObjectCode.FIELD_NAME_CREATOR, creator.Account);
-                dictionary.Add(ColdewObjectCode.FIELD_NAME_CREATE_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
-                dictionary.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, creator.Account);
-                dictionary.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
+                this.OnCreating(creator, jobject);
+                jobject.Add(ColdewObjectCode.FIELD_NAME_CREATOR, creator.Account);
+                jobject.Add(ColdewObjectCode.FIELD_NAME_CREATE_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
+                jobject.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, creator.Account);
+                jobject.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
 
                 List<Field> requiredFields = this.ColdewObject.GetRequiredFields();
                 foreach (Field field in requiredFields)
                 {
-                    if (!dictionary.ContainsKey(field.Code) || string.IsNullOrEmpty(dictionary[field.Code]))
+                    if (jobject[field.Code] == null || string.IsNullOrEmpty(jobject[field.Code].ToString()))
                     {
                         throw new ColdewException(string.Format("必要字段{0}不能空", field.Name));
                     }
                 }
-                if (this._metadataDicByName.ContainsKey(dictionary[ColdewObjectCode.FIELD_NAME_NAME]))
-                {
-                    throw new FieldNameRepeatException();
-                }
 
-                List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(dictionary, this.ColdewObject);
+                List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(jobject, this.ColdewObject);
                 Metadata metadata = this.ColdewObject.DataService.Create(propertys);
 
                 this._metadataDicById.Add(metadata.ID, metadata);
-                this._metadataDicByName.Add(metadata.Name, metadata);
                 this._metadataList.Insert(0, metadata);
 
                 this.BindEvent(metadata);
@@ -99,19 +93,16 @@ namespace Coldew.Core
 
         protected virtual void BindEvent(Metadata metadata)
         {
-            metadata.PropertyChanging += new TEventHandler<Metadata, PropertySettingDictionary>(Metadata_Changing);
+            metadata.PropertyChanging += new TEventHandler<Metadata, JObject>(Metadata_Changing);
             metadata.Deleted += new TEventHandler<Metadata, User>(Metadata_Deleted);
         }
 
-        void Metadata_Changing(Metadata metadata, PropertySettingDictionary propertys)
+        void Metadata_Changing(Metadata metadata, JObject propertys)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                if (metadata.Name != metadata.Name && this._metadataDicByName.ContainsKey(metadata.Name))
-                {
-                    throw new FieldNameRepeatException();
-                }
+                
             }
             finally
             {
@@ -125,7 +116,6 @@ namespace Coldew.Core
             try
             {
                 this._metadataDicById.Remove(customer.ID);
-                this._metadataDicByName.Remove(customer.Name);
                 this._metadataList.Remove(customer );
             }
             finally
@@ -240,7 +230,6 @@ namespace Coldew.Core
             foreach (Metadata metadata in metadatas)
             {
                 this._metadataDicById.Add(metadata.ID, metadata);
-                this._metadataDicByName.Add(metadata.Name, metadata);
                 this._metadataList.Add(metadata);
 
                 this.BindEvent(metadata);

@@ -10,6 +10,7 @@ using Coldew.Api;
 using Coldew.Core.UI;
 using Coldew.Api.UI;
 using Coldew.Api.Organization;
+using Newtonsoft.Json.Linq;
 
 namespace Crm.Core
 {
@@ -56,13 +57,13 @@ namespace Crm.Core
                     ColdewObject activityForm = this.InitActivity();
                     this.InitContract();
 
-                    PropertySettingDictionary customerPropertys = new PropertySettingDictionary();
+                    JObject customerPropertys = new JObject();
                     customerPropertys.Add(ColdewObjectCode.FIELD_NAME_NAME, "中华人民");
                     customerPropertys.Add(CrmObjectConstCode.CUST_FIELD_NAME_AREA, this._crmManager.AreaManager.GetAllArea()[0].ID.ToString());
                     customerPropertys.Add(CrmObjectConstCode.CUST_FIELD_NAME_SALES_USERS, "user1");
                     Metadata customer = customerForm.MetadataManager.Create(this._admin, customerPropertys);
 
-                    PropertySettingDictionary contactPropertys = new PropertySettingDictionary();
+                    JObject contactPropertys = new JObject();
                     contactPropertys.Add(ColdewObjectCode.FIELD_NAME_NAME, "李先生");
                     contactPropertys.Add(CrmObjectConstCode.FIELD_NAME_CUSTOMER, customer.ID);
                     contactForm.MetadataManager.Create(this._admin, contactPropertys);

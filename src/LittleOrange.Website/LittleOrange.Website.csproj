@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="ltlorg-js\chanpinEditDialog.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -113,7 +114,11 @@
     <Content Include="Views\Org\Group.cshtml" />
     <Content Include="Views\FahuoLiucheng\Faqi.cshtml" />
     <Content Include="Views\FahuoLiucheng\Mingxi.cshtml" />
-    <Content Include="Views\FahuoLiucheng\Caiwu.cshtml" />
+    <Content Include="Views\FahuoLiucheng\Shenhe.cshtml" />
+    <Content Include="Views\FahuoLiucheng\Details.cshtml" />
+    <Content Include="Views\FahuoLiucheng\ChanpinDetails.cshtml" />
+    <Content Include="Views\FahuoLiucheng\ChanpinEditDialog.cshtml" />
+    <Content Include="Views\FahuoLiucheng\ChanpinAddDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />

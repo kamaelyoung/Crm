@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Coldew.Api;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -26,13 +27,13 @@ namespace Coldew.Core
             get { return this.ValueForm.Name; }
         }
 
-        public override MetadataValue CreateMetadataValue(string value)
+        public override MetadataValue CreateMetadataValue(JToken value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value == null)
             {
                 throw new ArgumentNullException("value");
             }
-            return new MetadataRelatedValue(value, this);
+            return new MetadataRelatedValue(value.ToString(), this);
         }
 
         public override FieldInfo Map()

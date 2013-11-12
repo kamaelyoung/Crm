@@ -20,14 +20,7 @@
             @this.Html.Raw("<div class='row-fluid'>");
         }
     <div class="span6">
-    <div class="control-group">
-        <label class="control-label" >
-        @string.Format("{0}：", field.Name)
-        </label>
-        <div class="controls">
-            @crmInput.Input(field, metadataPropertys)
-        </div>
-    </div>
+    @crmInput.Input(field, metadataPropertys)
     </div>
         if (count % sectionInfo.ColumnCount == 1 ||
             count == sectionInfo.Inputs.Count - 1)

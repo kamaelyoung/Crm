@@ -6,6 +6,7 @@ using Coldew.Api;
 using Newtonsoft.Json;
 using Coldew.Core.Organization;
 using Coldew.Data;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -59,7 +60,7 @@ namespace Coldew.Core
 
         public abstract string TypeName { get; }
 
-        public abstract MetadataValue CreateMetadataValue(string value);
+        public abstract MetadataValue CreateMetadataValue(JToken value);
 
         public ColdewObject ColdewObject { private set; get; }
 

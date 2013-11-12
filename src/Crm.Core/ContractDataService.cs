@@ -37,7 +37,7 @@ namespace Crm.Core
 
         public override Metadata Create(string id, string propertysJson)
         {
-            return new Contract(id, MetadataPropertyListHelper.GetPropertys(propertysJson, this._cobject), this._cobject, this);
+            return new Contract(id, MetadataPropertyListHelper.GetPropertys(propertysJson, this._cobject), this._cobject);
         }
     }
 }

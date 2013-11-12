@@ -9,7 +9,6 @@ namespace LittleOrange.Core
     {
         public const string Object_Ziranren = "ziranren";
         public const string Object_GongsiKehu = "gongsiKehu";
-        public const string Object_Fahuo = "fahuo";
 
         public const string CUST_FIELD_NAME_SALES_USERS = "salesUsers";
     }

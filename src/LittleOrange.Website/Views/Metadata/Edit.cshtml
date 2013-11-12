@@ -10,7 +10,6 @@
 
 <h3>@formInfo.Title</h3>
 <form class="form-horizontal" id="editMetadataForm">
-    <input type="hidden" name="id" />
     @{this.Html.RenderPartial("EditForm");}
     <div class="control-group">
     <div class="controls">
@@ -20,6 +19,7 @@
 </form>
 <script language="javascript" type="text/javascript">
 var objectId = "@Request["objectId"]";
+var metadataId = "@Request["metadataId"]";
 var returnUrl = "@this.Html.Raw(this.Url.Action("Index", new { objectId = Request["objectId"], viewId = Request["viewId"] }))";
 var metadataInfo = @this.Html.Raw(this.ViewBag.metadataInfoJson);
 $("#editMetadataForm").validate({
@@ -38,7 +38,7 @@ $("#editMetadataForm").validate({
         var formValue = $("#editMetadataForm").getFormValue();
             
         $("#btnSave").button("loading");
-        $.post("@this.Url.Action("EditPost")", {objectId: objectId, json: $.toJSON(formValue)}, function(data){
+        $.post("@this.Url.Action("EditPost")", {objectId: objectId, metadataId: metadataId, json: $.toJSON(formValue)}, function(data){
             $("#btnSave").button("reset");
             if(data.result == 0){
                 location = returnUrl;

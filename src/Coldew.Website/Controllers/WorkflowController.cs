@@ -20,11 +20,6 @@ namespace Coldew.Website.Controllers
             return View();
         }
 
-        public ActionResult JianglaiZhipaiDialog()
-        {
-            return View();
-        }
-
         public ActionResult DaibanRenwu(string liuchengMobanId, DateTime? kaishiShijian, DateTime? jieshuShijian, string zhaiyao, int start, int size)
         {
             ControllerResultModel resultModel = new ControllerResultModel();

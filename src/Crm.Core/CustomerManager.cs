@@ -16,8 +16,8 @@ namespace Crm.Core
     public class CustomerManager : MetadataManager
     {
 
-        public CustomerManager(ColdewObject cobject, MetadataDataService dataService, OrganizationManagement orgManger)
-            : base(cobject, dataService, orgManger)
+        public CustomerManager(ColdewObject cobject, OrganizationManagement orgManger)
+            : base(cobject, orgManger)
         {
             
         }

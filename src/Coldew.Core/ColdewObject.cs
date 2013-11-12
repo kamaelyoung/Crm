@@ -163,6 +163,11 @@ namespace Coldew.Core
             return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.String, defaultValue);
         }
 
+        public Field CreateJsonField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index)
+        {
+            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.Json, "");
+        }
+
         public Field CreateTextField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string defaultValue)
         {
             return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.Text, defaultValue);
@@ -298,6 +303,8 @@ namespace Coldew.Core
                 case FieldType.Metadata:
                     MetadataFieldConfigModel metadataFieldConfigModel = JsonConvert.DeserializeObject<MetadataFieldConfigModel>(model.Config);
                     return new MetadataField(newInfo, this.ColdewManager.ObjectManager.GetFormByCode(metadataFieldConfigModel.FormCode));
+                case FieldType.Json:
+                    return new JsonField(newInfo);
             }
             throw new ArgumentException("type");
         }

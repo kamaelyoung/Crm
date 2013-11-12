@@ -1,27 +1,16 @@
 /* http://plugins.jquery.com/validate */
 ;(function(defaults, $, undefined) {
-
 	'use strict';
-
 	var
-
 		name = 'validate',
-
 		// Field types
 		type = ['input:not([type]),input[type=color],input[type=date],input[type=datetime],input[type=datetime-local],input[type=email],input[type=file],input[type=hidden],input[type=month],input[type=number],input[type=password],input[type=range],input[type=search],input[type=tel],input[type=text],input[type=time],input[type=url],input[type=week],textarea', 'select', 'input[type=checkbox],input[type=radio]'],
-
-		// All field types
+        // All field types
 		allTypes = type.join(','),
-
-		extend = {},
-
-		// Method to validate each fields
+        extend = {},
+        // Method to validate each fields
 		validateField = function(event, options) {
-
-			var
-
-				// Field status
-				status = {
+			var status = {
 					pattern : true,
 					conditional : true,
 					required : true,
@@ -30,89 +19,54 @@
 					maxlength : true
 				},
 
-				// Current field
-				field = $(this),
-
-				data = field.data(),
-
-				// Current field value
-				fieldValue = field.val() || '',
-
-				// An index of extend
-				fieldValidate = data.validate,
-
-				// A validation object (jQuery.fn.validateExtend)
-				validation = fieldValidate !== undefined ? extend[fieldValidate] : {},
-
-				// One index or more separated for spaces to prepare the field value
-				fieldPrepare = data.prepare || validation.prepare,
-
-				// A regular expression to validate field value
-				fieldPattern = (data.pattern || ($.type(validation.pattern) === 'regexp' ? validation.pattern : /(?:)/)),
-
-				// Is case sensitive? (Boolean)
-				fieldIgnoreCase = field.prop('data-ignore-case') || data.ignoreCase || validation.ignoreCase,
-
-				// A field mask
-				fieldMask = data.mask || validation.mask,
-
-				// A index in the conditional object containing a function to validate the field value
-				fieldConditional = data.conditional || validation.conditional,
-
-				// Is required?
-				fieldRequired = data.required,
-
-				// The field confirm id
-				fieldConfirm = data.confirm || validation.confirm,
-
-				// 
-				minlength = Number(data.minlength || validation.minlength || 0),
-
-				// 
-				maxlength = Number(data.maxlength || validation.maxlength || Infinity),
-
-				// The description element id
-				fieldDescribedby = data.describedby || validation.describedby,
-
-				// An index of description object
-				fieldDescription = data.description || validation.description,
-
-				// Trim spaces?
-				fieldTrim = data.trim,
-
-				reTrue = /^(true|)$/i,
-
-				reFalse = /^false$/i;
-
-			// The description object
+			// Current field
+			field = $(this),
+			data = field.data(),
+			// Current field value
+			fieldValue = field.val() || '',
+			// An index of extend
+			fieldValidate = data.validate,
+			// A validation object (jQuery.fn.validateExtend)
+			validation = fieldValidate !== undefined ? extend[fieldValidate] : {},
+			// One index or more separated for spaces to prepare the field value
+			fieldPrepare = data.prepare || validation.prepare,
+			// A regular expression to validate field value
+			fieldPattern = (data.pattern || ($.type(validation.pattern) === 'regexp' ? validation.pattern : /(?:)/)),
+			// Is case sensitive? (Boolean)
+			fieldIgnoreCase = field.prop('data-ignore-case') || data.ignoreCase || validation.ignoreCase,
+			// A field mask
+			fieldMask = data.mask || validation.mask,
+			// A index in the conditional object containing a function to validate the field value
+			fieldConditional = data.conditional || validation.conditional,
+			// Is required?
+			fieldRequired = data.required,
+			// The field confirm id
+			fieldConfirm = data.confirm || validation.confirm,
+			minlength = Number(data.minlength || validation.minlength || 0),
+			maxlength = Number(data.maxlength || validation.maxlength || Infinity),
+			fieldDescribedby = data.describedby || validation.describedby,
+			fieldDescription = data.description || validation.description,
+			fieldTrim = data.trim,
+			reTrue = /^(true|)$/i,
+			reFalse = /^false$/i;
 			fieldDescription = $.isPlainObject(fieldDescription) ? fieldDescription : (options.description[fieldDescription] || {});
-
 			fieldRequired = fieldRequired !== '' ? (fieldRequired || !!validation.required) : true;
-
 			fieldTrim = fieldTrim !== '' ? (fieldTrim || !!validation.trim) : true;
-
 			fieldConfirm = $('#' + fieldConfirm).length > 0 ? $('#' + fieldConfirm) : $(fieldConfirm);
-
 			minlength = typeof minlength === 'number' ? minlength : 0;
-
 			maxlength = typeof maxlength === 'number' ? maxlength : Infinity;
-
 			// Trim spaces?
 			if(reTrue.test(fieldTrim)) {
-
 				fieldValue = $.trim(fieldValue);
 			}
 
 			// The fieldPrepare is a function?
 			if($.isFunction(fieldPrepare)) {
-
 				// Updates the fieldValue variable
 				fieldValue = String(fieldPrepare.call(field, fieldValue));
 			} else {
-
 				// Is a function?
 				if($.isFunction(options.prepare[fieldPrepare])) {
-
 					// Updates the fieldValue variable
 					fieldValue = String(options.prepare[fieldPrepare].call(field, fieldValue));
 				}
@@ -120,32 +74,21 @@
 
 			// Is not RegExp?
 			if($.type(fieldPattern) !== 'regexp') {
-
 				fieldIgnoreCase = !reFalse.test(fieldIgnoreCase);
-
 				// Converts to RegExp
 				fieldPattern = fieldIgnoreCase ? new RegExp(fieldPattern, 'i') : new RegExp(fieldPattern);
 			}
 
 			// The conditional exists?
 			if(fieldConditional !== undefined) {
-
 				// The fieldConditional is a function?
 				if($.isFunction(fieldConditional)) {
-
 					status.conditional = !!fieldConditional.call(field, fieldValue, options);
 				} else {
-
-					var
-
-						// Splits the conditionals in an array
-						conditionals = fieldConditional.split(/\s+/);
-
+					var conditionals = fieldConditional.split(/\s+/);
 					// Each conditional
 					for(var counter = 0, len = conditionals.length; counter < len; counter++) {
-
 						if(options.conditional.hasOwnProperty(conditionals[counter]) && !options.conditional[conditionals[counter]].call(field, fieldValue, options)) {
-
 							status.conditional = false;
 						}
 					}
@@ -153,7 +96,6 @@
 			}
 
 			fieldRequired = reTrue.test(fieldRequired);
-
 			// Is required?
 			if(fieldRequired) {
 
@@ -368,30 +310,23 @@
 					}
 
 					fields = fields.filter(options.filter).off(namespace);
-
 					// If onKeyup is enabled
 					if(!!options.onKeyup) {
-
 						fields.filter(type[0]).on('keyup' + namespace, function(event) {
-
 							validateField.call(this, event, options, form);
 						});
 					}
 
 					// If onBlur is enabled
 					if(!!options.onBlur) {
-
 						fields.on('blur' + namespace, function(event) {
-
 							validateField.call(this, event, options, form);
 						});
 					}
 
 					// If onChange is enabled
 					if(!!options.onChange) {
-
 						fields.on('change' + namespace, function(event) {
-
 							validateField.call(this, event, options, form);
 						});
 					}
@@ -400,48 +335,34 @@
 					if(!!options.onSubmit) {
 
 						form.on('submit' + namespace, function(event) {
-
 							var formValid = true;
-
 							fields.each(function() {
-
 								var status = validateField.call(this, event, options, form);
-
 								if(!status.pattern || !status.conditional || !status.required) {
-
 									formValid = false;
 								}
 							});
 
 							// If form is valid
 							if(formValid) {
-
 								// Send form?
 								if(!options.sendForm) {
-
 									event.preventDefault();
 								}
-
 								// Is a function?
 								if($.isFunction(options.valid)) {
-
 									options.valid.call(form, event, options);
 								}
-
 								form.trigger('valid');
-							} else {
-
+							} 
+                            else {
 								if(!options.sendInvalidForm) {
-
 									event.preventDefault();
 								}
-
 								// Is a function?
 								if($.isFunction(options.invalid)) {
-
 									options.invalid.call(form, event, options);
 								}
-
 								form.trigger('invalid');
 							}
 						});

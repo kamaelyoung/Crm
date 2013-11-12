@@ -5,6 +5,7 @@ using System.Text;
 using Coldew.Api;
 using Coldew.Data;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -25,9 +26,9 @@ namespace Coldew.Core
 
         public List<string> SelectList { set; get; }
 
-        public override MetadataValue CreateMetadataValue(string value)
+        public override MetadataValue CreateMetadataValue(JToken value)
         {
-            return new StringMetadataValue(value, this);
+            return new StringMetadataValue(value.ToString(), this);
         }
 
         public void Modify(string name, bool required, string defaultValue, List<string> selectList, int index)

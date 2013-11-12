@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Coldew.Core.Organization;
 using Coldew.Api;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -23,15 +25,19 @@ namespace Coldew.Core
             }
         }
 
-        public override string PersistenceValue
+        public override JToken PersistenceValue
         {
-            get 
+            get
             {
+                JArray jarray = new JArray();
                 if (this.Users != null)
                 {
-                    return string.Join(",", this.Users.Select(x => x.Account));
+                    foreach(User user in this.Users)
+                    {
+                        jarray.Add(user.Account);
+                    }
                 }
-                return "";
+                return jarray;
             }
         }
 

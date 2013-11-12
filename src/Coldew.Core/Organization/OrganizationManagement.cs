@@ -185,14 +185,6 @@ namespace Coldew.Core.Organization
                     group.RemoveGroup(args.Operator, args.DeleteObject);
                 }
             }
-            List<Function> functions = this.FunctionManager.GetAllFunction();
-            foreach (Function function in functions)
-            {
-                if (function.Contains(args.DeleteObject))
-                {
-                    function.Remove(args.DeleteObject);
-                }
-            }
         }
 
         void DepartmentManager_Deleted(DepartmentManagement sender, DeleteEventArgs<Department> args)
@@ -224,14 +216,6 @@ namespace Coldew.Core.Organization
                 if (group.GroupUsers.Contains(args.DeleteObject))
                 {
                     group.RemoveUser(args.Operator, args.DeleteObject);
-                }
-            }
-            List<Function> functions = this.FunctionManager.GetAllFunction();
-            foreach (Function function in functions)
-            {
-                if (function.Contains(args.DeleteObject))
-                {
-                    function.Remove(args.DeleteObject);
                 }
             }
         }

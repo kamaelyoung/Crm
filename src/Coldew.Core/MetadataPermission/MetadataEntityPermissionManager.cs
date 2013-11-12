@@ -12,27 +12,37 @@ namespace Coldew.Core.MetadataPermission
 {
     public class MetadataEntityPermissionManager
     {
-        Dictionary<string, MetadataEntityPermission> _permissionDict;
+        Dictionary<string, List<MetadataEntityPermission>> _permissionDict;
         protected ReaderWriterLock _lock;
         OrganizationManagement _orgManager;
 
         public MetadataEntityPermissionManager(OrganizationManagement orgManager)
         {
-            this._permissionDict = new Dictionary<string, MetadataEntityPermission>();
+            this._permissionDict = new Dictionary<string, List<MetadataEntityPermission>>();
             this._orgManager = orgManager;
             this._lock = new ReaderWriterLock();
+
+            this.Load();
         }
 
-        public MetadataEntityPermission GetPermission(string metadataId)
+        public MetadataPermissionValue GetPermission(User user, Metadata metadata)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                if (this._permissionDict.ContainsKey(metadataId))
+                int value = 0;
+                if (this._permissionDict.ContainsKey(metadata.ID))
                 {
-                    return this._permissionDict[metadataId];
+                    List<MetadataEntityPermission> permissions = this._permissionDict[metadata.ID];
+                    foreach (MetadataEntityPermission permission in permissions)
+                    {
+                        if (permission.Member.Contains(metadata, user))
+                        {
+                            value = value | (int)permission.Value;
+                        }
+                    }
                 }
-                return null;
+                return (MetadataPermissionValue)value;
             }
             finally
             {
@@ -40,20 +50,44 @@ namespace Coldew.Core.MetadataPermission
             }
         }
 
-        public void SetPermission(string metadataId, List<MetadataMemberPermissionValue> values)
+        public bool HasValue(User user, MetadataPermissionValue value, Metadata metadata)
+        {
+            this._lock.AcquireReaderLock(0);
+            try
+            {
+                if (this._permissionDict.ContainsKey(metadata.ID))
+                {
+                    List<MetadataEntityPermission> permissions = this._permissionDict[metadata.ID];
+                    foreach (MetadataEntityPermission permission in permissions)
+                    {
+                        if(permission.HasValue(metadata, user, value))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            finally
+            {
+                this._lock.ReleaseReaderLock();
+            }
+        }
+
+        public MetadataEntityPermission Create(string metadataId, MetadataMember member, MetadataPermissionValue value)
         {
             this._lock.AcquireWriterLock(0);
             try
             {
-                if (this._permissionDict.ContainsKey(metadataId))
-                {
-                    MetadataEntityPermission permission = this._permissionDict[metadataId];
-                    permission.SetValues(values);
-                }
-                else
-                {
-                    this.Create(metadataId, values);
-                }
+                MetadataEntityPermissionModel model = new MetadataEntityPermissionModel();
+                model.MetadataId = metadataId;
+                model.Member = member.Serialize();
+                model.Value = (int)value;
+
+                model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
+                NHibernateHelper.CurrentSession.Flush();
+
+                return this.Create(model);
             }
             finally
             {
@@ -61,39 +95,21 @@ namespace Coldew.Core.MetadataPermission
             }
         }
 
-        private MetadataEntityPermission Create(string metadataId, List<MetadataMemberPermissionValue> values)
+        private MetadataEntityPermission Create(MetadataEntityPermissionModel model)
         {
-            List<MemberPermissionValueJsonModel> valueModels = new List<MemberPermissionValueJsonModel>();
-            foreach(MetadataMemberPermissionValue value in values)
+            MetadataMember metadataMember = MetadataMember.Create(model.Member, this._orgManager);
+            if (metadataMember != null)
             {
-                valueModels.Add(new MemberPermissionValueJsonModel{ memberId = value.Member.ID, value = (int)value.Value });    
-            }
-
-            MetadataPermissionModel model = new MetadataPermissionModel();
-            model.MetadataId = metadataId;
-            model.PermissionJson = JsonConvert.SerializeObject(valueModels);
-
-            NHibernateHelper.CurrentSession.Save(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            return this.Create(model);
-        }
-
-        private MetadataEntityPermission Create(MetadataPermissionModel model)
-        {
-            List<MemberPermissionValueJsonModel> valueModels = JsonConvert.DeserializeObject<List<MemberPermissionValueJsonModel>>(model.PermissionJson);
-            List<MetadataMemberPermissionValue> values = new List<MetadataMemberPermissionValue>();
-            foreach(MemberPermissionValueJsonModel valueModel in  valueModels )
-            {
-                Member member = this._orgManager.GetMember(valueModel.memberId);
-                if(member != null)
+                MetadataEntityPermission permission = new MetadataEntityPermission(model.ID, model.MetadataId, metadataMember, (MetadataPermissionValue)model.Value);
+                if(!this._permissionDict.ContainsKey(model.MetadataId))
                 {
-                    values.Add(new MetadataMemberPermissionValue(member, (MetadataPermissionValue)valueModel.value));
+                    this._permissionDict.Add(model.MetadataId, new List<MetadataEntityPermission>());
                 }
+                this._permissionDict[model.MetadataId].Add(permission);
+                return permission;
+
             }
-            MetadataEntityPermission permission = new MetadataEntityPermission(model.MetadataId, values);
-            this._permissionDict.Add(permission.MetadataId, permission);
-            return permission;
+            return null;
         }
 
         internal void Load()
@@ -101,7 +117,11 @@ namespace Coldew.Core.MetadataPermission
             this._lock.AcquireWriterLock(0);
             try
             {
-                NHibernateHelper.CurrentSession.QueryOver<MetadataPermissionModel>().List();
+                IList<MetadataEntityPermissionModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataEntityPermissionModel>().List();
+                foreach (MetadataEntityPermissionModel model in models)
+                {
+                    this.Create(model);
+                }
             }
             finally
             {

@@ -5,6 +5,7 @@ using System.Text;
 using Coldew.Api;
 using Coldew.Core;
 using Crm.Api;
+using Newtonsoft.Json.Linq;
 
 namespace Crm.Core
 {
@@ -30,21 +31,21 @@ namespace Crm.Core
 
         public CustomerArea DefaultValue { set; get; }
 
-        public override MetadataValue CreateMetadataValue(string value)
+        public override MetadataValue CreateMetadataValue(JToken value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value == null)
             {
                 throw new ArgumentNullException();
             }
             CustomerArea area = null;
             int areaId;
-            if (int.TryParse(value, out areaId))
+            if (int.TryParse(value.ToString(), out areaId))
             {
                 area = this._areaManager.GetAreaById(areaId);
             }
             else
             {
-                area = this._areaManager.GetAreaByName(value);
+                area = this._areaManager.GetAreaByName(value.ToString());
             }
             return new CustomerAreaMetadataValue(area, this);
         }

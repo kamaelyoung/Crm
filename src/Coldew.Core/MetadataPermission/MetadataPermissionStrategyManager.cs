@@ -13,29 +13,37 @@ namespace Coldew.Core.MetadataPermission
 {
     public class MetadataPermissionStrategyManager
     {
-        Dictionary<string, MetadataPermissionStrategy> _permissionDict;
+        Dictionary<string, List<MetadataPermissionStrategy>> _permissionDict;
         protected ReaderWriterLock _lock;
         OrganizationManagement _orgManager;
         ColdewManager _coldewManager;
 
         public MetadataPermissionStrategyManager(ColdewManager coldewManager)
         {
-            this._permissionDict = new Dictionary<string, MetadataPermissionStrategy>();
+            this._permissionDict = new Dictionary<string,List<MetadataPermissionStrategy>>();
             this._orgManager = coldewManager.OrgManager;
             this._coldewManager = coldewManager;
             this._lock = new ReaderWriterLock();
         }
 
-        public MetadataPermissionStrategy GetPermission(string objectId)
+        public MetadataPermissionValue GetPermission(string objectId, User user, Metadata metadata)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
+                int value = 0;
                 if (this._permissionDict.ContainsKey(objectId))
                 {
-                    return this._permissionDict[objectId];
+                    List<MetadataPermissionStrategy> permissions = this._permissionDict[objectId];
+                    foreach (MetadataPermissionStrategy permission in permissions)
+                    {
+                        if (permission.Member.Contains(metadata, user))
+                        {
+                            value = value | (int)permission.Value;
+                        }
+                    }
                 }
-                return null;
+                return (MetadataPermissionValue)value;
             }
             finally
             {
@@ -43,20 +51,45 @@ namespace Coldew.Core.MetadataPermission
             }
         }
 
-        public void SetPermission(string objectId, List<MetadataMemberPermissionStrategyValue> values)
+        public bool HasValue(string objectId, User user, MetadataPermissionValue value, Metadata metadata)
         {
-            this._lock.AcquireWriterLock(0);
+            this._lock.AcquireReaderLock(0);
             try
             {
                 if (this._permissionDict.ContainsKey(objectId))
                 {
-                    MetadataPermissionStrategy permission = this._permissionDict[objectId];
-                    permission.SetValues(values);
+                    List<MetadataPermissionStrategy> permissions = this._permissionDict[objectId];
+                    foreach (MetadataPermissionStrategy permission in permissions)
+                    {
+                        if (permission.HasValue(metadata, user, value))
+                        {
+                            return true;
+                        }
+                    }
                 }
-                else
-                {
-                    this.Create(objectId, values);
-                }
+                return false;
+            }
+            finally
+            {
+                this._lock.ReleaseReaderLock();
+            }
+        }
+
+        public MetadataPermissionStrategy Create(string objectId, MetadataMember member, MetadataPermissionValue value, string searchExpressions)
+        {
+            this._lock.AcquireWriterLock(0);
+            try
+            {
+                MetadataPermissionStrategyModel model = new MetadataPermissionStrategyModel();
+                model.ObjectId = objectId;
+                model.Member = member.Serialize();
+                model.Value = (int)value;
+                model.SearchExpressions = searchExpressions;
+
+                model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
+                NHibernateHelper.CurrentSession.Flush();
+
+                return this.Create(model);
             }
             finally
             {
@@ -64,42 +97,23 @@ namespace Coldew.Core.MetadataPermission
             }
         }
 
-        private MetadataPermissionStrategy Create(string objectId, List<MetadataMemberPermissionStrategyValue> values)
-        {
-            List<MemberPermissionStrategyValueJsonModel> valueModels = new List<MemberPermissionStrategyValueJsonModel>();
-            foreach (MetadataMemberPermissionStrategyValue value in values)
-            {
-                valueModels.Add(new MemberPermissionStrategyValueJsonModel { memberId = value.Member.ID, value = (int)value.Value, searchExpression = value.Searcher.ToString() });
-            }
-
-            MetadataPermissionStrategyModel model = new MetadataPermissionStrategyModel();
-            model.ObjectId = objectId;
-            model.PermissionJson = JsonConvert.SerializeObject(valueModels);
-
-            NHibernateHelper.CurrentSession.Save(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            return this.Create(model);
-        }
-
         private MetadataPermissionStrategy Create(MetadataPermissionStrategyModel model)
         {
             ColdewObject cobject = this._coldewManager.ObjectManager.GetFormById(model.ObjectId);
             if (cobject != null)
             {
-                List<MemberPermissionStrategyValueJsonModel> valueModels = JsonConvert.DeserializeObject<List<MemberPermissionStrategyValueJsonModel>>(model.PermissionJson);
-                List<MetadataMemberPermissionStrategyValue> values = new List<MetadataMemberPermissionStrategyValue>();
-                foreach (MemberPermissionStrategyValueJsonModel valueModel in valueModels)
+                MetadataMember metadataMember = MetadataMember.Create(model.Member, this._orgManager);
+                if (metadataMember != null)
                 {
-                    Member member = this._orgManager.GetMember(valueModel.memberId);
-                    if (member != null)
+                    MetadataPermissionStrategy permission = new MetadataPermissionStrategy(model.ID, model.ObjectId, metadataMember, (MetadataPermissionValue)model.Value, MetadataExpressionSearcher.Parse(model.SearchExpressions, cobject));
+
+                    if (!this._permissionDict.ContainsKey(model.ObjectId))
                     {
-                        values.Add(new MetadataMemberPermissionStrategyValue(member, (MetadataPermissionValue)valueModel.value, MetadataExpressionSearcher.Parse(valueModel.searchExpression, cobject)));
+                        this._permissionDict.Add(model.ObjectId, new List<MetadataPermissionStrategy>());
                     }
+                    this._permissionDict[model.ObjectId].Add(permission);
+                    return permission;
                 }
-                MetadataPermissionStrategy permission = new MetadataPermissionStrategy(model.ObjectId, values);
-                this._permissionDict.Add(permission.ObjectId, permission);
-                return permission;
             } 
             return null;
         }
@@ -109,7 +123,11 @@ namespace Coldew.Core.MetadataPermission
             this._lock.AcquireWriterLock(0);
             try
             {
-                NHibernateHelper.CurrentSession.QueryOver<MetadataPermissionStrategyModel>().List();
+                IList<MetadataPermissionStrategyModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataPermissionStrategyModel>().List();
+                foreach (MetadataPermissionStrategyModel model in models)
+                {
+                    this.Create(model);
+                }
             }
             finally
             {

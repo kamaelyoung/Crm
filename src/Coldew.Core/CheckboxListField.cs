@@ -5,6 +5,7 @@ using System.Text;
 using Coldew.Api;
 using Coldew.Data;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -39,12 +40,15 @@ namespace Coldew.Core
 
         public List<string> SelectList { set; get; }
 
-        public override MetadataValue CreateMetadataValue(string value)
+        public override MetadataValue CreateMetadataValue(JToken value)
         {
             List<string> stringList = new List<string>();
-            if (!string.IsNullOrEmpty(value))
+            if (value != null)
             {
-                stringList = value.Split(',').ToList();
+                foreach (JToken str in value)
+                {
+                    stringList.Add(str.ToString());
+                }
             }
             return new StringListMetadataValue(stringList, this);
         }

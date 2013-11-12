@@ -40,12 +40,6 @@
 			{title: "流程名", width: 150, field:"liuchengMingcheng", render: function(row, args){
                 var span = $("<span></span>");
 				span.append("<a target='_blank' href='" + args.data.url + "'>"+args.value+"</a>");
-                var liuchengtu = $("<a href='#'><img src='/img/icon-liuchengtu.gif' title='流程图' /></a>")
-                    .click(function(){
-                        liuchengtuDialog.liuchengtuDialog("xianshi", args.data.liuchengtuUrl);
-                        return false;
-                    });
-                span.append(liuchengtu);
                 return span;
 			}},
 			{title: "步骤名", width: 80, field:"mingcheng"},

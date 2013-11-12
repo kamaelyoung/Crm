@@ -10,7 +10,6 @@ namespace Coldew.Core.Workflow
 {
     public class Xingdong
     {
-        LiuchengYinqing _yingqing;
 
         public Xingdong(int id, string guid, string code, string name, bool jinjide, DateTime kaishiShjian,
             DateTime? qiwangWanchengShijian, DateTime? wanchengShijian, string zhaiyao, XingdongZhuangtai zhuangtai, LiuchengYinqing yingqing)
@@ -26,8 +25,9 @@ namespace Coldew.Core.Workflow
             this._renwuList = new List<Renwu>();
             this.Zhuangtai = zhuangtai;
             this.Jinjide = jinjide;
-            this._yingqing = yingqing;
+            this.Yingqing = yingqing;
         }
+        public LiuchengYinqing Yingqing { protected set; get; }
 
         public int Id { protected set; get; }
 
@@ -84,7 +84,7 @@ namespace Coldew.Core.Workflow
                 model.Id = (int)NHibernateHelper.CurrentSession.Save(model);
 
                 Renwu xingdong = this.ChuangjianRenwu(model);
-                JianglaiRenwuZhipai jianglaiZhipai = this._yingqing.JianglaiZhipaiManager.GetJaingLaiZhipai(chuliren);
+                JianglaiRenwuZhipai jianglaiZhipai = this.Yingqing.JianglaiZhipaiManager.GetJaingLaiZhipai(chuliren);
                 if (jianglaiZhipai != null && Helper.InDateRange(this.KaishiShijian, jianglaiZhipai.KaishiShijian, jianglaiZhipai.JieshuShijian))
                 {
                     xingdong.Zhipai(jianglaiZhipai.Dailiren);
@@ -104,12 +104,19 @@ namespace Coldew.Core.Workflow
                 chuliJieguo = (RenwuChuliJieguo)model.ChuliJieguo.Value;
             }
             Renwu renwu = new Renwu(model.Id, model.Guid, yongyouren, chuliren, shijiChuliren,
-                model.ChuliShijian, (RenwuZhuangtai)model.Zhuangtai, chuliJieguo, model.ChuliShuoming, this._yingqing);
+                model.ChuliShijian, (RenwuZhuangtai)model.Zhuangtai, chuliJieguo, model.ChuliShuoming, this);
             List<Renwu> renwuList = this.RenwuList;
-            renwu.Xingdong = this;
             renwuList.Add(renwu);
+            renwu.Shanchuhou += new TEventHanlder<Renwu>(Renwu_Shanchuhou);
             this._renwuList = renwuList;
             return renwu;
+        }
+
+        void Renwu_Shanchuhou(Renwu args)
+        {
+            List<Renwu> renwuList = this._renwuList.ToList();
+            renwuList.Remove(args);
+            this._renwuList = renwuList;
         }
 
         public virtual event TEventHanlder<Xingdong> Wanchenghou;

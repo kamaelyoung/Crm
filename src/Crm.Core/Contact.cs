@@ -13,8 +13,8 @@ namespace Crm.Core
 {
     public class Contact : Metadata
     {
-        public Contact(string id, List<MetadataProperty> propertys, ColdewObject form, ContactDataService dataService)
-            : base(id, propertys, form, dataService)
+        public Contact(string id, List<MetadataProperty> propertys, ColdewObject form)
+            : base(id, propertys, form)
         {
 
         }

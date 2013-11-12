@@ -19,7 +19,7 @@ namespace LittleOrange.Core
         public override Coldew.Core.Metadata Create(string id, string propertysJson)
         {
             List<MetadataProperty> propertys = MetadataPropertyListHelper.GetPropertys(propertysJson, this._cobject);
-            GongsiKehu metadata = new GongsiKehu(id, propertys, this._cobject, this);
+            GongsiKehu metadata = new GongsiKehu(id, propertys, this._cobject);
             return metadata;
         }
     }

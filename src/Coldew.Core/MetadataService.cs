@@ -5,6 +5,8 @@ using System.Text;
 using Coldew.Api;
 using Coldew.Core.Organization;
 using Coldew.Core.Search;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Coldew.Core
 {
@@ -56,21 +58,21 @@ namespace Coldew.Core
                 .ToList();
         }
 
-        public MetadataInfo Create(string objectId, string opUserAccount, PropertySettingDictionary propertys)
+        public MetadataInfo Create(string objectId, string opUserAccount, string propertyJson)
         {
             ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User opUser = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
 
-            Metadata customer = form.MetadataManager.Create(opUser, propertys);
+            Metadata customer = form.MetadataManager.Create(opUser, JsonConvert.DeserializeObject<JObject>(propertyJson));
             return customer.Map();
         }
 
-        public void Modify(string objectId, string opUserAccount, string customerId, PropertySettingDictionary propertys)
+        public void Modify(string objectId, string opUserAccount, string customerId, string propertyJson)
         {
             ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
             User opUser = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
             Metadata metadata = form.MetadataManager.GetById(customerId);
-            metadata.SetPropertys(opUser, propertys);
+            metadata.SetPropertys(opUser, JsonConvert.DeserializeObject<JObject>(propertyJson));
         }
 
         public void Delete(string objectId, string opUserAccount, List<string> customerIds)

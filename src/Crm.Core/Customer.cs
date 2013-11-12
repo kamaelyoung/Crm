@@ -14,8 +14,8 @@ namespace Crm.Core
 {
     public class Customer : Metadata
     {
-        public Customer(string id, List<MetadataProperty> propertys, ColdewObject form, MetadataDataService dataService)
-            : base(id, propertys, form, dataService)
+        public Customer(string id, List<MetadataProperty> propertys, ColdewObject form)
+            : base(id, propertys, form)
         {
 
         }

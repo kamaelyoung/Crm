@@ -64,7 +64,7 @@
                 string metadataMenuClass = this.ViewBag.TopMenu == "Metadata" && formInfo.ID == Request["objectId"] ? "class='active'" : "";
                 <li @this.Html.Raw(metadataMenuClass)><a href="@this.Url.Action("Index", "Metadata", new { objectId = formInfo.ID })">@formInfo.Name</a></li>
             }
-                @*<li @this.Html.Raw(workflowMenuClass)><a href="@this.Url.Action("Daibande", "Workflow")">工作流</a></li>*@
+                <li @this.Html.Raw(workflowMenuClass)><a href="@this.Url.Action("Daibande", "Workflow")">工作流</a></li>
             @if (WebHelper.IsAdmin)
             {
                 <li @this.Html.Raw(setupMenuClass)><a href="@this.Url.Action("Index", "Setup")">管理</a></li>

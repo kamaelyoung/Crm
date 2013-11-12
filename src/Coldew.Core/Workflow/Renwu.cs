@@ -14,7 +14,7 @@ namespace Coldew.Core.Workflow
         LiuchengYinqing _yingqing;
 
         public Renwu(int id, string guid, User yongyouren, User chuliren, User shijiChuliren, 
-            DateTime? chuliShijian, RenwuZhuangtai zhuangtai, RenwuChuliJieguo? chuliJieguo, string chuliShuoming, LiuchengYinqing yingqing)
+            DateTime? chuliShijian, RenwuZhuangtai zhuangtai, RenwuChuliJieguo? chuliJieguo, string chuliShuoming, Xingdong xingdong)
         {
             this.Id = id;
             this.Guid = guid;
@@ -25,15 +25,25 @@ namespace Coldew.Core.Workflow
             this.ChuliShuoming = chuliShuoming;
             this.Yongyouren = yongyouren;
             this.ChuliJieguo = chuliJieguo;
-            this._yingqing = yingqing;
+            this._yingqing = xingdong.Yingqing;
+            this.Xingdong = xingdong;
             if (this.Chuliren != this.Yongyouren && this.Zhuangtai == RenwuZhuangtai.Chulizhong)
             {
 
                 this._yingqing.ZhipaiManager.TianjiaZhipaideRenwu(this.Yongyouren, this.Chuliren, this);
             }
+            this.Xingdong.Wanchenghou += new TEventHanlder<Workflow.Xingdong>(Xingdong_Wanchenghou);
         }
 
-        public Xingdong Xingdong { internal set; get; }
+        void Xingdong_Wanchenghou(Xingdong args)
+        {
+            if (this.Zhuangtai == RenwuZhuangtai.Chulizhong)
+            {
+                this.Shanchu();
+            }
+        }
+
+        public Xingdong Xingdong { private set; get; }
 
         public int Id { private set; get; }
 
@@ -53,7 +63,7 @@ namespace Coldew.Core.Workflow
 
         public RenwuChuliJieguo? ChuliJieguo { private set; get; }
 
-        public event TEventHanlder<Renwu> XingdongChulihou;
+        public event TEventHanlder<Renwu> Wanchenghou;
 
         private object _lock = new object();
 
@@ -78,12 +88,29 @@ namespace Coldew.Core.Workflow
                 this.ChuliShuoming = shuoming;
                 this.Zhuangtai = RenwuZhuangtai.Wanchengle;
 
-                if (this.XingdongChulihou != null)
+                if (this.Wanchenghou != null)
                 {
-                    this.XingdongChulihou(this);
+                    this.Wanchenghou(this);
                 }
 
                 this._yingqing.ZhipaiManager.YichuZhipaideRenwu(this.Yongyouren, this);
+            }
+        }
+
+        public event TEventHanlder<Renwu> Shanchuhou;
+
+        public virtual void Shanchu()
+        {
+            lock (_lock)
+            {
+                RenwuModel model = NHibernateHelper.CurrentSession.Get<RenwuModel>(this.Id);
+                NHibernateHelper.CurrentSession.Delete(model);
+                NHibernateHelper.CurrentSession.Flush();
+
+                if (this.Shanchuhou != null)
+                {
+                    this.Shanchuhou(this);
+                }
             }
         }
 

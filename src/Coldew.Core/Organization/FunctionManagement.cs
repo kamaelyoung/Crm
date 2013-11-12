@@ -34,7 +34,17 @@ namespace Coldew.Core.Organization
                         {
                             foreach (FunctionModel model in funcModels)
                             {
-                                Function function = new Function(model, this._orgMnger);
+                                List<Member> members = new List<Member>();
+                                string[] memberIds = model.OwnerMemberIds.Split(',');
+                                foreach(string memberId in memberIds)
+                                {
+                                    Member member = this._orgMnger.GetMember(memberId);
+                                    if(member != null)
+                                    {
+                                        members.Add(member);
+                                    }
+                                }
+                                Function function = new Function(model.ID, model.Name, model.Url, model.IconClass, model.Sort, members, this._orgMnger);
                                 this._funtions.Add(function.ID, function);
                             }
                         }
@@ -44,22 +54,24 @@ namespace Coldew.Core.Organization
             }
         }
 
-        public Function Create(FunctionCreateInfo createInfo)
+        public Function Create(string id, string name, string url, string iconClass, int sort, List<Member> members)
         {
             this.Load();
+            string memberIds = string.Join(",", members);
+            
             FunctionModel model = new FunctionModel
                 {
-                    IconClass = createInfo.IconClass,
-                    ID = createInfo.ID,
-                    Name = createInfo.Name,
-                    ParentId = createInfo.ParentId,
-                    Sort = createInfo.Sort,
-                    Url = createInfo.Url
+                    IconClass = iconClass,
+                    ID = id,
+                    Name = name,
+                    Sort = sort,
+                    Url = url,
+                    OwnerMemberIds = memberIds
                 };
             NHibernateHelper.CurrentSession.Save(model);
             NHibernateHelper.CurrentSession.Flush();
 
-            Function function = new Function(model, this._orgMnger);
+            Function function = new Function(id, name, url, iconClass, sort, members, this._orgMnger);
             this._funtions.Add(function.ID, function);
 
             return function;
@@ -83,35 +95,10 @@ namespace Coldew.Core.Organization
             return null;
         }
 
-        public List<Function> GetTopFunctions()
-        {
-            this.Load();
-            return this._funtions.Values
-                .Where(x => x.Parent == null && this.HasChildren(x))
-                .OrderBy(x => x.Sort)
-                .ToList();
-        }
-
-        private bool HasChildren(Function function)
-        {
-            List<Function> functions = this._orgMnger.FunctionManager.GetChildren(function);
-            if (functions != null && functions.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
         public List<Function> GetAllFunction()
         {
             this.Load();
-            return this._funtions.Values.Where(x => x.Parent != null).ToList();
-        }
-
-        public List<Function> GetChildren(Function parent)
-        {
-            this.Load();
-            return this._funtions.Values.Where(x => x.Parent == parent).ToList();
+            return this._funtions.Values.ToList();
         }
     }
 }

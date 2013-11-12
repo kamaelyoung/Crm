@@ -6,6 +6,7 @@ using Coldew.Api;
 using Coldew.Data;
 using Newtonsoft.Json;
 using Coldew.Api.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -76,14 +77,14 @@ namespace Coldew.Core
             return info;
         }
 
-        public override MetadataValue CreateMetadataValue(string value)
+        public override MetadataValue CreateMetadataValue(JToken value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value.ToString()))
             {
                 return new NumberMetadataValue(null, this);
             }
             decimal number;
-            if (decimal.TryParse(value, out number))
+            if (decimal.TryParse(value.ToString(), out number))
             {
                 return new NumberMetadataValue(number, this);
             }

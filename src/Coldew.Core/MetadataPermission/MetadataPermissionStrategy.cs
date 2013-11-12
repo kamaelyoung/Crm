@@ -12,63 +12,35 @@ namespace Coldew.Core.MetadataPermission
 {
     public class MetadataPermissionStrategy
     {
-        public MetadataPermissionStrategy(string objectId, List<MetadataMemberPermissionStrategyValue> permissionValues)
+        public MetadataPermissionStrategy(string id, string objectId, MetadataMember member, MetadataPermissionValue value, MetadataExpressionSearcher searcher)
         {
-            this.ObjectId = objectId;
-            this._values = permissionValues;
+            this.ID = id;
+            this.ObjectId = objectId; 
+            this.Member = member;
+            this.Value = value;
+            this.Searcher = searcher;
         }
+
+        public string ID { private set; get; }
 
         public string ObjectId { private set; get; }
 
-        private List<MetadataMemberPermissionStrategyValue> _values;
+        public MetadataPermissionValue Value { private set; get; }
 
-        public void SetValues(List<MetadataMemberPermissionStrategyValue> values)
+        public MetadataMember Member { private set; get; }
+
+        public MetadataExpressionSearcher Searcher { private set; get; }
+
+        public virtual bool HasValue(Metadata metadata, User user, MetadataPermissionValue value)
         {
-            if (values == null)
+            if (this.Searcher == null)
             {
-                throw new ArgumentNullException("values");
+                return this.Value.HasFlag(value) && this.Member.Contains(metadata, user);
             }
-
-            List<MemberPermissionStrategyValueJsonModel> valueModels = new List<MemberPermissionStrategyValueJsonModel>();
-            foreach (MetadataMemberPermissionStrategyValue permission in this._values)
+            else
             {
-                valueModels.Add(new MemberPermissionStrategyValueJsonModel { memberId = permission.Member.ID, value = (int)permission.Value, searchExpression = permission.Searcher.ToString() });
+                return this.Value.HasFlag(value) && this.Member.Contains(metadata, user) && this.Searcher.Accord(user, metadata);
             }
-
-            MetadataPermissionStrategyModel model = NHibernateHelper.CurrentSession.Get<MetadataPermissionStrategyModel>(this.ObjectId);
-            model.PermissionJson = JsonConvert.SerializeObject(valueModels);
-
-            NHibernateHelper.CurrentSession.Update(model);
-            NHibernateHelper.CurrentSession.Flush();
-
-            this._values = values;
-        }
-
-        public bool HasValue(Metadata metadata, User user, MetadataPermissionValue value)
-        {
-            foreach (MetadataMemberPermissionStrategyValue permission in this._values)
-            {
-                if (permission.Member.Contains(user) && permission.Value.HasFlag(value) && permission.Searcher.Accord(user, metadata))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public MetadataPermissionValue GetValue(Metadata metadata, User user)
-        {
-            int value = 0;
-
-            foreach (MetadataMemberPermissionStrategyValue permission in this._values)
-            {
-                if (permission.Member.Contains(user) && permission.Searcher.Accord(user, metadata))
-                {
-                    value = value | (int)permission.Value;
-                }
-            }
-
-            return (MetadataPermissionValue)value;
         }
     }
 }

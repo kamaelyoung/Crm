@@ -6,6 +6,7 @@ using Coldew.Api;
 using Coldew.Data;
 using Newtonsoft.Json;
 using Coldew.Api.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.Core
 {
@@ -53,14 +54,14 @@ namespace Coldew.Core
             this.OnModifyed(args);
         }
 
-        public override MetadataValue CreateMetadataValue(string value)
+        public override MetadataValue CreateMetadataValue(JToken value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value.ToString()))
             {
                 return new DateMetadataValue(null, this);
             }
             DateTime date;
-            if (DateTime.TryParse(value, out date))
+            if (DateTime.TryParse(value.ToString(), out date))
             {
                 return new DateMetadataValue(date, this);
             }

@@ -13,8 +13,8 @@ namespace Crm.Core
 {
     public class Activity : Metadata
     {
-        public Activity(string id, List<MetadataProperty> propertys, ColdewObject cobject, ActivityDataService dataService)
-            : base(id, propertys, cobject, dataService)
+        public Activity(string id, List<MetadataProperty> propertys, ColdewObject cobject)
+            : base(id, propertys, cobject)
         {
 
             

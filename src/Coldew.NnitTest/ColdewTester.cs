@@ -8,6 +8,7 @@ using Coldew.Core;
 using Coldew.Api;
 using Coldew.Core.MetadataPermission;
 using Coldew.Core.Search;
+using Newtonsoft.Json.Linq;
 
 namespace Coldew.NnitTest
 {
@@ -30,7 +31,7 @@ namespace Coldew.NnitTest
             Field modifiedUserField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, "修改人", "", true, false, false, 18, true);
             Field modifiedTimeField = cobject.CreateDateField(ColdewObjectCode.FIELD_NAME_MODIFIED_TIME, "修改时间", "", false, false, false, 19, true);
 
-            PropertySettingDictionary dictionary = new PropertySettingDictionary();
+            JObject dictionary = new JObject();
             dictionary.Add(nameField.Code, "name1");
             dictionary.Add(diquField.Code, "天河区");
             dictionary.Add(salesUsersField.Code, "user5");
@@ -38,9 +39,8 @@ namespace Coldew.NnitTest
 
             Assert.IsFalse(metadata.CanPreview(this.User2));
 
-            List<MetadataMemberPermissionValue> entityPermissionValues = new List<MetadataMemberPermissionValue>();
-            entityPermissionValues.Add(new MetadataMemberPermissionValue(this.User2, MetadataPermissionValue.View));
-            cobject.PermissionManager.EntityPermissionManager.SetPermission(metadata.ID, entityPermissionValues);
+            List<MetadataPermission> entityPermissionValues = new List<MetadataPermission>();
+            cobject.PermissionManager.EntityPermissionManager.Create(metadata.ID, new MetadataOrgMember(this.User2), MetadataPermissionValue.View);
 
             Assert.IsTrue(metadata.CanPreview(this.User2));
 
@@ -48,13 +48,9 @@ namespace Coldew.NnitTest
             Assert.IsFalse(metadata.CanPreview(this.User4));
             Assert.IsFalse(metadata.CanPreview(this.User5));
 
-            List<MetadataMemberPermissionStrategyValue> permissionStrategyValues = new List<MetadataMemberPermissionStrategyValue>();
-            MetadataExpressionSearcher searher1 = MetadataExpressionSearcher.Parse("{diqu: '天河区'}", cobject);
-            permissionStrategyValues.Add(new MetadataMemberPermissionStrategyValue(this.User4, MetadataPermissionValue.View, searher1));
-            MetadataExpressionSearcher searher2 = MetadataExpressionSearcher.Parse("{userField: '${operationUser}'}", cobject);
-            permissionStrategyValues.Add(new MetadataMemberPermissionStrategyValue(this.Org.Everyone, MetadataPermissionValue.View, searher2));
-            cobject.PermissionManager.PermissionStrategyManager.SetPermission(cobject.ID, permissionStrategyValues);
-
+            cobject.PermissionManager.PermissionStrategyManager.Create(cobject.ID, new MetadataOrgMember(this.User4), MetadataPermissionValue.View, "{diqu: '天河区'}");
+            cobject.PermissionManager.PermissionStrategyManager.Create(cobject.ID, new MetadataFieldMember("userField"), MetadataPermissionValue.View, null);
+            
             Assert.IsTrue(metadata.CanPreview(this.User4));
             Assert.IsTrue(metadata.CanPreview(this.User5));
         }

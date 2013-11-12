@@ -11,7 +11,7 @@ namespace Coldew.Api
 
         ColdewObjectInfo GetFormByCode(string objectCode);
 
-        List<ColdewObjectInfo> GetForms();
+        List<ColdewObjectInfo> GetForms(string userAccount);
 
         FieldInfo GetField(int fieldId);
 

@@ -24,6 +24,7 @@ namespace Coldew.Core
             return new PropertyInfo
             {
                 Code = this.Field.Code,
+                Type = this.Field.Type,
                 ShowValue = this.Value.ShowValue,
                 EditValue = this.Value.EditValue
             };

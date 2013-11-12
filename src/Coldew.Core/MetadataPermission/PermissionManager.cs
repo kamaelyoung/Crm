@@ -24,14 +24,11 @@ namespace Coldew.Core.MetadataPermission
 
         public bool HasValue(User user, MetadataPermissionValue value, Metadata metadata)
         {
-            MetadataEntityPermission entityPermission = this.EntityPermissionManager.GetPermission(metadata.ID);
-            if (entityPermission != null && entityPermission.HasValue(user, value))
+            if (this.EntityPermissionManager.HasValue(user, value, metadata))
             {
                 return true;
             }
-
-            MetadataPermissionStrategy strategy = this.PermissionStrategyManager.GetPermission(this.ColdewObject.ID);
-            if (strategy != null && strategy.HasValue(metadata, user, value))
+            if (this.PermissionStrategyManager.HasValue(this.ColdewObject.ID, user, value, metadata))
             {
                 return true;
             }
@@ -40,11 +37,9 @@ namespace Coldew.Core.MetadataPermission
 
         public MetadataPermissionValue GetValue(User user, Metadata metadata)
         {
-            MetadataEntityPermission entityPermission = this.EntityPermissionManager.GetPermission(metadata.ID);
-            MetadataPermissionValue entityValue = entityPermission.GetValue(user);
+            MetadataPermissionValue entityValue = this.EntityPermissionManager.GetPermission(user, metadata);
 
-            MetadataPermissionStrategy strategy = this.PermissionStrategyManager.GetPermission(this.ColdewObject.ID);
-            MetadataPermissionValue strategyValue = strategy.GetValue(metadata, user);
+            MetadataPermissionValue strategyValue = this.PermissionStrategyManager.GetPermission(this.ColdewObject.ID, user, metadata);
 
             return (MetadataPermissionValue)((int)entityValue | (int)strategyValue);
         }

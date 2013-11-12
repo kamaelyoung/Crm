@@ -15,5 +15,10 @@ namespace Coldew.Api
         public string Name { set; get; }
 
         public List<FieldInfo> Fields { set; get; }
+
+        public FieldInfo GetField(string code)
+        {
+            return this.Fields.Find(x => x.Code == code);
+        }
     }
 }

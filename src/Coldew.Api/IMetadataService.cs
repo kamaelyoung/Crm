@@ -15,9 +15,9 @@ namespace Coldew.Api
 
         List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
 
-        MetadataInfo Create(string objectId, string opUserAccount, PropertySettingDictionary propertys);
+        MetadataInfo Create(string objectId, string opUserAccount, string propertyJson);
 
-        void Modify(string objectId, string opUserAccount, string customerId, PropertySettingDictionary propertys);
+        void Modify(string objectId, string opUserAccount, string customerId, string propertyJson);
 
         void Delete(string objectId, string opUserAccount, List<string> customerIds);
 

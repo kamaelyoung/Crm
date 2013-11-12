@@ -12,8 +12,8 @@ namespace LittleOrange.Core
 {
     public class GongsiKehu : Metadata
     {
-        public GongsiKehu(string id, List<MetadataProperty> propertys, ColdewObject cobject, MetadataDataService dataService)
-            : base(id, propertys, cobject, dataService)
+        public GongsiKehu(string id, List<MetadataProperty> propertys, ColdewObject cobject)
+            : base(id, propertys, cobject)
         {
 
         }

@@ -17,9 +17,9 @@ namespace LittleOrange.Core
 
         }
 
-        protected override MetadataManager CreateMetadataManager(ColdewManager coldewManager)
+        protected override MetadataDataService CreateDataService()
         {
-            return new MetadataManager(this, new TModelMetadataDataService<ZhiranrenModel>(this), coldewManager.OrgManager);
+            return new TModelMetadataDataService<ZhiranrenModel>(this);
         }
     }
 }

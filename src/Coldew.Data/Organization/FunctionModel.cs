@@ -20,8 +20,8 @@ namespace Coldew.Data.Organization
 
         public virtual string IconClass { set; get; }
 
-        public virtual string ParentId { set; get; }
-
         public virtual int Sort { set; get; }
+
+        public virtual string OwnerMemberIds { set; get; }
     }
 }

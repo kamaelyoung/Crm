@@ -21,7 +21,7 @@ namespace Coldew.Website.Controllers
 
         public ActionResult Dialog()
         {
-            return View();
+            return this.PartialView();
         }
 
         public ActionResult DingjiBumen()
@@ -60,7 +60,6 @@ namespace Coldew.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                int count;
                 UserFilterInfo filterInfo = new UserFilterInfo();
                 filterInfo.AccountOrName = zhanghaoHuoXingming;
                 filterInfo.OrganizationId = bumenId;

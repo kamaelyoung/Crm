@@ -223,60 +223,6 @@ namespace Crm.UnitTest.Management
             Assert.AreEqual(SignInResult.AccountNotFound, result);
         }
 
-        [Test]
-        public void FunctionPermissionManagerTest()
-        {
-            FunctionCreateInfo createInfo = new FunctionCreateInfo();
-            createInfo.ID = Guid.NewGuid().ToString();
-            createInfo.Name = Guid.NewGuid().ToString();
-            Function topFunction = this.Org.FunctionManager.Create(createInfo);
-            Assert.IsNotNull(topFunction);
 
-            FunctionCreateInfo createInfo1 = new FunctionCreateInfo();
-            createInfo1.ID = Guid.NewGuid().ToString();
-            createInfo1.Name = Guid.NewGuid().ToString();
-            createInfo1.ParentId = topFunction.ID;
-            Function function = this.Org.FunctionManager.Create(createInfo1);
-
-            List<Function> functions = this.Org.FunctionManager.GetChildren(topFunction);
-            Assert.AreEqual(1, functions.Count);
-            Assert.AreEqual(function, functions[0]);
-
-            Function function1 = this.Org.FunctionManager.GetFunctionInfoById(createInfo1.ID);
-            Assert.AreEqual(function, function1);
-        }
-
-        [Test]
-        public void FunctionPermissionTest()
-        {
-            FunctionCreateInfo createInfo = new FunctionCreateInfo();
-            createInfo.ID = Guid.NewGuid().ToString();
-            createInfo.Name = Guid.NewGuid().ToString();
-            Function topFunction = this.Org.FunctionManager.Create(createInfo);
-            Assert.IsNotNull(topFunction);
-
-            FunctionCreateInfo createInfo1 = new FunctionCreateInfo();
-            createInfo1.ID = Guid.NewGuid().ToString();
-            createInfo1.Name = Guid.NewGuid().ToString();
-            createInfo1.ParentId = topFunction.ID;
-            Function function1 = this.Org.FunctionManager.Create(createInfo1);
-
-            FunctionCreateInfo createInfo2 = new FunctionCreateInfo();
-            createInfo2.ID = Guid.NewGuid().ToString();
-            createInfo2.Name = Guid.NewGuid().ToString();
-            createInfo2.ParentId = topFunction.ID;
-            Function function2 = this.Org.FunctionManager.Create(createInfo2);
-
-            User testUser1 = this.Org.UserManager.Create(this.Admin, new UserCreateInfo { Account = Guid.NewGuid().ToString(), Password = "edoc2", Name = Guid.NewGuid().ToString(), MainPositionId = this.Org.PositionManager.TopPosition.ID });
-            User testUser2 = this.Org.UserManager.Create(this.Admin, new UserCreateInfo { Account = Guid.NewGuid().ToString(), Password = "edoc2", Name = Guid.NewGuid().ToString(), MainPositionId = this.Org.PositionManager.TopPosition.ID });
-            Group group1 = this.Org.GroupManager.Create(this.Admin, new GroupCreateInfo { Name = Guid.NewGuid().ToString(),  });
-            group1.AddUser(this.Admin, testUser2);
-
-            function1.Add(testUser1, true);
-            function1.Add(group1, true);
-
-            Assert.IsTrue(function1.HasPermission(testUser1));
-            Assert.IsTrue(function1.HasPermission(testUser2));
-        }
     }
 }

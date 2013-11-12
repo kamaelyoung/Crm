@@ -17,23 +17,7 @@
         }
         FieldInfo field = sectionInfo.Inputs[count].Field;
     <div class="span6">
-    <div class="control-group">
-        <label class="control-label" >
-        @if (string.IsNullOrEmpty(field.Tip))
-        {
-            @field.Name
-        }
-        else{
-            @string.Format("{0}({1})", field.Name, field.Tip)
-        }
-        @if (field.Required) { 
-            <font style="color: Red">*</font>
-        }
-        </label>
-        <div class="controls">
-            @crmInput.Input(field)
-        </div>
-    </div>
+    @crmInput.Input(field)
     </div>
         if (count % sectionInfo.ColumnCount == 1 ||
             count == sectionInfo.Inputs.Count - 1)

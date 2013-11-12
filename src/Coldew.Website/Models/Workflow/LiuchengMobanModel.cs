@@ -24,7 +24,7 @@ namespace Coldew.Website.Models
             {
                 faqiUrl = string.Format("{0}?mobanId={1}", transferUrl, this.id);
             }
-            this.faqiLink = string.Format("<a target='_blank' href='{0}'>{1}</a>", faqiUrl, this.mingcheng);
+            this.faqiLink = string.Format("<a href='{0}'>{1}</a>", faqiUrl, this.mingcheng);
             this.shuoming = liucheng.Shuoming;
         }
 

@@ -11,6 +11,19 @@ namespace Coldew.Website
 {
     public class ColdewInput
     {
+        private const string RequirdControlGroupTemplate = @"<div class='control-group'>
+                    <label class='control-label' >{0}<font style='color: Red'>*</font></label>
+                    <div class='controls'>
+                        {1}
+                    </div>
+                </div>";
+        private const string OptionControlGroupTemplate = @"<div class='control-group'>
+                    <label class='control-label' >{0}</label>
+                    <div class='controls'>
+                        {1}
+                    </div>
+                </div>";
+
         bool _setDefaultValue;
 
         public ColdewInput(bool setDefaultValue)
@@ -47,6 +60,20 @@ namespace Coldew.Website
             throw new ArgumentException("field.Type:" + field.Type.ToString());
         }
 
+        private MvcHtmlString ControlGroup(FieldInfo field, string inputHtml)
+        {
+            string html = "";
+            if (field.Required)
+            {
+                html = string.Format(RequirdControlGroupTemplate, field.Name, inputHtml);
+            }
+            else
+            {
+                html = string.Format(OptionControlGroupTemplate, field.Name, inputHtml);
+            }
+            return new MvcHtmlString(html);
+        }
+
         public MvcHtmlString String(StringFieldInfo field)
         {
             string dataRequiredAttr = "";
@@ -58,7 +85,8 @@ namespace Coldew.Website
             {
                 defualtValue = field.DefaultValue;
             }
-            return new MvcHtmlString(string.Format("<input type='text' class='input-large' name='{0}' {1} value='{2}'/>", field.Code, dataRequiredAttr, defualtValue));
+            string inputHtml = string.Format("<input type='text' class='input-large' name='{0}' {1} value='{2}'/>", field.Code, dataRequiredAttr, defualtValue);
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString Text(StringFieldInfo field)
@@ -73,8 +101,8 @@ namespace Coldew.Website
             {
                 defualtValue = field.DefaultValue;
             }
-
-            return new MvcHtmlString(string.Format("<textarea class='input-large' name='{0}' {1} rows='3' >{2}</textarea>", field.Code, dataRequiredAttr, defualtValue));
+            string inputHtml = string.Format("<textarea class='input-large' name='{0}' {1} rows='3' >{2}</textarea>", field.Code, dataRequiredAttr, defualtValue);
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString DropdownList(ListFieldInfo field)
@@ -98,7 +126,8 @@ namespace Coldew.Website
                     itemSb.AppendFormat("<option>{0}</option>", item);
                 }
             }
-            return new MvcHtmlString(string.Format(template, field.Code, dataRequiredAttr, itemSb.ToString()));
+            string inputHtml = string.Format(template, field.Code, dataRequiredAttr, itemSb.ToString());
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString RadioList(ListFieldInfo field)
@@ -123,7 +152,9 @@ namespace Coldew.Website
                 }
                 sb.Append("</label>");
             }
-            return new MvcHtmlString(sb.ToString());
+
+            string inputHtml = sb.ToString();
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString CheckboxList(CheckboxFieldInfo field)
@@ -148,7 +179,9 @@ namespace Coldew.Website
                 }
                 sb.Append("</label>");
             }
-            return new MvcHtmlString(sb.ToString());
+
+            string inputHtml = sb.ToString();
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString Number(NumberFieldInfo field)
@@ -164,7 +197,8 @@ namespace Coldew.Website
                 defualtValue = field.DefaultValue.ToString();
             }
 
-            return new MvcHtmlString(string.Format("<input type='text' class='input-large' name='{0}' {1} value='{2}'/>", field.Code, dataRequiredAttr, defualtValue));
+            string inputHtml = string.Format("<input type='text' class='input-large' name='{0}' {1} value='{2}'/>", field.Code, dataRequiredAttr, defualtValue);
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString Date(DateFieldInfo field)
@@ -180,7 +214,8 @@ namespace Coldew.Website
                 defualtValue = field.DefaultValue;
             }
 
-            return new MvcHtmlString(string.Format("<input type='text' class='input-large date' name='{0}' {1} value='{2}'/>", field.Code, dataRequiredAttr, defualtValue));
+            string inputHtml = string.Format("<input type='text' class='input-large date' name='{0}' {1} value='{2}'/>", field.Code, dataRequiredAttr, defualtValue);
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString User(UserFieldInfo field)
@@ -205,7 +240,8 @@ namespace Coldew.Website
                 }
             }
 
-            return new MvcHtmlString(sb.ToString());
+            string inputHtml = sb.ToString();
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString UserList(UserListFieldInfo field)
@@ -230,7 +266,8 @@ namespace Coldew.Website
                 }
             }
 
-            return new MvcHtmlString(sb.ToString());
+            string inputHtml = sb.ToString();
+            return this.ControlGroup(field, inputHtml);
         }
 
         public MvcHtmlString Metadata(MetadataFieldInfo field)
@@ -239,7 +276,9 @@ namespace Coldew.Website
             <input type='text' readonly='readonly' class='input-large txtName'/>
             <input class='txtId' type='hidden' name='{2}'/>
             <button class='btn btnSelect'>选择</button> </div>";
-            return new MvcHtmlString(string.Format(template, field.ValueFormId, field.ValueFormName, field.Code));
+
+            string inputHtml = string.Format(template, field.ValueFormId, field.ValueFormName, field.Code);
+            return this.ControlGroup(field, inputHtml);
         }
     }
 }
