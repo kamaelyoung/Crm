@@ -7,7 +7,7 @@ namespace Coldew.Website.Models
 {
     public class GridViweColumnSetupModel
     {
-        public int fieldId;
+        public string fieldCode;
 
         public int width;
     }

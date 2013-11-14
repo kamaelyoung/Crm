@@ -9,7 +9,5 @@ namespace Coldew.Api.UI
     public class InputInfo
     {
         public FieldInfo Field { set; get; }
-
-        public int Index { set; get; }
     }
 }

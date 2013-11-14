@@ -17,7 +17,7 @@ namespace Coldew.Website.Models
             this.max = field.Max;
             this.min = field.Min;
             this.precision = field.Precision;
-            this.index = field.Index;
+            
         }
 
         public int id;

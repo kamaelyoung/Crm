@@ -29,10 +29,10 @@
                 <tbody>
                     @foreach (ViewSetupFieldModel field in this.ViewBag.fields)
                     {
-                        <tr data-field-id="@field.fieldId">
+                        <tr>
                             <td><label class='checkbox'><input type='checkbox' @field.checkedAttr />@field.name</label></td>
                             <td><input name='width' value="@field.width"/></td>
-                            <input type="hidden" name="fieldId" value="@field.fieldId" />
+                            <input type="hidden" name="fieldCode" value="@field.code" />
                         </tr>
                     }
                 </tbody>

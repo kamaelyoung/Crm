@@ -256,7 +256,7 @@ namespace Coldew.Website
 
             ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
             int i = 0;
-            foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields.Where(x => x.CanInput))
+            foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)
             {
                 row.CreateCell(i).SetCellValue(filed.Name);
                 i++;
@@ -297,7 +297,7 @@ namespace Coldew.Website
                 foreach (DataRow customerRow in customerTable.Rows)
                 {
                     JObject importModel = new JObject();
-                    foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields.Where(x => x.CanInput))
+                    foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)
                     {
                         if (customerRow[filed.Name] != null)
                         {
@@ -317,7 +317,7 @@ namespace Coldew.Website
         public static List<DataGridColumnModel> GetImportColumns(string objectId)
         {
             ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
-            List<Coldew.Api.FieldInfo> fields = coldewObject.Fields.Where(x => x.CanInput).ToList();
+            List<Coldew.Api.FieldInfo> fields = coldewObject.Fields.ToList();
 
             List<DataGridColumnModel> columns = new List<DataGridColumnModel>();
             columns.Add(new DataGridColumnModel { field = "importMessage", title = "导入结果", width = 80 });

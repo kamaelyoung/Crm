@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Coldew.Data;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Coldew.Core.DataServices
 {
@@ -58,7 +60,8 @@ namespace Coldew.Core.DataServices
 
         public virtual Metadata Create(string id, string propertysJson)
         {
-            List<MetadataProperty> propertys = MetadataPropertyListHelper.GetPropertys(propertysJson, this._cobject);
+            JObject jobject = JsonConvert.DeserializeObject<JObject>(propertysJson);
+            List<MetadataProperty> propertys = MetadataPropertyListHelper.MapPropertys(jobject, this._cobject);
             Metadata metadata = new Metadata(id, propertys, this._cobject);
             return metadata;
         }

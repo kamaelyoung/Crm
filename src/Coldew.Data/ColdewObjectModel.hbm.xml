@@ -7,6 +7,8 @@
             </generator>
         </id>
         <property name="Code" type="string" column="object_code"></property>
+        <property name="Type" type="int" column="object_type"></property>
         <property name="Name" type="string" column="object_name"></property>
+        <property name="IsSystem" type="bool" column="object_isSystem"></property>
     </class>
 </hibernate-mapping>

@@ -18,7 +18,7 @@ namespace Coldew.Core
 
         public ColdewObjectInfo GetFormById(string objectId)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
             if (form != null)
             {
                 return form.Map();
@@ -28,7 +28,7 @@ namespace Coldew.Core
 
         public ColdewObjectInfo GetFormByCode(string objectCode)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormByCode(objectCode);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectByCode(objectCode);
             if (form != null)
             {
                 return form.Map();
@@ -39,94 +39,102 @@ namespace Coldew.Core
         public List<ColdewObjectInfo> GetForms(string userAccount)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
-            List<ColdewObject> forms = this._coldewManager.ObjectManager.GetForms();
-            return forms.Where(x => {
-                Function function = this._coldewManager.OrgManager.FunctionManager.GetFunctionInfoById(x.ID);
-                if (function == null)
-                {
-                    return true;
-                }
-                return function.HasPermission(user);
+            List<ColdewObject> objects = this._coldewManager.ObjectManager.GetObjects();
+            return objects.Where(x => {
+                return x.ObjectPermission.HasValue(user, ObjectPermissionValue.View);
             }).Select(x => x.Map()).ToList();
         }
 
-        public FieldInfo CreateStringField(string objectId, string name, bool required, string defaultValue, int index)
+        public ObjectPermissionValue GetobjectPermissionValue(string objectId, string account)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            Field field = form.CreateStringField(null, name, "", required, false, true, index, defaultValue);
+            User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
+            ColdewObject cobject = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            if (cobject != null)
+            {
+                ObjectPermissionValue permValue = cobject.ObjectPermission.GetPermission(user);
+                return permValue;
+            }
+            return ObjectPermissionValue.None;
+        }
+
+        public FieldInfo CreateStringField(string objectId, string name, string code, bool required, string defaultValue)
+        {
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            
+            Field field = form.CreateStringField(new FieldCreateBaseInfo(code, name, "", required, false),  defaultValue);
             return field.Map();
         }
 
-        public FieldInfo CreateTextField(string objectId, string name, bool required, string defaultValue, int index)
+        public FieldInfo CreateTextField(string objectId, string name, string code, bool required, string defaultValue)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            Field field = form.CreateTextField(null, name, "", required, false, true, index, defaultValue);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            Field field = form.CreateTextField(new FieldCreateBaseInfo(code, name, "", required, false),  defaultValue);
             return field.Map();
         }
 
-        public FieldInfo CreateDropdownField(string objectId, string name, bool required, string defaultValue, List<string> selectList, int index)
+        public FieldInfo CreateDropdownField(string objectId, string name, string code, bool required, string defaultValue, List<string> selectList)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            Field field = form.CreateDropdownField(null, name, "", required, false, true, index, defaultValue, selectList);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            Field field = form.CreateDropdownField(new FieldCreateBaseInfo(code, name, "", required, false),  defaultValue, selectList);
             return field.Map();
         }
 
-        public FieldInfo CreateRadioListField(string objectId, string name, bool required, string defaultValue, List<string> selectList, int index)
+        public FieldInfo CreateRadioListField(string objectId, string name, string code, bool required, string defaultValue, List<string> selectList)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            Field field = form.CreateRadioListField(null, name, "", required, false, true, index, defaultValue, selectList);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            Field field = form.CreateRadioListField(new FieldCreateBaseInfo(code, name, "", required, false),  defaultValue, selectList);
             return field.Map();
         }
 
-        public FieldInfo CreateCheckboxListField(string objectId, string name, bool required, List<string> defaultValues, List<string> selectList, int index)
+        public FieldInfo CreateCheckboxListField(string objectId, string name, string code, bool required, List<string> defaultValues, List<string> selectList)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            Field field = form.CreateCheckboxListField(null, name, "", required, false, true, index, defaultValues, selectList);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            Field field = form.CreateCheckboxListField(new FieldCreateBaseInfo(code, name, "", required, false),  defaultValues, selectList);
             return field.Map();
         }
 
-        public void ModifyStringField(int fieldId, string name, bool required, string defaultValue, int index)
+        public void ModifyStringField(int fieldId, string name, bool required, string defaultValue)
         {
             StringField field = this._coldewManager.ObjectManager.GetFieldById(fieldId) as StringField;
             if (field != null)
             {
-                field.Modify(name, required, defaultValue, index);
+                field.Modify(name, required, defaultValue);
             }
         }
 
-        public void ModifyTextField(int fieldId, string name, bool required, string defaultValue, int index)
+        public void ModifyTextField(int fieldId, string name, bool required, string defaultValue)
         {
             TextField field = this._coldewManager.ObjectManager.GetFieldById(fieldId) as TextField;
             if (field != null)
             {
-                field.Modify(name, required, defaultValue, index);
+                field.Modify(name, required, defaultValue);
             }
         }
 
-        public void ModifyDropdownField(int fieldId, string name, bool required, string defaultValue, List<string> selectList, int index)
+        public void ModifyDropdownField(int fieldId, string name, bool required, string defaultValue, List<string> selectList)
         {
             DropdownField field = this._coldewManager.ObjectManager.GetFieldById(fieldId) as DropdownField;
             if (field != null)
             {
-                field.Modify(name, required, defaultValue, selectList, index);
+                field.Modify(name, required, defaultValue, selectList);
             }
         }
 
-        public void ModifyRadioListField(int fieldId, string name, bool required, string defaultValue, List<string> selectList, int index)
+        public void ModifyRadioListField(int fieldId, string name, bool required, string defaultValue, List<string> selectList)
         {
             RadioListField field = this._coldewManager.ObjectManager.GetFieldById(fieldId) as RadioListField;
             if (field != null)
             {
-                field.Modify(name, required, defaultValue, selectList, index);
+                field.Modify(name, required, defaultValue, selectList);
             }
         }
 
-        public void ModifyCheckboxListField(int fieldId, string name, bool required, List<string> defaultValues, List<string> selectList, int index)
+        public void ModifyCheckboxListField(int fieldId, string name, bool required, List<string> defaultValues, List<string> selectList)
         {
             CheckboxListField field = this._coldewManager.ObjectManager.GetFieldById(fieldId) as CheckboxListField;
             if (field != null)
             {
-                field.Modify(name, required, defaultValues, selectList, index);
+                field.Modify(name, required, defaultValues, selectList);
             }
         }
 
@@ -150,45 +158,35 @@ namespace Coldew.Core
             }
         }
 
-        public int GetFieldMaxIndex(string objectId)
+        public FieldInfo CreateDateField(string objectId, string name, string code, bool required, bool defaultValueIsToday)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            if (form != null)
-            {
-                return form.GetFieldMaxIndex();
-            }
-            return 0;
-        }
-
-        public FieldInfo CreateDateField(string objectId, string name, bool required, bool defaultValueIsToday, int index)
-        {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            Field field = form.CreateDateField(null, name, "", required, false, true, index, defaultValueIsToday);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            Field field = form.CreateDateField(new FieldCreateBaseInfo(code, name, "", required, false),  defaultValueIsToday);
             return field.Map();
         }
 
-        public FieldInfo CreateNumberField(string objectId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        public FieldInfo CreateNumberField(string objectId, string name, string code, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision)
         {
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
-            Field field = form.CreateNumberField(null, name, "", required, false, true, index, defaultValue, max, min, precision);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
+            Field field = form.CreateNumberField(new FieldCreateBaseInfo(code, name, "", required, false),  defaultValue, max, min, precision);
             return field.Map();
         }
 
-        public void ModifyDateField(int fieldId, string name, bool required, bool defaultValueIsToday, int index)
+        public void ModifyDateField(int fieldId, string name, bool required, bool defaultValueIsToday)
         {
             DateField field = this._coldewManager.ObjectManager.GetFieldById(fieldId) as DateField;
             if(field != null)
             {
-                field.Modify(name, required, defaultValueIsToday, index);
+                field.Modify(name, required, defaultValueIsToday);
             }
         }
 
-        public void ModifyNumberField(int fieldId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index)
+        public void ModifyNumberField(int fieldId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision)
         {
             NumberField field = this._coldewManager.ObjectManager.GetFieldById(fieldId) as NumberField;
             if (field != null)
             {
-                field.Modify(name, required, defaultValue, max, min, precision, index);
+                field.Modify(name, required, defaultValue, max, min, precision);
             }
         }
     }

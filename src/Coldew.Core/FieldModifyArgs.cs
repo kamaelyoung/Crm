@@ -9,6 +9,5 @@ namespace Coldew.Core
     {
         public string Name{set;get;} 
         public bool Required{set;get;} 
-        public int Index{set;get;}
     }
 }

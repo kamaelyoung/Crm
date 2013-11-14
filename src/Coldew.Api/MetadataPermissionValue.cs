@@ -9,11 +9,9 @@ namespace Coldew.Api
     public enum MetadataPermissionValue
     {
         None = 0,
-        Create = 1,
-        Modify = 2,
-        View = 4,
-        Delete = 8,
-        Export = 16,
-        Manage = 32
+        View = 1,
+        Modify = 1 << 1,
+        Delete = 1 << 2,
+        All = MetadataPermissionValue.Modify | MetadataPermissionValue.View | MetadataPermissionValue.Delete
     }
 }

@@ -6,6 +6,7 @@
             <generator class="uuid.hex">
             </generator>
         </id>
+        <property name="ObjectId" type="String" column="object_id"></property>
         <property name="MetadataId" type="String" column="metadata_id"></property>
         <property name="Member" type="String" column="perm_member"></property>
         <property name="Value" type="int" column="perm_value"></property>

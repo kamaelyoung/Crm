@@ -18,11 +18,6 @@ namespace Coldew.Core
             this.DefaultValueIsToday = defaultValueIsToday;
         }
 
-        public override string Type
-        {
-            get { return FieldType.Date; }
-        }
-
         public override string TypeName
         {
             get { return "日期"; }
@@ -30,16 +25,15 @@ namespace Coldew.Core
 
         public bool DefaultValueIsToday { set; get; }
 
-        public void Modify(string name, bool required, bool defaultValueIsToday, int index)
+        public void Modify(string name, bool required, bool defaultValueIsToday)
         {
-            FieldModifyArgs args = new FieldModifyArgs { Name = name, Required = required, Index = index };
+            FieldModifyArgs args = new FieldModifyArgs { Name = name, Required = required};
 
             this.OnModifying(args);
 
             FieldModel model = NHibernateHelper.CurrentSession.Get<FieldModel>(this.ID);
             model.Name = name;
             model.Required = required;
-            model.Index = index;
             DateFieldConfigModel configModel = new DateFieldConfigModel { DefaultValueIsToday = defaultValueIsToday };
             model.Config = JsonConvert.SerializeObject(configModel);
 
@@ -47,7 +41,6 @@ namespace Coldew.Core
             NHibernateHelper.CurrentSession.Flush();
 
             this.Name = name;
-            this.Index = index;
             this.Required = required;
             this.DefaultValueIsToday = defaultValueIsToday;
 

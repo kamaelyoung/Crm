@@ -17,11 +17,6 @@ namespace Coldew.Core
 
         public ColdewObject ValueForm { private set;get;}
 
-        public override string Type
-        {
-            get { return FieldType.Metadata; }
-        }
-
         public override string TypeName
         {
             get { return this.ValueForm.Name; }

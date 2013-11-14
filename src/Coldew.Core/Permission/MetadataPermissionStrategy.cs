@@ -8,7 +8,7 @@ using Coldew.Core.Organization;
 using Coldew.Data;
 using Newtonsoft.Json;
 
-namespace Coldew.Core.MetadataPermission
+namespace Coldew.Core.Permission
 {
     public class MetadataPermissionStrategy
     {

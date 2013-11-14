@@ -62,10 +62,11 @@ namespace Coldew.Core
             try
             {
                 this.OnCreating(creator, jobject);
-                jobject.Add(ColdewObjectCode.FIELD_NAME_CREATOR, creator.Account);
-                jobject.Add(ColdewObjectCode.FIELD_NAME_CREATE_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
-                jobject.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, creator.Account);
-                jobject.Add(ColdewObjectCode.FIELD_NAME_MODIFIED_TIME, DateTime.Now.ToString("yyyy-MM-dd"));
+                
+                jobject.Add(this.ColdewObject.CreatedUserField.Code , creator.Account);
+                jobject.Add(this.ColdewObject.CreatedTimeField.Code, DateTime.Now);
+                jobject.Add(this.ColdewObject.ModifiedUserField.Code, creator.Account);
+                jobject.Add(this.ColdewObject.ModifiedTimeField.Code, DateTime.Now);
 
                 List<Field> requiredFields = this.ColdewObject.GetRequiredFields();
                 foreach (Field field in requiredFields)

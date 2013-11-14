@@ -28,7 +28,7 @@ namespace Coldew.Core.UI
             {
                 if (this._object == null)
                 {
-                    this._object = this._objectManager.GetFormByCode(this._objectCode);
+                    this._object = this._objectManager.GetObjectByCode(this._objectCode);
                 }
                 return _object;
             }

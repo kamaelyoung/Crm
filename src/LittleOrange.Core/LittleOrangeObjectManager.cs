@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Coldew.Core;
+using Coldew.Api;
 
 namespace LittleOrange.Core
 {
@@ -15,7 +16,7 @@ namespace LittleOrange.Core
             this._crmManager = crmManager;
         }
 
-        protected override ColdewObject Create(string id, string code, string name)
+        protected override ColdewObject Create(string id, string code, ColdewObjectType type, string name, bool isSystem)
         {
             if (code == LittleOrangeObjectConstCode.Object_GongsiKehu )
             {
@@ -25,7 +26,7 @@ namespace LittleOrange.Core
             {
                 return new ZiranrenColdewObject(id, code, name, this._crmManager);
             }
-            return base.Create(id, code, name);
+            return base.Create(id, code, type, name, isSystem);
         }
     }
 }

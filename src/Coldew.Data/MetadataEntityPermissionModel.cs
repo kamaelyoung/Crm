@@ -9,6 +9,8 @@ namespace Coldew.Data
     {
         public virtual string ID { set; get; }
 
+        public virtual string ObjectId { set; get; }
+
         public virtual string MetadataId { set; get; }
 
         public virtual string Member { set; get; }

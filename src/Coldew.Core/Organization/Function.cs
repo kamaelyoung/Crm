@@ -13,7 +13,7 @@ namespace Coldew.Core.Organization
     {
         OrganizationManagement _orgManager;
 
-        public Function(string id, string name, string url, string iconClass, int sort, List<Member> ownerMembers, OrganizationManagement orgManager)
+        public Function(string id, string name, string url, string iconClass, int sort, List<Member> ownerMembers,  OrganizationManagement orgManager)
         {
             this._orgManager = orgManager;
             this.ID = id;

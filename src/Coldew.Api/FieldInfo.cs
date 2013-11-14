@@ -22,10 +22,6 @@ namespace Coldew.Api
 
         public string TypeName { set; get; }
 
-        public bool CanModify { set; get; }
-
-        public bool CanInput { set; get; }
-
-        public int Index { set; get; }
+        public bool IsSystem { set; get; }
     }
 }

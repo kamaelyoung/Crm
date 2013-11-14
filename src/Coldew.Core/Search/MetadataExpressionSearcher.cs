@@ -98,6 +98,8 @@ namespace Coldew.Core.Search
                         expressions.Add(new NumberSearchExpression(field, min, max));
                         break;
                     case FieldType.Date:
+                    case FieldType.ModifiedTime:
+                    case FieldType.CreatedTime:
                         string startValue = jProperty.Value["start"].ToString();
                         string endValue = jProperty.Value["end"].ToString();
                         DateTime? start = null;
@@ -134,6 +136,8 @@ namespace Coldew.Core.Search
                         }
                         break;
                     case FieldType.User:
+                    case FieldType.ModifiedUser:
+                    case FieldType.CreatedUser:
                         if (jProperty.Value.ToString().Equals(OperationUserToken, StringComparison.InvariantCultureIgnoreCase))
                         {
                             expressions.Add(new OperationUserExpression(field));

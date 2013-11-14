@@ -10,15 +10,15 @@ namespace Coldew.Website.Models
     {
         public ViewSetupFieldModel(FieldInfo field, bool selected, int width)
         {
-            this.fieldId = field.ID;
+            this.code = field.Code;
             this.name = field.Name;
             this.required = field.Required;
             this.selected = selected;
             this.width = width;
-            this.index = field.Index;
+            
         }
 
-        public int fieldId;
+        public string code;
 
         public string name;
 

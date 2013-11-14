@@ -7,6 +7,11 @@ namespace Coldew.Api
 {
     public class FieldType
     {
+        public const string CreatedUser = "CreatedUser";
+        public const string CreatedTime = "CreatedTime";
+        public const string ModifiedUser = "ModifiedUser";
+        public const string ModifiedTime = "ModifiedTime";
+        public const string Name = "Name";
         public const string String = "String";
         public const string Text = "Text";
         public const string DropdownList = "DropdownList";

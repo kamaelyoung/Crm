@@ -90,7 +90,7 @@ namespace Coldew.Core.Workflow
 
         private LiuchengMoban Create(LiuchengMobanModel model)
         {
-            ColdewObject cobject = this._objectManager.GetFormByCode(model.ColdewObjectCode);
+            ColdewObject cobject = this._objectManager.GetObjectByCode(model.ColdewObjectCode);
 
             LiuchengMoban moban = new LiuchengMoban(model.ID, model.Code, model.Name, model.TransferUrl, model.Remark, this._yinqing, cobject);
             this._mobanList.Add(moban);

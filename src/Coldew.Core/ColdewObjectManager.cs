@@ -9,58 +9,64 @@ namespace Coldew.Core
 {
     public class ColdewObjectManager
     {
+
         protected ColdewManager _coldewManager;
-        List<ColdewObject> _forms;
+        List<ColdewObject> _objects;
 
         public ColdewObjectManager(ColdewManager coldewManager)
         {
             this._coldewManager = coldewManager;
-            this._forms = new List<ColdewObject>();
+            this._objects = new List<ColdewObject>();
         }
 
-        public ColdewObject Create(string name, string code)
+        public ColdewObject Create(ColdewObjectCreateInfo createInfo)
         {
             ColdewObjectModel model = new ColdewObjectModel
             {
-                Code = code,
-                Name = name
+                Code = createInfo.Code,
+                Name = createInfo.Name,
+                Type = (int)createInfo.Type,
+                IsSystem = createInfo.IsSystem
             };
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
 
-            return this.Create(model);
+            ColdewObject cobject = this.Create(model);
+            cobject.CreateSystemFields(createInfo.NameFieldName);
+
+            return cobject;
         }
 
         private ColdewObject Create(ColdewObjectModel model)
         {
-            ColdewObject form = this.Create(model.ID, model.Code, model.Name);
-            this._forms.Add(form);
+            ColdewObject form = this.Create(model.ID, model.Code, (ColdewObjectType)model.Type, model.Name, model.IsSystem);
+            this._objects.Add(form);
             return form;
         }
 
-        protected virtual ColdewObject Create(string id, string code, string name)
+        protected virtual ColdewObject Create(string id, string code, ColdewObjectType type, string name, bool isSystem)
         {
-            return new ColdewObject(id, code, name, this._coldewManager);
+            return new ColdewObject(id, code, name, type, isSystem, this._coldewManager);
         }
 
-        public ColdewObject GetFormById(string objectId)
+        public ColdewObject GetObjectById(string objectId)
         {
-            return this._forms.Find(x => x.ID == objectId);
+            return this._objects.Find(x => x.ID == objectId);
         }
 
-        public ColdewObject GetFormByCode(string code)
+        public ColdewObject GetObjectByCode(string code)
         {
-            return this._forms.Find(x => x.Code == code);
+            return this._objects.Find(x => x.Code == code);
         }
 
-        public List<ColdewObject> GetForms()
+        public List<ColdewObject> GetObjects()
         {
-            return this._forms.ToList();
+            return this._objects.ToList();
         }
 
         public Field GetFieldById(int fieldId)
         {
-            foreach (ColdewObject form in this._forms)
+            foreach (ColdewObject form in this._objects)
             {
                 Field field = form.GetFieldById(fieldId);
                 if (field != null)
@@ -78,7 +84,7 @@ namespace Coldew.Core
             {
                 this.Create(model);
             }
-            foreach (ColdewObject form in this._forms)
+            foreach (ColdewObject form in this._objects)
             {
                 form.Load();
             }

@@ -3,6 +3,7 @@
 @using Coldew.Api;
 @{
     Layout = "~/Views/Metadata/Layout.cshtml";
+    ObjectPermissionValue objectPermValue = this.ViewBag.objectPermValue;
 }
 <script type="text/javascript" src='@this.Url.Content("~/js/metadataSearchPopover.js")'></script>
 <div class="row-fluid">
@@ -10,7 +11,10 @@
         <p class="lead">@this.ViewBag.Title</p>
     </div>
     <div class="span10">
+        @if (objectPermValue.HasFlag(ObjectPermissionValue.Create))
+        {
         <a id="btnCreate" href="@this.Url.Action("Create", new { objectId = Request["objectId"], viewId = this.ViewBag.viewId })" class="btn"><i class="icon-plus"></i>创建</a>
+        }
         <button id="btnSearch" class="btn"><i class="icon-search"></i>查询</button>
         <button id="btnEdit" disabled="disabled" class="btn"><i class="icon-edit"></i>编辑</button> 
         <button id="btnDelete" disabled="disabled" data-loading-text="删除中..." class="btn"><i class="icon-trash"></i>删除</button> 
@@ -20,7 +24,10 @@
         {
         <a id="btnViewSteup" href="@this.Url.Action("ViewSetup", new { viewId = this.ViewBag.viewId, objectId = Request["objectId"], returnUrl = this.Request.Url })" class="btn"><i class="icon-th"></i>视图设置</a> 
         }
+        @if (objectPermValue.HasFlag(ObjectPermissionValue.Export))
+        {
         <button id="btnExport" class="btn" data-loading-text="导出中..."><i class="icon-download"></i>导出Excel</button> 
+        }
     </div>
 </div>
 

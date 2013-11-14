@@ -22,6 +22,8 @@ namespace Coldew.Website
                 case FieldType.Number:
                     return Number((NumberFieldInfo)field);
                 case FieldType.Date:
+                case FieldType.ModifiedTime:
+                case FieldType.CreatedTime:
                     return Date((DateFieldInfo)field);
                 default:
                     return String(field);

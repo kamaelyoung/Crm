@@ -18,11 +18,6 @@ namespace Coldew.Core
             this._userManager = userManager;
         }
 
-        public override string Type
-        {
-            get { return FieldType.User; }
-        }
-
         public override string TypeName
         {
             get { return "用户"; }

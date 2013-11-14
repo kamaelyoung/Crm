@@ -20,11 +20,6 @@ namespace Coldew.Website.Controllers
 
         public ActionResult SignIn(string account, string password, bool remember, string returnUrl)
         {
-            if (string.IsNullOrEmpty(returnUrl))
-            {
-                List<ColdewObjectInfo> forms = WebHelper.ColdewObjectService.GetForms(WebHelper.CurrentUserAccount);
-                returnUrl = this.Url.Action("Index", "Metadata", new { objectId = forms[0].ID });
-            }
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
@@ -48,6 +43,11 @@ namespace Coldew.Website.Controllers
 
         public ActionResult Redirect(string url, string token, bool remember)
         {
+            if (string.IsNullOrEmpty(url))
+            {
+                List<ColdewObjectInfo> forms = WebHelper.ColdewObjectService.GetForms(WebHelper.CurrentUserAccount);
+                url = this.Url.Action("Index", "Metadata", new { objectId = forms[0].ID });
+            }
 
             WebHelper.SetCurrentUserToken(token, remember);
             return this.Redirect(url);

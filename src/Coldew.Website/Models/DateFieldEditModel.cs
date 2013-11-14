@@ -14,7 +14,6 @@ namespace Coldew.Website.Models
             this.name = field.Name;
             this.required = field.Required;
             this.defaultValueIsToday = field.DefaultValueIsToday;
-            this.index = field.Index;
         }
 
         public int id;
@@ -24,7 +23,5 @@ namespace Coldew.Website.Models
         public bool required;
 
         public bool defaultValueIsToday;
-
-        public int index;
     }
 }

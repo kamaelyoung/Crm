@@ -5,7 +5,8 @@
     string createMenuClass = this.ViewBag.LeftMenu == "Create" ? "class='active'" : "";
     string viewManageMenuClass = this.ViewBag.LeftMenu == "ViewManage" ? "class='active'" : "";
     string importMenuClass = this.ViewBag.LeftMenu == "Import" ? "class='active'" : "";
-    ColdewObjectInfo formInfo = WebHelper.ColdewObjectService.GetFormById(Request["objectId"]);
+    ObjectPermissionValue objectPermValue = this.ViewBag.objectPermValue;
+    ColdewObjectInfo coldewObject = this.ViewBag.coldewObject;
     List<GridViewInfo> gridViews = WebHelper.GridViewService.GetGridViews(Request["objectId"], WebHelper.CurrentUserAccount);
     List<LeftMenuModel> menuModels = new List<LeftMenuModel>();
     foreach(GridViewInfo viewInfo in gridViews)
@@ -13,15 +14,15 @@
         LeftMenuModel menuModel = new LeftMenuModel();
         if(viewInfo.Type == GridViewType.Manage)
         {
-            menuModel.actionUrl = this.Url.Action("Index", new { viewId = viewInfo.ID, objectId = formInfo.ID });
+            menuModel.actionUrl = this.Url.Action("Index", new { viewId = viewInfo.ID, objectId = coldewObject.ID });
         }
         else if (viewInfo.Type == GridViewType.Favorite)
         {
-            menuModel.actionUrl = this.Url.Action("Favorite", new { viewId = viewInfo.ID, objectId = formInfo.ID });
+            menuModel.actionUrl = this.Url.Action("Favorite", new { viewId = viewInfo.ID, objectId = coldewObject.ID });
         }
         else if (viewInfo.Type == GridViewType.Customized)
         {
-            menuModel.actionUrl = this.Url.Action("Customized", new { viewId = viewInfo.ID, objectId = formInfo.ID });
+            menuModel.actionUrl = this.Url.Action("Customized", new { viewId = viewInfo.ID, objectId = coldewObject.ID });
         }
         menuModel.name = viewInfo.Name;
         menuModel.active = viewInfo.ID == this.ViewBag.viewId;
@@ -29,12 +30,15 @@
     }
 }
 <ul class="nav nav-list">
-    <li class="nav-header">@formInfo.Name</li>
+    <li class="nav-header">@coldewObject.Name</li>
     @foreach (LeftMenuModel menu in menuModels)
     {
         string menuClass = menu.active ? "class='active'" : "";
         <li @this.Html.Raw(menuClass)><a href="@menu.actionUrl">@menu.name</a></li>
     }
-    <li @this.Html.Raw(viewManageMenuClass)><a href="@this.Url.Action("GridViewManage", new { objectId = formInfo.ID })">视图管理</a></li>
-    <li @this.Html.Raw(importMenuClass)><a href="@this.Url.Action("ImportFirst", new { objectId = formInfo.ID })">导入Excel</a></li>
+    <li @this.Html.Raw(viewManageMenuClass)><a href="@this.Url.Action("GridViewManage", new { objectId = coldewObject.ID })">视图管理</a></li>
+    @if (objectPermValue.HasFlag(ObjectPermissionValue.Import))
+    {
+    <li @this.Html.Raw(importMenuClass)><a href="@this.Url.Action("ImportFirst", new { objectId = coldewObject.ID })">导入Excel</a></li>
+    }
 </ul>

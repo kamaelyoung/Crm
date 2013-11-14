@@ -13,38 +13,38 @@ namespace Coldew.Api
 
         List<ColdewObjectInfo> GetForms(string userAccount);
 
-        FieldInfo GetField(int fieldId);
+        ObjectPermissionValue GetobjectPermissionValue(string objectId, string account);
 
-        int GetFieldMaxIndex(string objectId);
+        FieldInfo GetField(int fieldId);
 
         void DeleteField(string opUserAccount, int fieldId);
 
-        FieldInfo CreateStringField(string objectId, string name, bool required, string defaultValue, int index);
+        FieldInfo CreateStringField(string objectId, string name, string code, bool required, string defaultValue);
 
-        FieldInfo CreateDateField(string objectId, string name, bool required, bool defaultValueIsToday, int index);
+        FieldInfo CreateDateField(string objectId, string name, string code, bool required, bool defaultValueIsToday);
 
-        FieldInfo CreateNumberField(string objectId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index);
+        FieldInfo CreateNumberField(string objectId, string name, string code, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision);
 
-        FieldInfo CreateTextField(string objectId, string name, bool required, string defaultValue, int index);
+        FieldInfo CreateTextField(string objectId, string name, string code, bool required, string defaultValue);
 
-        FieldInfo CreateDropdownField(string objectId, string name, bool required, string defaultValue, List<string> selectList, int index);
+        FieldInfo CreateDropdownField(string objectId, string name, string code, bool required, string defaultValue, List<string> selectList);
 
-        FieldInfo CreateRadioListField(string objectId, string name, bool required, string defaultValue, List<string> selectList, int index);
+        FieldInfo CreateRadioListField(string objectId, string name, string code, bool required, string defaultValue, List<string> selectList);
 
-        FieldInfo CreateCheckboxListField(string objectId, string name, bool required, List<string> defaultValues, List<string> selectList, int index);
+        FieldInfo CreateCheckboxListField(string objectId, string name, string code, bool required, List<string> defaultValues, List<string> selectList);
 
-        void ModifyStringField(int fieldId, string name, bool required, string defaultValue, int index);
+        void ModifyStringField(int fieldId, string name, bool required, string defaultValue);
 
-        void ModifyDateField(int fieldId, string name, bool required, bool defaultValueIsToday, int index);
+        void ModifyDateField(int fieldId, string name, bool required, bool defaultValueIsToday);
 
-        void ModifyNumberField(int fieldId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision, int index);
+        void ModifyNumberField(int fieldId, string name, bool required, decimal? defaultValue, decimal? max, decimal? min, int precision);
 
-        void ModifyTextField(int fieldId, string name, bool required, string defaultValue, int index);
+        void ModifyTextField(int fieldId, string name, bool required, string defaultValue);
 
-        void ModifyDropdownField(int fieldId, string name, bool required, string defaultValue, List<string> selectList, int index);
+        void ModifyDropdownField(int fieldId, string name, bool required, string defaultValue, List<string> selectList);
 
-        void ModifyRadioListField(int fieldId, string name, bool required, string defaultValue, List<string> selectList, int index);
+        void ModifyRadioListField(int fieldId, string name, bool required, string defaultValue, List<string> selectList);
 
-        void ModifyCheckboxListField(int fieldId, string name, bool required, List<string> defaultValues, List<string> selectList, int index);
+        void ModifyCheckboxListField(int fieldId, string name, bool required, List<string> defaultValues, List<string> selectList);
     }
 }

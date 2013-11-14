@@ -6,14 +6,12 @@
             <generator class="native">
             </generator>
         </id>
-        <property name="FormId" type="string" column="form_id"></property>
+        <property name="ObjectId" type="string" column="object_id"></property>
         <property name="Name" type="String" column="field_name"></property>
         <property name="Tip" type="String" column="field_tip"></property>
         <property name="Code" type="String" column="field_code"></property>
         <property name="Required" type="bool" column="field_required"></property>
-        <property name="CanModify" type="bool" column="field_canModify"></property>
-        <property name="CanInput" type="bool" column="field_canInput"></property>
-        <property name="Index" type="int" column="field_index"></property>
+        <property name="IsSystem" type="bool" column="field_isSystem"></property>
         <property name="Type" type="string" column="field_type"></property>
         <property name="Config" type="String" length="20000" column="field_config"></property>
     </class>

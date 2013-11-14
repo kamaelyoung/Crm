@@ -33,12 +33,22 @@ namespace Coldew.Website
 
         public virtual MvcHtmlString Input(FieldInfo field)
         {
+            return this.Input(field, "");
+        }
+
+        public virtual MvcHtmlString Input(FieldInfo field, string attributes)
+        {
+            if (attributes == null)
+            {
+                attributes = "";
+            }
             switch (field.Type)
             {
                 case FieldType.String:
+                case FieldType.Name:
                     return String((StringFieldInfo)field);
                 case FieldType.Text:
-                    return Text((StringFieldInfo)field);
+                    return Text((StringFieldInfo)field, attributes);
                 case FieldType.DropdownList:
                     return DropdownList((ListFieldInfo)field);
                 case FieldType.RadioList:
@@ -48,8 +58,12 @@ namespace Coldew.Website
                 case FieldType.Number:
                     return Number((NumberFieldInfo)field);
                 case FieldType.Date:
+                case FieldType.ModifiedTime:
+                case FieldType.CreatedTime:
                     return Date((DateFieldInfo)field);
                 case FieldType.User:
+                case FieldType.ModifiedUser:
+                case FieldType.CreatedUser:
                     return User((UserFieldInfo)field);
                 case FieldType.UserList:
                     return UserList((UserListFieldInfo)field);
@@ -89,19 +103,19 @@ namespace Coldew.Website
             return this.ControlGroup(field, inputHtml);
         }
 
-        public MvcHtmlString Text(StringFieldInfo field)
+        public MvcHtmlString Text(StringFieldInfo field, string attributes)
         {
-            string dataRequiredAttr = "";
             if (field.Required)
             {
-                dataRequiredAttr = "data-required = 'true'";
+                attributes += " data-required = 'true'";
             }
+
             string defualtValue = "";
             if (this._setDefaultValue)
             {
                 defualtValue = field.DefaultValue;
             }
-            string inputHtml = string.Format("<textarea class='input-large' name='{0}' {1} rows='3' >{2}</textarea>", field.Code, dataRequiredAttr, defualtValue);
+            string inputHtml = string.Format("<textarea name='{0}' {1} rows='3' >{2}</textarea>", field.Code, attributes, defualtValue);
             return this.ControlGroup(field, inputHtml);
         }
 

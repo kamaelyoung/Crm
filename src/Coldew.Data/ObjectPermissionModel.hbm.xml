@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="Coldew.Data" assembly="Coldew.Data">
+    <class name="ObjectPermissionModel" table="coldew_object_permission">
+        <id name="ID" type="string" column="perm_id">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="ObjectId" type="String" column="object_id"></property>
+        <property name="MemberId" type="String" column="member_id"></property>
+        <property name="Value" type="int" column="perm_value"></property>
+    </class>
+</hibernate-mapping>

@@ -9,7 +9,7 @@ namespace Coldew.Data
     {
         public virtual int ID { set; get; }
 
-        public virtual string FormId { set; get; }
+        public virtual string ObjectId { set; get; }
 
         public virtual string Code { set; get; }
 
@@ -19,11 +19,7 @@ namespace Coldew.Data
 
         public virtual bool Required { set; get; }
 
-        public virtual bool CanModify { set; get; }
-
-        public virtual bool CanInput { set; get; }
-
-        public virtual int Index { set; get; }
+        public virtual bool IsSystem { set; get; }
 
         public virtual string Type { set; get; }
 

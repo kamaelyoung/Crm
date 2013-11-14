@@ -16,7 +16,7 @@ namespace Coldew.Core
             JObject jobject = new JObject();
             foreach (MetadataProperty property in propertys)
             {
-                jobject.Add(property.Field.ID.ToString(), property.Value.PersistenceValue);
+                jobject.Add(property.Field.Code, property.Value.PersistenceValue);
             }
             return JsonConvert.SerializeObject(jobject);
         }
@@ -34,22 +34,6 @@ namespace Coldew.Core
                 }
             }
 
-            return propertys;
-        }
-
-        public static List<MetadataProperty> GetPropertys(string propertysJson, ColdewObject form)
-        {
-            JObject propertyModels = JsonConvert.DeserializeObject<JObject>(propertysJson);
-            List<MetadataProperty> propertys = new List<MetadataProperty>();
-            foreach (JProperty property in propertyModels.Properties())
-            {
-                Field field = form.GetFieldById(int.Parse(property.Name));
-                if (field != null)
-                {
-                    MetadataValue metadataValue = field.CreateMetadataValue(property.Value);
-                    propertys.Add(new MetadataProperty(metadataValue));
-                }
-            }
             return propertys;
         }
     }

@@ -117,10 +117,6 @@
       <Project>{E4527E74-26C9-4B11-9D78-476619E3D440}</Project>
       <Name>Coldew.Website</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Crm.Api\Crm.Api.csproj">
-      <Project>{BA1B16DF-70B1-43F4-BEAF-BCA39F1D6832}</Project>
-      <Name>Crm.Api</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Template.xls" />

@@ -98,10 +98,6 @@
       <Project>{47EA2B39-B843-497F-88FD-136964A12577}</Project>
       <Name>Coldew.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Crm.Api\Crm.Api.csproj">
-      <Project>{BA1B16DF-70B1-43F4-BEAF-BCA39F1D6832}</Project>
-      <Name>Crm.Api</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Crm.Data\Crm.Data.csproj">
       <Project>{C0A43D4B-D7B2-43A8-A53C-9FC1F3A5A051}</Project>
       <Name>Crm.Data</Name>

@@ -17,7 +17,7 @@ namespace Coldew.Core.UI
 
         public FormInfo GetForm(string objectId, string code)
         {
-            ColdewObject cObject = this._coldewManager.ObjectManager.GetFormById(objectId);
+            ColdewObject cObject = this._coldewManager.ObjectManager.GetObjectById(objectId);
             Form form = cObject.FormManager.GetFormByCode(code);
             if (form != null)
             {
@@ -28,7 +28,7 @@ namespace Coldew.Core.UI
 
         public FormInfo GetFormByCode(string objectCode, string code)
         {
-            ColdewObject cObject = this._coldewManager.ObjectManager.GetFormByCode(objectCode);
+            ColdewObject cObject = this._coldewManager.ObjectManager.GetObjectByCode(objectCode);
             Form form = cObject.FormManager.GetFormByCode(code);
             if (form != null)
             {

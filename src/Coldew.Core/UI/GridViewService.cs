@@ -18,7 +18,7 @@ namespace Coldew.Core
         public GridViewInfo Create(string name, string objectId, string creatorAccount, bool isShared, string searchExpressionJson, List<GridViewColumnSetupInfo> columns)
         {
             User creator = this._coldewManager.OrgManager.UserManager.GetUserByAccount(creatorAccount);
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
             int index = form.GridViewManager.MaxIndex();
             GridView view = form.GridViewManager.Create(GridViewType.Customized, "", name, creator, isShared, false, index, searchExpressionJson, columns);
             return view.Map();
@@ -26,7 +26,7 @@ namespace Coldew.Core
 
         private GridView GetViewById(string viewId)
         {
-            List<ColdewObject> objects = this._coldewManager.ObjectManager.GetForms();
+            List<ColdewObject> objects = this._coldewManager.ObjectManager.GetObjects();
             GridView view = null;
             foreach (ColdewObject cobject in objects)
             {
@@ -70,7 +70,7 @@ namespace Coldew.Core
         public List<GridViewInfo> GetGridViews(string objectId, string userAccount)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
             List<GridView> views = form.GridViewManager.GetGridViews(user);
             return views.Select(x => x.Map()).ToList();
         }
@@ -78,7 +78,7 @@ namespace Coldew.Core
         public List<GridViewInfo> GetMyGridViews(string objectId, string userAccount)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
-            ColdewObject form = this._coldewManager.ObjectManager.GetFormById(objectId);
+            ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
             List<GridView> views = form.GridViewManager.GetGridViews(user);
             return views.Where(x => x.Creator == user && !x.IsSystem).Select(x => x.Map()).ToList();
         }

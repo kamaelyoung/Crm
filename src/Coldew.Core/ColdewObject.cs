@@ -10,32 +10,37 @@ using Coldew.Core.Organization;
 using Coldew.Api.Exceptions;
 using Coldew.Core.UI;
 using Coldew.Core.DataServices;
-using Coldew.Core.MetadataPermission;
+using Coldew.Core.Permission;
 
 namespace Coldew.Core
 {
     public class ColdewObject
     {
+        public const string FIELD_NAME_NAME = "name";
+        public const string FIELD_NAME_CREATOR = "creator";
+        public const string FIELD_NAME_CREATE_TIME = "createTime";
+        public const string FIELD_NAME_MODIFIED_USER = "modifiedUser";
+        public const string FIELD_NAME_MODIFIED_TIME = "modifiedTime";
+
         ReaderWriterLock _lock;
         private List<Field> _fields;
 
-        public ColdewObject(string id, string code, string name, ColdewManager coldewManager)
+        public ColdewObject(string id, string code, string name, ColdewObjectType type, bool isSystem, ColdewManager coldewManager)
         {
             this.ID = id;
             this.Name = name;
             this.Code = code;
-            this._fields = this.LoadSystemField();
-            if (this._fields == null)
-            {
-                this._fields = new List<Field>();
-            }
+            this.Type = type;
+            this.IsSystem = isSystem;
+            this._fields = new List<Field>();
             this._lock = new ReaderWriterLock();
             this.ColdewManager = coldewManager;
-            this.PermissionManager = new PermissionManager(this);
             this.MetadataManager = this.CreateMetadataManager(coldewManager);
             this.GridViewManager = this.CreateGridViewManager(coldewManager);
             this.FormManager = this.CreateFormManager(coldewManager);
             this.DataService = this.CreateDataService();
+            this.ObjectPermission = new ObjectPermissionManager(this);
+            this.MetadataPermission = new MetadataPermissionManager(this);
         }
 
         public ColdewManager ColdewManager { private set; get; }
@@ -60,11 +65,19 @@ namespace Coldew.Core
             return new GridViewManager(coldewManager.OrgManager, this);
         }
 
+        public virtual ObjectPermissionManager ObjectPermission { private set; get; }
+
+        public virtual MetadataPermissionManager MetadataPermission { private set; get; }
+
         public string ID { set; get; }
 
         public string Code { set; get; }
 
         public string Name { set; get; }
+
+        public bool IsSystem { set; get; }
+
+        public ColdewObjectType Type { set; get; }
 
         public MetadataManager MetadataManager { private set; get; }
 
@@ -74,181 +87,122 @@ namespace Coldew.Core
 
         internal MetadataDataService DataService { private set; get; }
 
-        public PermissionManager PermissionManager { private set; get; }
+        public NameField NameField { private set; get; }
 
-        public StringField NameField
+        public CreatedUserField CreatedUserField { private set; get; }
+
+        public CreatedTimeField CreatedTimeField { private set; get; }
+
+        public ModifiedUserField ModifiedUserField { private set; get; }
+
+        public ModifiedTimeField ModifiedTimeField { private set; get; }
+
+        internal void CreateSystemFields(string nameFieldName)
         {
-            get
-            {
-                return this.GetFieldByCode(ColdewObjectCode.FIELD_NAME_NAME) as StringField;
-            }
+            this.NameField = this.CreateField(new FieldCreateBaseInfo(FIELD_NAME_NAME, nameFieldName, "", true, true), FieldType.Name, "") as NameField;
+            this.CreatedUserField = this.CreateField(new FieldCreateBaseInfo(FIELD_NAME_CREATOR, "创建人", "", true, true), FieldType.CreatedUser, "") as CreatedUserField;
+            this.CreatedTimeField = this.CreateField(new FieldCreateBaseInfo(FIELD_NAME_CREATE_TIME, "创建时间", "", true, true), FieldType.CreatedTime, "") as CreatedTimeField;
+            this.ModifiedUserField = this.CreateField(new FieldCreateBaseInfo(FIELD_NAME_MODIFIED_USER, "修改人", "", true, true), FieldType.ModifiedUser, "") as ModifiedUserField;
+            this.ModifiedTimeField = this.CreateField(new FieldCreateBaseInfo(FIELD_NAME_MODIFIED_TIME, "修改时间", "", true, true), FieldType.ModifiedTime, "") as ModifiedTimeField;
         }
 
-        public UserField CreatorField
+        public Field CreateStringField(FieldCreateBaseInfo baseInfo, string defaultValue)
         {
-            get
-            {
-                return this.GetFieldByCode(ColdewObjectCode.FIELD_NAME_CREATOR) as UserField;
-            }
+            return this.CreateField(baseInfo, FieldType.String, defaultValue);
         }
 
-        public DateField CreateTimeField
+        public Field CreateJsonField(FieldCreateBaseInfo baseInfo)
         {
-            get
-            {
-                return this.GetFieldByCode(ColdewObjectCode.FIELD_NAME_CREATE_TIME) as DateField;
-            }
+            return this.CreateField(baseInfo,FieldType.Json, "");
         }
 
-        public Field CreateStringField(string code, string name, bool required, bool canModify, bool canInput, int index, string defaultValue)
+        public Field CreateTextField(FieldCreateBaseInfo baseInfo,  string defaultValue)
         {
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.String, defaultValue);
+            return this.CreateField(baseInfo, FieldType.Text, defaultValue);
         }
 
-        public Field CreateTextField(string code, string name, bool required, bool canModify, bool canInput, int index, string defaultValue)
-        {
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.Text, defaultValue);
-        }
-
-        public Field CreateDateField(string code, string name, bool required, bool canModify, bool canInput, int index, bool defaultValueIsToday)
+        public Field CreateDateField(FieldCreateBaseInfo baseInfo,  bool defaultValueIsToday)
         {
             DateFieldConfigModel configModel = new DateFieldConfigModel { DefaultValueIsToday = defaultValueIsToday };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.Date, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo, FieldType.Date, JsonConvert.SerializeObject(configModel));
         }
 
-        public Field CreateNumberField(string code, string name, bool required, bool canModify, bool canInput, int index, decimal? defaultValue, decimal? max, decimal? min, int precision)
+        public Field CreateNumberField(FieldCreateBaseInfo baseInfo,  decimal? defaultValue, decimal? max, decimal? min, int precision)
         {
             NumberFieldConfigModel configModel = new NumberFieldConfigModel { DefaultValue = defaultValue, Max = max, Min = min, Precision = precision };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.Number, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo, FieldType.Number, JsonConvert.SerializeObject(configModel));
         }
 
-        public Field CreateCheckboxListField(string code, string name, bool required, bool canModify, bool canInput, int index, List<string> defaultValues, List<string> selectList)
+        public Field CreateCheckboxListField(FieldCreateBaseInfo baseInfo,  List<string> defaultValues, List<string> selectList)
         {
             CheckboxFieldConfigModel configModel = new CheckboxFieldConfigModel { DefaultValues = defaultValues, SelectList = selectList };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.CheckboxList, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo, FieldType.CheckboxList, JsonConvert.SerializeObject(configModel));
         }
 
-        public Field CreateRadioListField(string code, string name, bool required, bool canModify, bool canInput, int index, string defaultValue, List<string> selectList)
+        public Field CreateRadioListField(FieldCreateBaseInfo baseInfo,  string defaultValue, List<string> selectList)
         {
             ListFieldConfigModel configModel = new ListFieldConfigModel { DefaultValue = defaultValue, SelectList = selectList };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.RadioList, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo, FieldType.RadioList, JsonConvert.SerializeObject(configModel));
         }
 
-        public Field CreateDropdownField(string code, string name, bool required, bool canModify, bool canInput, int index, string defaultValue, List<string> selectList)
+        public Field CreateDropdownField(FieldCreateBaseInfo baseInfo,  string defaultValue, List<string> selectList)
         {
             ListFieldConfigModel configModel = new ListFieldConfigModel { DefaultValue = defaultValue, SelectList = selectList };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.DropdownList, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo, FieldType.DropdownList, JsonConvert.SerializeObject(configModel));
         }
 
-        public Field CreateUserField(string code, string name, bool required, bool canModify, bool canInput, int index, bool defaultValueIsCurrent)
-        {
-            UserFieldConfigModel configModel = new UserFieldConfigModel { defaultValueIsCurrent = defaultValueIsCurrent };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.User, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateUserListField(string code, string name, bool required, bool canModify, bool canInput, int index, bool defaultValueIsCurrent)
-        {
-            UserFieldConfigModel configModel = new UserFieldConfigModel { defaultValueIsCurrent = defaultValueIsCurrent };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.UserList, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateMetadataField(string code, string name, bool required, bool canModify, bool canInput, int index, string formCode)
-        {
-            MetadataFieldConfigModel configModel = new MetadataFieldConfigModel { FormCode = formCode };
-            return this.CreateField(code, name, "",required, canModify, canInput, index, FieldType.Metadata, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateStringField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string defaultValue)
-        {
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.String, defaultValue);
-        }
-
-        public Field CreateJsonField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index)
-        {
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.Json, "");
-        }
-
-        public Field CreateTextField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string defaultValue)
-        {
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.Text, defaultValue);
-        }
-
-        public Field CreateDateField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, bool defaultValueIsToday)
-        {
-            DateFieldConfigModel configModel = new DateFieldConfigModel { DefaultValueIsToday = defaultValueIsToday };
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.Date, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateNumberField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, decimal? defaultValue, decimal? max, decimal? min, int precision)
-        {
-            NumberFieldConfigModel configModel = new NumberFieldConfigModel { DefaultValue = defaultValue, Max = max, Min = min, Precision = precision };
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.Number, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateCheckboxListField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, List<string> defaultValues, List<string> selectList)
-        {
-            CheckboxFieldConfigModel configModel = new CheckboxFieldConfigModel { DefaultValues = defaultValues, SelectList = selectList };
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.CheckboxList, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateRadioListField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string defaultValue, List<string> selectList)
-        {
-            ListFieldConfigModel configModel = new ListFieldConfigModel { DefaultValue = defaultValue, SelectList = selectList };
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.RadioList, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateDropdownField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string defaultValue, List<string> selectList)
-        {
-            ListFieldConfigModel configModel = new ListFieldConfigModel { DefaultValue = defaultValue, SelectList = selectList };
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.DropdownList, JsonConvert.SerializeObject(configModel));
-        }
-
-        public Field CreateUserField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, bool defaultValueIsCurrent)
+        public Field CreateUserField(FieldCreateBaseInfo baseInfo,  bool defaultValueIsCurrent)
         {
             UserFieldConfigModel configModel = new UserFieldConfigModel { defaultValueIsCurrent = defaultValueIsCurrent};
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.User, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo, FieldType.User, JsonConvert.SerializeObject(configModel));
         }
 
-        public Field CreateUserListField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, bool defaultValueIsCurrent)
+        public Field CreateUserListField(FieldCreateBaseInfo baseInfo,  bool defaultValueIsCurrent)
         {
             UserFieldConfigModel configModel = new UserFieldConfigModel { defaultValueIsCurrent = defaultValueIsCurrent};
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.UserList, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo,FieldType.UserList, JsonConvert.SerializeObject(configModel));
         }
 
-        public Field CreateMetadataField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string formCode)
+        public Field CreateMetadataField(FieldCreateBaseInfo baseInfo,  string formCode)
         {
             MetadataFieldConfigModel configModel = new MetadataFieldConfigModel { FormCode = formCode};
-            return this.CreateField(code, name, tip, required, canModify, canInput, index, FieldType.Metadata, JsonConvert.SerializeObject(configModel));
+            return this.CreateField(baseInfo,FieldType.Metadata, JsonConvert.SerializeObject(configModel));
         }
 
         public event TEventHandler<ColdewObject, Field> FieldCreated;
 
-        protected Field CreateField(string code, string name, string tip, bool required, bool canModify, bool canInput, int index, string type, string config)
+        protected Field CreateField(FieldCreateBaseInfo baseInfo, string type, string config)
         {
             this._lock.AcquireWriterLock();
             try
             {
-                if (this._fields.Any(x => x.Name == name))
+                if (string.IsNullOrEmpty(baseInfo.Code))
+                {
+                    throw new ArgumentNullException("baseInfo.Code");
+                }
+                if (string.IsNullOrEmpty(baseInfo.Name))
+                {
+                    throw new ArgumentNullException("baseInfo.Name");
+                }
+
+                if (this._fields.Any(x => x.Name == baseInfo.Name))
                 {
                     throw new FieldNameRepeatException();
-                } 
-                
-                if (!string.IsNullOrEmpty(code) && this._fields.Any(x => x.Code == code))
+                }
+
+                if (!string.IsNullOrEmpty(baseInfo.Code) && this._fields.Any(x => x.Code == baseInfo.Code))
                 {
                     throw new FieldCodeRepeatException();
                 }
 
                 FieldModel model = new FieldModel
                 {
-                    FormId = this.ID,
-                    Code = code,
-                    Name = name,
-                    Tip = tip,
-                    Required = required,
+                    ObjectId = this.ID,
+                    Code = baseInfo.Code,
+                    Name = baseInfo.Name,
+                    Tip = baseInfo.Tip,
+                    Required = baseInfo.Required,
                     Type = type,
-                    CanModify = canModify,
-                    CanInput = canInput,
-                    Index = index,
                     Config = config
                 };
                 model.ID = (int)NHibernateHelper.CurrentSession.Save(model);
@@ -257,7 +211,6 @@ namespace Coldew.Core
                 Field field = this.CreateField(model);
                 this.BindEvent(field);
                 this._fields.Add(field);
-                this._fields = this._fields.OrderBy(x => x.Index).ToList();
                 if (this.FieldCreated != null)
                 {
                     this.FieldCreated(this, field);
@@ -272,9 +225,11 @@ namespace Coldew.Core
 
         public virtual Field CreateField(FieldModel model)
         {
-            FieldNewInfo newInfo = new FieldNewInfo(model.ID, model.Code, model.Name, model.Tip, model.Required, model.CanModify, model.Type, model.CanInput, model.Index, this);
+            FieldNewInfo newInfo = new FieldNewInfo(model.ID, model.Code, model.Name, model.Tip, model.Required, model.Type, model.IsSystem, this);
             switch (newInfo.Type)
             {
+                case FieldType.Name:
+                    return new NameField(newInfo);
                 case FieldType.String:
                     return new StringField(newInfo, model.Config);
                 case FieldType.Text:
@@ -294,32 +249,27 @@ namespace Coldew.Core
                 case FieldType.Date:
                     DateFieldConfigModel dateFieldConfigModel = JsonConvert.DeserializeObject<DateFieldConfigModel>(model.Config);
                     return new DateField(newInfo, dateFieldConfigModel.DefaultValueIsToday);
+                case FieldType.CreatedTime:
+                    return new CreatedTimeField(newInfo);
+                case FieldType.ModifiedTime:
+                    return new ModifiedTimeField(newInfo);
                 case FieldType.User:
                     UserFieldConfigModel userFieldConfigModel = JsonConvert.DeserializeObject<UserFieldConfigModel>(model.Config);
                     return new UserField(newInfo, userFieldConfigModel.defaultValueIsCurrent, this.ColdewManager.OrgManager.UserManager);
+                case FieldType.CreatedUser:
+                    return new CreatedUserField(newInfo, this.ColdewManager.OrgManager.UserManager);
+                case FieldType.ModifiedUser:
+                    return new ModifiedUserField(newInfo, this.ColdewManager.OrgManager.UserManager);
                 case FieldType.UserList:
                     UserFieldConfigModel userListFieldConfigModel = JsonConvert.DeserializeObject<UserFieldConfigModel>(model.Config);
                     return new UserListField(newInfo, userListFieldConfigModel.defaultValueIsCurrent, this.ColdewManager.OrgManager.UserManager);
                 case FieldType.Metadata:
                     MetadataFieldConfigModel metadataFieldConfigModel = JsonConvert.DeserializeObject<MetadataFieldConfigModel>(model.Config);
-                    return new MetadataField(newInfo, this.ColdewManager.ObjectManager.GetFormByCode(metadataFieldConfigModel.FormCode));
+                    return new MetadataField(newInfo, this.ColdewManager.ObjectManager.GetObjectByCode(metadataFieldConfigModel.FormCode));
                 case FieldType.Json:
                     return new JsonField(newInfo);
             }
             throw new ArgumentException("type");
-        }
-
-        public int GetFieldMaxIndex()
-        {
-            this._lock.AcquireReaderLock();
-            try
-            {
-                return this._fields.Max(x => x.Index);
-            }
-            finally
-            {
-                this._lock.ReleaseReaderLock();
-            }
         }
 
         private void BindEvent(Field field)
@@ -414,28 +364,44 @@ namespace Coldew.Core
                 ID = this.ID,
                 Name = this.Name,
                 Code = this.Code,
+                Type = this.Type,
                 Fields = this._fields.Select(x => x.Map()).ToList()
             };
         }
 
-        protected virtual List<Field> LoadSystemField()
-        {
-            return null;
-        }
-
         internal void Load()
         {
-            IList<FieldModel> models = NHibernateHelper.CurrentSession.QueryOver<FieldModel>().Where(x => x.FormId == this.ID).List();
+            IList<FieldModel> models = NHibernateHelper.CurrentSession.QueryOver<FieldModel>().Where(x => x.ObjectId == this.ID).List();
             foreach (FieldModel model in models)
             {
                 Field field = this.CreateField(model);
+                if (field.Type == FieldType.CreatedUser)
+                {
+                    this.CreatedUserField = field as CreatedUserField;
+                }
+                else if (field.Type == FieldType.CreatedTime)
+                {
+                    this.CreatedTimeField = field as CreatedTimeField;
+                }
+                else if (field.Type == FieldType.ModifiedUser)
+                {
+                    this.ModifiedUserField = field as ModifiedUserField;
+                }
+                else if (field.Type == FieldType.ModifiedTime)
+                {
+                    this.ModifiedTimeField = field as ModifiedTimeField;
+                }
+                else if (field.Type == FieldType.Name)
+                {
+                    this.NameField = field as NameField;
+                }
                 this.BindEvent(field);
                 this._fields.Add(field);
             }
-            this._fields = this._fields.OrderBy(x => x.Index).ToList();
             this.MetadataManager.Load();
             this.GridViewManager.Load();
             this.FormManager.Load();
         }
+
     }
 }

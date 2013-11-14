@@ -32,7 +32,7 @@ namespace Coldew.Core.UI
             {
                 foreach (Form form in this._forms)
                 {
-                    form.Sections[0].Inputs.Add(new Input(field, field.Index));
+                    form.Sections[0].Inputs.Add(new Input(field));
                 }
             }
             finally
@@ -110,7 +110,7 @@ namespace Coldew.Core.UI
         protected virtual Form Create(string id, string code, string title, List<SectionModel> sectionModels, List<RelatedObjectModel> relatedModels)
         {
             List<Section> sections = sectionModels.Select(x => {
-                var inputs = x.Inputs.Select(input => new Input(this._coldewObject.GetFieldByCode(input.FieldCode), input.Index)).ToList();
+                var inputs = x.Inputs.Select(input => new Input(this._coldewObject.GetFieldByCode(input.FieldCode))).ToList();
                 return new Section(x.Title, x.ColumnCount, inputs);
             }).ToList();
 

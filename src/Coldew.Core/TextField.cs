@@ -14,11 +14,6 @@ namespace Coldew.Core
 
         }
 
-        public override string Type
-        {
-            get { return FieldType.Text; }
-        }
-
         public override string TypeName
         {
             get { return "长文本"; }

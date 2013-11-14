@@ -8,15 +8,15 @@ namespace Coldew.Api
     [Serializable]
     public class GridViewColumnSetupInfo
     {
-        public GridViewColumnSetupInfo(int fieldId, int width)
+        public GridViewColumnSetupInfo(string fieldCode, int width)
         {
-            this.FieldId = fieldId;
+            this.FieldCode = fieldCode;
             this.Width = width;
         }
 
         public GridViewColumnSetupInfo() { }
 
-        public int FieldId { set; get; }
+        public string FieldCode { set; get; }
 
         public int Width { set; get; }
     }

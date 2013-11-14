@@ -62,26 +62,31 @@
     <Compile Include="ChangeEventArgs.cs" />
     <Compile Include="CheckboxListField.cs" />
     <Compile Include="ColdewManager.cs" />
+    <Compile Include="ColdewObjectCreateInfo.cs" />
+    <Compile Include="CreatedUserField.cs" />
     <Compile Include="CreateEventArgs.cs" />
     <Compile Include="ColdewConfigManager.cs" />
     <Compile Include="ColdewConfigService.cs" />
     <Compile Include="DataServices\MetadataDataService.cs" />
     <Compile Include="DataServices\TModelMetadataDataService.cs" />
+    <Compile Include="FieldCreateBaseInfo.cs" />
+    <Compile Include="FieldModifyArgs.cs" />
+    <Compile Include="FieldModifyBaseInfo.cs" />
     <Compile Include="JsonField.cs" />
     <Compile Include="JsonMetadataValue.cs" />
     <Compile Include="MetadataEnumerable.cs" />
     <Compile Include="MetadataFieldMember.cs" />
     <Compile Include="MetadataMember.cs" />
     <Compile Include="MetadataOrgMember.cs" />
-    <Compile Include="MetadataPermission\MetadataStrategyPermission.cs" />
-    <Compile Include="MetadataPermission\MetadataPermission.cs" />
-    <Compile Include="MetadataPermission\MetadataEntityPermission.cs" />
-    <Compile Include="MetadataPermission\MetadataEntityPermissionManager.cs" />
-    <Compile Include="MetadataPermission\MetadataPermissionStrategy.cs" />
-    <Compile Include="MetadataPermission\MetadataPermissionStrategyManager.cs" />
-    <Compile Include="MetadataPermission\ObjectPermission.cs" />
-    <Compile Include="MetadataPermission\PermissionManager.cs" />
+    <Compile Include="Permission\MetadataEntityPermission.cs" />
+    <Compile Include="Permission\MetadataEntityPermissionManager.cs" />
+    <Compile Include="Permission\MetadataPermissionStrategy.cs" />
+    <Compile Include="Permission\MetadataPermissionStrategyManager.cs" />
+    <Compile Include="Permission\ObjectPermission.cs" />
+    <Compile Include="Permission\MetadataPermissionManager.cs" />
+    <Compile Include="NameField.cs" />
     <Compile Include="Organization\Member.cs" />
+    <Compile Include="Permission\ObjectPermissionManager.cs" />
     <Compile Include="Search\DateRecentlySearchExpression.cs" />
     <Compile Include="Search\MetadataExpressionSearcher.cs" />
     <Compile Include="Search\OperationUserExpression.cs" />
@@ -98,7 +103,6 @@
     <Compile Include="DeleteEventArgs.cs" />
     <Compile Include="DropdownField.cs" />
     <Compile Include="Field.cs" />
-    <Compile Include="FieldModifyArgs.cs" />
     <Compile Include="FieldNewInfo.cs" />
     <Compile Include="ColdewObject.cs" />
     <Compile Include="ColdewObjectManager.cs" />
@@ -192,6 +196,9 @@
     <Compile Include="Workflow\Xingdong.cs" />
     <Compile Include="Workflow\LiuchengYinqing.cs" />
     <Compile Include="Workflow\YinqingFuwu.cs" />
+    <Compile Include="ModifiedUserField.cs" />
+    <Compile Include="ModifiedTimeField.cs" />
+    <Compile Include="CreatedTimeField.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coldew.Api\Coldew.Api.csproj">

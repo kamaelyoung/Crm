@@ -44,7 +44,7 @@ namespace Coldew.Core
         public GridView Create(GridViewType type, string code, string name, User user, bool isShared, bool isSystem, int index, 
             string searchExpressionJson, List<GridViewColumnSetupInfo> setupColumns)
         {
-            var columnModels = setupColumns.Select(x => new GridViewColumnModel { FieldId = x.FieldId, Width = x.Width});
+            var columnModels = setupColumns.Select(x => new GridViewColumnModel { FieldCode = x.FieldCode, Width = x.Width});
             string columnJson = JsonConvert.SerializeObject(columnModels);
             GridViewModel model = new GridViewModel
             {
@@ -138,7 +138,7 @@ namespace Coldew.Core
         {
             User creator = this._orgManager.UserManager.GetUserByAccount(model.CreatorAccount);
             List<GridViewColumnModel> columnModels = JsonConvert.DeserializeObject<List<GridViewColumnModel>>(model.ColumnsJson);
-            List<GridViewColumn> columns = columnModels.Select(x => new GridViewColumn(this._coldewObject.GetFieldById(x.FieldId), x.Width)).ToList();
+            List<GridViewColumn> columns = columnModels.Select(x => new GridViewColumn(this._coldewObject.GetFieldByCode(x.FieldCode), x.Width)).ToList();
             GridView view = new GridView(model.ID, model.Code, model.Name, (GridViewType)model.Type, creator, model.IsShared, model.IsSystem,
                     model.Index, columns, MetadataExpressionSearcher.Parse(model.SearchExpression, this._coldewObject), this._coldewObject);
             return view;

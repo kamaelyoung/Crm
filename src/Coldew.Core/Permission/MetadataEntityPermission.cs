@@ -7,7 +7,7 @@ using Coldew.Api;
 using Coldew.Data;
 using Newtonsoft.Json;
 
-namespace Coldew.Core.MetadataPermission
+namespace Coldew.Core.Permission
 {
     public class MetadataEntityPermission
     {

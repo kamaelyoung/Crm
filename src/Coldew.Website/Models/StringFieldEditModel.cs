@@ -14,7 +14,7 @@ namespace Coldew.Website.Models
             this.name = field.Name;
             this.required = field.Required;
             this.defaultValue = field.DefaultValue;
-            this.index = field.Index;
+            
         }
 
         public int id;

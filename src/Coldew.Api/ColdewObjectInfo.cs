@@ -14,6 +14,8 @@ namespace Coldew.Api
 
         public string Name { set; get; }
 
+        public ColdewObjectType Type { set; get; }
+
         public List<FieldInfo> Fields { set; get; }
 
         public FieldInfo GetField(string code)

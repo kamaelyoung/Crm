@@ -18,31 +18,15 @@ namespace Coldew.Core
             this.Tip = info.Tip;
             this.Name = info.Name;
             this.Required = info.Required;
-            this.CanModify = info.CanModify;
-            this._code = info.Code;
-            this.CanInput = info.CanInput;
-            this.Index = info.Index;
+            this.IsSystem = info.IsSystem;
+            this.Code = info.Code;
             this.ColdewObject = info.ColdewObject;
+            this.Type = info.Type;
         }
 
         public int ID { set; get; }
 
-        private string _code;
-        public string Code
-        {
-            private set
-            {
-                this._code = value;
-            }
-            get 
-            {
-                if (string.IsNullOrEmpty(this._code))
-                {
-                    return "field" + this.ID;
-                }
-                return this._code;
-            } 
-        }
+        public string Code{ private set;get; }
 
         public string Name { set; get; }
 
@@ -50,13 +34,9 @@ namespace Coldew.Core
 
         public bool Required { set; get; }
 
-        public bool CanModify { set; get; }
+        public bool IsSystem { set; get; }
 
-        public bool CanInput { set; get; }
-
-        public int Index { set; get; }
-
-        public abstract string Type { get; }
+        public string Type { set; get; }
 
         public abstract string TypeName { get; }
 
@@ -111,13 +91,11 @@ namespace Coldew.Core
             info.Code = this.Code;
             info.ID = this.ID;
             info.Tip = this.Tip;
-            info.CanModify = this.CanModify;
+            info.Type = this.Type;
             info.Name = this.Name;
             info.Required = this.Required;
             info.Type = this.Type;
             info.TypeName = this.TypeName;
-            info.CanInput = this.CanInput;
-            info.Index = this.Index;
         }
     }
 }

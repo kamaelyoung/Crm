@@ -14,11 +14,6 @@ namespace Coldew.Core
 
         }
 
-        public override string Type
-        {
-            get { return FieldType.DropdownList; }
-        }
-
         public override string TypeName
         {
             get { return "下拉选项"; }

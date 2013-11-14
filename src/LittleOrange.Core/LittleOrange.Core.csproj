@@ -59,8 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GongsiKehuColdewObject.cs" />
-    <Compile Include="GongsiKehu.cs" />
-    <Compile Include="GongsiKehuDataService.cs" />
     <Compile Include="LittleOrangeInitializer.cs" />
     <Compile Include="LittleOrangeManager.cs" />
     <Compile Include="LittleOrangeObjectConstCode.cs" />

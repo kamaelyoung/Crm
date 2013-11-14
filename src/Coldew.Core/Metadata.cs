@@ -9,7 +9,7 @@ using Coldew.Api;
 using Coldew.Data;
 using Coldew.Api.Exceptions;
 using Coldew.Core.DataServices;
-using Coldew.Core.MetadataPermission;
+using Coldew.Core.Permission;
 
 namespace Coldew.Core
 {
@@ -70,7 +70,7 @@ namespace Coldew.Core
         {
             get
             {
-                UserMetadataValue value = this.GetProperty(this.ColdewObject.CreatorField.Code).Value as UserMetadataValue;
+                UserMetadataValue value = this.GetProperty(this.ColdewObject.CreatedUserField.Code).Value as UserMetadataValue;
                 return value.User;
             }
         }
@@ -79,7 +79,7 @@ namespace Coldew.Core
         {
             get
             {
-                DateMetadataValue value = this.GetProperty(this.ColdewObject.CreateTimeField.Code).Value as DateMetadataValue;
+                DateMetadataValue value = this.GetProperty(this.ColdewObject.CreatedTimeField.Code).Value as DateMetadataValue;
                 return value.Date.Value;
             }
         }
@@ -234,7 +234,7 @@ namespace Coldew.Core
                 return true;
             }
 
-            if (this.ColdewObject.PermissionManager.HasValue(user, MetadataPermissionValue.Modify, this))
+            if (this.ColdewObject.MetadataPermission.HasValue(user, MetadataPermissionValue.Modify, this))
             {
                 return true;
             }
@@ -258,7 +258,7 @@ namespace Coldew.Core
                 return true;
             }
 
-            if (this.ColdewObject.PermissionManager.HasValue(user, MetadataPermissionValue.View, this))
+            if (this.ColdewObject.MetadataPermission.HasValue(user, MetadataPermissionValue.View, this))
             {
                 return true;
             }
@@ -282,7 +282,7 @@ namespace Coldew.Core
                 return true;
             }
 
-            if (this.ColdewObject.PermissionManager.HasValue(user, MetadataPermissionValue.Delete, this))
+            if (this.ColdewObject.MetadataPermission.HasValue(user, MetadataPermissionValue.Delete, this))
             {
                 return true;
             }

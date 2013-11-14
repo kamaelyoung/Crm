@@ -13,7 +13,6 @@ namespace Coldew.Website.Models
         {
             this.id = fieldInfo.ID;
             this.name = fieldInfo.Name;
-            this.index = fieldInfo.Index;
             this.required = fieldInfo.Required ? "是" : "否";
             this.type = fieldInfo.TypeName;
             switch (fieldInfo.Type)
@@ -80,8 +79,6 @@ namespace Coldew.Website.Models
         public string required { set; get; }
 
         public string type { set; get; }
-
-        public int index { set; get; }
 
         public string editLink;
     }

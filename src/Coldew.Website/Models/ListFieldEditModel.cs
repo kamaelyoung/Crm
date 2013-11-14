@@ -14,7 +14,7 @@ namespace Coldew.Website.Models
             this.name = field.Name;
             this.required = field.Required;
             this.defaultValue = field.DefaultValue;
-            this.index = field.Index;
+            
             this.selectList = string.Join(",", field.SelectList);
         }
 
@@ -24,7 +24,7 @@ namespace Coldew.Website.Models
             this.name = field.Name;
             this.required = field.Required;
             this.defaultValue = string.Join(",", field.DefaultValues);
-            this.index = field.Index;
+            
             this.selectList = string.Join(",", field.SelectList);
         }
 

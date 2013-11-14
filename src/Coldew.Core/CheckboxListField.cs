@@ -26,11 +26,6 @@ namespace Coldew.Core
             this.SelectList = selectList;
         }
 
-        public override string Type
-        {
-            get { return FieldType.CheckboxList; }
-        }
-
         public override string TypeName
         {
             get { return "复选框"; }
@@ -53,16 +48,14 @@ namespace Coldew.Core
             return new StringListMetadataValue(stringList, this);
         }
 
-        public void Modify(string name, bool required, List<string> defaultValues, List<string> selectList, int index)
+        public void Modify(string name, bool required, List<string> defaultValues, List<string> selectList)
         {
-            FieldModifyArgs args = new FieldModifyArgs { Name = name, Required = required, Index = index };
-
+            FieldModifyArgs args = new FieldModifyArgs { Name = name, Required = required };
             this.OnModifying(args);
 
             FieldModel model = NHibernateHelper.CurrentSession.Get<FieldModel>(this.ID);
             model.Name = name;
             model.Required = required;
-            model.Index = index;
             CheckboxFieldConfigModel configModel = new CheckboxFieldConfigModel { DefaultValues = defaultValues, SelectList = selectList };
             model.Config = JsonConvert.SerializeObject(configModel);
 
@@ -70,10 +63,10 @@ namespace Coldew.Core
             NHibernateHelper.CurrentSession.Flush();
 
             this.Name = name;
-            this.Index = index;
             this.Required = required;
             this.DefaultValues = defaultValues;
             this.SelectList = selectList;
+
             this.OnModifyed(args);
         }
 

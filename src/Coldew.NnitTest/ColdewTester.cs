@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Coldew.Core.Organization;
 using Coldew.Core;
 using Coldew.Api;
-using Coldew.Core.MetadataPermission;
+using Coldew.Core.Permission;
 using Coldew.Core.Search;
 using Newtonsoft.Json.Linq;
 
@@ -22,37 +22,33 @@ namespace Coldew.NnitTest
         [Test]
         public void PermissionTest()
         {
-            ColdewObject cobject = this.ColdewManager.ObjectManager.Create("testObject", "testObject");
-            Field nameField = cobject.CreateStringField(ColdewObjectCode.FIELD_NAME_NAME, "名称", "", true, true, true, 1, "");
-            Field diquField = cobject.CreateDropdownField("diqu", "地区", false, false, true, 3, null, new List<string> { "天河区", "番禺区" });
-            Field salesUsersField = cobject.CreateUserField("userField", "业务员", "", true, true, true, 4, true);
-            Field creatorField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_CREATOR, "创建人", "", true, false, false, 16, true);
-            Field createTimeField = cobject.CreateDateField(ColdewObjectCode.FIELD_NAME_CREATE_TIME, "创建时间", "", false, false, false, 17, true);
-            Field modifiedUserField = cobject.CreateUserField(ColdewObjectCode.FIELD_NAME_MODIFIED_USER, "修改人", "", true, false, false, 18, true);
-            Field modifiedTimeField = cobject.CreateDateField(ColdewObjectCode.FIELD_NAME_MODIFIED_TIME, "修改时间", "", false, false, false, 19, true);
+            ColdewObject cobject = this.ColdewManager.ObjectManager.Create(new ColdewObjectCreateInfo("testObject", "testObject", ColdewObjectType.Standard, true, "名称"));
+            Field diquField = cobject.CreateDropdownField(new FieldCreateBaseInfo("diqu", "地区", "", false, false), null, new List<string> { "天河区", "番禺区" });
+            Field salesUsersField = cobject.CreateUserField(new FieldCreateBaseInfo("userField", "业务员", "", true, true), true);
 
             JObject dictionary = new JObject();
-            dictionary.Add(nameField.Code, "name1");
+            dictionary.Add(cobject.NameField.Code, "name1");
             dictionary.Add(diquField.Code, "天河区");
             dictionary.Add(salesUsersField.Code, "user5");
             Metadata metadata = cobject.MetadataManager.Create(this.User1, dictionary);
 
+            //enetity permission
             Assert.IsFalse(metadata.CanPreview(this.User2));
-
-            List<MetadataPermission> entityPermissionValues = new List<MetadataPermission>();
-            cobject.PermissionManager.EntityPermissionManager.Create(metadata.ID, new MetadataOrgMember(this.User2), MetadataPermissionValue.View);
-
+            cobject.MetadataPermission.EntityManager.Create(metadata.ID, new MetadataOrgMember(this.User2), MetadataPermissionValue.View);
             Assert.IsTrue(metadata.CanPreview(this.User2));
 
             //strategy permission
             Assert.IsFalse(metadata.CanPreview(this.User4));
             Assert.IsFalse(metadata.CanPreview(this.User5));
-
-            cobject.PermissionManager.PermissionStrategyManager.Create(cobject.ID, new MetadataOrgMember(this.User4), MetadataPermissionValue.View, "{diqu: '天河区'}");
-            cobject.PermissionManager.PermissionStrategyManager.Create(cobject.ID, new MetadataFieldMember("userField"), MetadataPermissionValue.View, null);
-            
+            cobject.MetadataPermission.StrategyManager.Create(new MetadataOrgMember(this.User4), MetadataPermissionValue.View, "{diqu: '天河区'}");
+            cobject.MetadataPermission.StrategyManager.Create(new MetadataFieldMember("userField"), MetadataPermissionValue.View, null);
             Assert.IsTrue(metadata.CanPreview(this.User4));
             Assert.IsTrue(metadata.CanPreview(this.User5));
+
+            //object permission
+            Assert.IsFalse(cobject.ObjectPermission.HasValue(this.User1, ObjectPermissionValue.View));
+            cobject.ObjectPermission.Create(this.User1, ObjectPermissionValue.View);
+            Assert.IsTrue(cobject.ObjectPermission.HasValue(this.User1, ObjectPermissionValue.View));
         }
     }
 }

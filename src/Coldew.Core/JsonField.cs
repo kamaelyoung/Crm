@@ -16,11 +16,6 @@ namespace Coldew.Core
             
         }
 
-        public override string Type
-        {
-            get { return FieldType.Json; }
-        }
-
         public override string TypeName
         {
             get { return "Json"; }
@@ -33,23 +28,21 @@ namespace Coldew.Core
             return new JsonMetadataValue(value, this);
         }
 
-        public void Modify(string name, bool required, string defaultValue, int index)
+        public void Modify(string name, bool required, string defaultValue)
         {
-            FieldModifyArgs args = new FieldModifyArgs { Name = name, Required = required, Index = index };
+            FieldModifyArgs args = new FieldModifyArgs { Name = name, Required = required};
 
             this.OnModifying(args);
 
             FieldModel model = NHibernateHelper.CurrentSession.Get<FieldModel>(this.ID);
             model.Name = name;
             model.Required = required;
-            model.Index = index;
             model.Config = defaultValue;
 
             NHibernateHelper.CurrentSession.Update(model);
             NHibernateHelper.CurrentSession.Flush();
 
             this.Name = name;
-            this.Index = index;
             this.Required = required;
             this.DefaultValue = defaultValue;
 
