@@ -21,31 +21,7 @@ namespace Coldew.Core.Workflow
 
         public List<LiuchengXinxi> GetLiuchengXinxiList(string liuchengMobanId, ShijianFanwei faqiShijianFanwei, ShijianFanwei jieshuShijianFanwei, string zhaiyao, int start, int size, out int count)
         {
-            List<Liucheng> liuchengList = new List<Liucheng>();
-            foreach (LiuchengMoban moban in this._yinqing.LiuchengMobanManager.GetAllMoban())
-            {
-                if (!string.IsNullOrEmpty(liuchengMobanId) && moban.ID != liuchengMobanId)
-                {
-                    continue;
-                }
-                foreach (Liucheng liucheng in moban.LiuchengList)
-                {
-                    if (faqiShijianFanwei != null && !faqiShijianFanwei.ZaiFanweinei(liucheng.FaqiShijian))
-                    {
-                        continue;
-                    }
-                    if (jieshuShijianFanwei != null && !jieshuShijianFanwei.ZaiFanweinei(liucheng.JieshuShijian))
-                    {
-                        continue;
-                    }
-                    if (zhaiyao != null && liucheng.Zhaiyao.IndexOf(zhaiyao, StringComparison.InvariantCultureIgnoreCase) == -1)
-                    {
-                        continue;
-                    }
-                    liuchengList.Add(liucheng);
-                }
-            }
-            count = liuchengList.Count;
+            List<Liucheng> liuchengList = this._yinqing.LiuchengManager.GetLiuchengList(liuchengMobanId, faqiShijianFanwei, jieshuShijianFanwei, zhaiyao, start, size, out count);
             return liuchengList.Select(x => x.Map()).ToList();
         }
 
@@ -53,9 +29,9 @@ namespace Coldew.Core.Workflow
         {
             User user = this._coldewManger.OrgManager.UserManager.GetUserByAccount(faqirenAccount);
             LiuchengMoban moban = this._yinqing.LiuchengMobanManager.GetMobanById(liuchengMobanId);
-            Metadata biaodan = moban.BiandanManager.GetById(biaodanId);
+            Metadata biaodan = moban.ColdewObject.MetadataManager.GetById(biaodanId);
 
-            Liucheng liucheng = moban.FaqiLiucheng(user, zhaiyao, jinjide, biaodan);
+            Liucheng liucheng = this._yinqing.LiuchengManager.FaqiLiucheng(user, liuchengMobanId, zhaiyao, jinjide, biaodan);
             Xingdong xingdong = liucheng.ChuangjianXingdong(code, name, zhaiyao, null);
             Renwu renwu = xingdong.ChuangjianRenwu(user);
             renwu.Wancheng(user, shuoming);
@@ -65,13 +41,13 @@ namespace Coldew.Core.Workflow
 
         public LiuchengXinxi GetLiucheng(string liuchengId)
         {
-            Liucheng liucheng = this._yinqing.LiuchengMobanManager.GetLiucheng(liuchengId);
+            Liucheng liucheng = this._yinqing.LiuchengManager.GetLiucheng(liuchengId);
             return liucheng.Map();
         }
 
         public void Wancheng(string liuchengId)
         {
-            Liucheng liucheng = this._yinqing.LiuchengMobanManager.GetLiucheng(liuchengId);
+            Liucheng liucheng = this._yinqing.LiuchengManager.GetLiucheng(liuchengId);
             liucheng.Wancheng();
         }
     }

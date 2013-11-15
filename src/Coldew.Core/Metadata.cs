@@ -139,11 +139,6 @@ namespace Coldew.Core
 
         public virtual void SetPropertys(User opUser, JObject jobject)
         {
-            if (!this.CanModify(opUser))
-            {
-                throw new ColdewException("没有权限修改该客户!");
-            }
-
             this.OnPropertyChanging(jobject);
 
             List<MetadataProperty> modifyPropertys = MetadataPropertyListHelper.MapPropertys(jobject, this.ColdewObject);
@@ -199,11 +194,6 @@ namespace Coldew.Core
 
         public virtual void Delete(User opUser)
         {
-            if (!this.CanDelete(opUser))
-            {
-                throw new ColdewException("没有权限删除该客户!");
-            }
-
             if (this.Deleting != null)
             {
                 this.Deleting(this, opUser);
@@ -217,47 +207,8 @@ namespace Coldew.Core
             }
         }
 
-        public virtual bool CanModify(User user)
-        {
-            if (user.Role == Api.Organization.UserRole.Administrator)
-            {
-                return true;
-            }
-
-            if (user == this.Creator)
-            {
-                return true;
-            }
-
-            if (this.Creator.IsMySuperior(user, true))
-            {
-                return true;
-            }
-
-            if (this.ColdewObject.MetadataPermission.HasValue(user, MetadataPermissionValue.Modify, this))
-            {
-                return true;
-            }
-            return false;
-        }
-
         public virtual bool CanPreview(User user)
         {
-            if (user.Role == Api.Organization.UserRole.Administrator)
-            {
-                return true;
-            }
-
-            if (user == this.Creator)
-            {
-                return true;
-            }
-
-            if (this.Creator.IsMySuperior(user, true))
-            {
-                return true;
-            }
-
             if (this.ColdewObject.MetadataPermission.HasValue(user, MetadataPermissionValue.View, this))
             {
                 return true;
@@ -265,29 +216,16 @@ namespace Coldew.Core
             return false;
         }
 
-        public virtual bool CanDelete(User user)
+        public virtual UserMetadataInfo Map(User user)
         {
-            if (user.Role == Api.Organization.UserRole.Administrator)
+            return new UserMetadataInfo()
             {
-                return true;
-            }
-
-            if (user == this.Creator)
-            {
-                return true;
-            }
-
-            if (this.Creator.IsMySuperior(user, true))
-            {
-                return true;
-            }
-
-            if (this.ColdewObject.MetadataPermission.HasValue(user, MetadataPermissionValue.Delete, this))
-            {
-                return true;
-            }
-
-            return false;
+                ID = this.ID,
+                Name = this.Name,
+                PermissionValue = this.ColdewObject.MetadataPermission.GetValue(user, this),
+                Propertys = this._propertys.Values.Select(x => x.Map()).ToList(),
+                Favorited = this.ColdewObject.FavoriteManager.IsFavorite(user, this)
+            };
         }
 
         public virtual MetadataInfo Map()

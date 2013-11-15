@@ -26,5 +26,7 @@ namespace Coldew.Core
         public bool IsSystem { set; get; }
 
         public string NameFieldName { set; get; }
+
+        public int Index { set; get; }
     }
 }

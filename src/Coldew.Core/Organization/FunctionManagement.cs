@@ -21,7 +21,7 @@ namespace Coldew.Core.Organization
             _funtions = new Dictionary<string,Function>();
         }
 
-        private void Load()
+        internal void Load()
         {
             if (!_loaded)
             {
@@ -56,7 +56,6 @@ namespace Coldew.Core.Organization
 
         public Function Create(string id, string name, string url, string iconClass, int sort, List<Member> members)
         {
-            this.Load();
             string memberIds = string.Join(",", members);
             
             FunctionModel model = new FunctionModel
@@ -79,7 +78,6 @@ namespace Coldew.Core.Organization
 
         public Function GetFunctionInfoById(string id)
         {
-            this.Load();
             if (string.IsNullOrEmpty(id))
             {
                 return null;
@@ -97,7 +95,6 @@ namespace Coldew.Core.Organization
 
         public List<Function> GetAllFunction()
         {
-            this.Load();
             return this._funtions.Values.ToList();
         }
     }

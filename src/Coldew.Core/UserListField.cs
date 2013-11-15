@@ -30,9 +30,16 @@ namespace Coldew.Core
             List<User> users = new List<User>();
             if (value != null)
             {
-                foreach (JToken account in value)
+                if (value.Type == JTokenType.Array)
                 {
-                    users.Add(this._userManager.GetUserByAccount(account.ToString()));
+                    foreach (JToken account in value)
+                    {
+                        users.Add(this._userManager.GetUserByAccount(account.ToString()));
+                    }
+                }
+                else
+                {
+                    users.Add(this._userManager.GetUserByAccount(value.ToString()));
                 }
             }
             return new UserListMetadataValue(users, this);

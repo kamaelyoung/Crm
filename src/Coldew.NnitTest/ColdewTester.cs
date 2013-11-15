@@ -41,7 +41,7 @@ namespace Coldew.NnitTest
             Assert.IsFalse(metadata.CanPreview(this.User4));
             Assert.IsFalse(metadata.CanPreview(this.User5));
             cobject.MetadataPermission.StrategyManager.Create(new MetadataOrgMember(this.User4), MetadataPermissionValue.View, "{diqu: '天河区'}");
-            cobject.MetadataPermission.StrategyManager.Create(new MetadataFieldMember("userField"), MetadataPermissionValue.View, null);
+            cobject.MetadataPermission.StrategyManager.Create(new MetadataFieldMember(salesUsersField), MetadataPermissionValue.View, null);
             Assert.IsTrue(metadata.CanPreview(this.User4));
             Assert.IsTrue(metadata.CanPreview(this.User5));
 

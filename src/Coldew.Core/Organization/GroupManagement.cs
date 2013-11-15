@@ -22,16 +22,13 @@ namespace Coldew.Core.Organization
         {
             get
             {
-                this.Load();
                 return this._groups;
             }
         }
 
-        public EveryoneGroup Everyone { private set; get; }
-
         private bool _loaded;
 
-        private void Load()
+        internal void Load()
         {
             if (!this._loaded)
             {

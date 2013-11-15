@@ -11,8 +11,8 @@ namespace LittleOrange.Core
 {
     public class ZiranrenColdewObject : ColdewObject
     {
-        public ZiranrenColdewObject(string id, string code, string name, ColdewManager coldewManager)
-            : base(id, code, name, Coldew.Api.ColdewObjectType.Standard, true, coldewManager)
+        public ZiranrenColdewObject(string id, string code, string name, int index, ColdewManager coldewManager)
+            : base(id, code, name, Coldew.Api.ColdewObjectType.Standard, true, index, coldewManager)
         {
 
         }

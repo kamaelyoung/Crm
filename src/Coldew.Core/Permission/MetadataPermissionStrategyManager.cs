@@ -93,7 +93,7 @@ namespace Coldew.Core.Permission
 
         private MetadataPermissionStrategy Create(MetadataPermissionStrategyModel model)
         {
-            MetadataMember metadataMember = MetadataMember.Create(model.Member, this._orgManager);
+            MetadataMember metadataMember = MetadataMember.Create(model.Member, this._cobject);
             if (metadataMember != null)
             {
                 MetadataPermissionStrategy permission = new MetadataPermissionStrategy(model.ID, model.ObjectId, metadataMember, (MetadataPermissionValue)model.Value, MetadataExpressionSearcher.Parse(model.SearchExpressions, this._cobject));

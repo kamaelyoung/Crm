@@ -8,15 +8,15 @@ namespace Coldew.Core
 {
     public class MetadataFieldMember : MetadataMember
     {
-        string _fieldCode;
-        public MetadataFieldMember(string fieldCode)
+        Field _field;
+        public MetadataFieldMember(Field field)
         {
-            this._fieldCode = fieldCode;
+            this._field = field;
         }
 
         public override bool Contains(Metadata metadata, User user)
         {
-            MetadataProperty property = metadata.GetProperty(this._fieldCode);
+            MetadataProperty property = metadata.GetProperty(this._field.Code);
             if (property != null)
             {
                 if (property.Value is UserMetadataValue)
@@ -35,7 +35,7 @@ namespace Coldew.Core
 
         public override string Serialize()
         {
-            return "field:" + this._fieldCode;
+            return "field:" + this._field.Code;
         }
     }
 }

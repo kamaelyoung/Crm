@@ -27,7 +27,6 @@ namespace Coldew.Core
             this._orgManger = orgManger;
             this.ColdewObject = cobject;
             this._lock = new ReaderWriterLock();
-            this.FavoriteManager = new MetadataFavoriteManager(this, orgManger);
             this.ColdewObject.FieldDeleted += new TEventHandler<Core.ColdewObject, Field>(ColdewObject_FieldDeleted);
         }
 
@@ -48,8 +47,6 @@ namespace Coldew.Core
         }
 
         public ColdewObject ColdewObject { private set; get; }
-
-        public MetadataFavoriteManager FavoriteManager { private set; get; }
 
         protected virtual void OnCreating(User creator, JObject jobject)
         {
@@ -195,13 +192,20 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> Search(User user, MetadataSearcher seracher, int skipCount, int takeCount, string orderBy, out int totalCount)
+        public List<Metadata> Search(User user, List<MetadataSearcher> serachers, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(user, x));
-                var metadatas = metadatasEnumer.OrderBy(orderBy).ToList();
+                List<Metadata> metadatas = null;
+                if (serachers == null || serachers.Count == 0)
+                {
+                    metadatas = this._metadataList.Where(x => x.CanPreview(user)).OrderBy(orderBy).ToList();
+                }
+                else
+                {
+                    metadatas = this._metadataList.Where(x => x.CanPreview(user) && serachers.All(s =>s.Accord(user, x))).OrderBy(orderBy).ToList();
+                }
                 totalCount = metadatas.Count;
                 return metadatas.Skip(skipCount).Take(takeCount).ToList();
             }
@@ -211,13 +215,21 @@ namespace Coldew.Core
             }
         }
 
-        public List<Metadata> Search(User user, MetadataSearcher seracher, string orderBy)
+        public List<Metadata> Search(User user, List<MetadataSearcher> serachers, string orderBy)
         {
             this._lock.AcquireReaderLock(0);
             try
             {
-                var metadatasEnumer = this._metadataList.Where(x => x.CanPreview(user) && seracher.Accord(user, x));
-                return metadatasEnumer.OrderBy(orderBy).ToList();
+                List<Metadata> metadatas = null;
+                if (serachers == null || serachers.Count == 0)
+                {
+                    metadatas = this._metadataList.Where(x => x.CanPreview(user)).OrderBy(orderBy).ToList();
+                }
+                else
+                {
+                    metadatas = this._metadataList.Where(x => x.CanPreview(user) && serachers.All(s =>s.Accord(user, x))).OrderBy(orderBy).ToList();
+                }
+                return metadatas;
             }
             finally
             {

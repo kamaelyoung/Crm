@@ -16,17 +16,17 @@ namespace LittleOrange.Core
             this._crmManager = crmManager;
         }
 
-        protected override ColdewObject Create(string id, string code, ColdewObjectType type, string name, bool isSystem)
+        protected override ColdewObject Create(string id, string code, ColdewObjectType type, string name, bool isSystem, int index)
         {
             if (code == LittleOrangeObjectConstCode.Object_GongsiKehu )
             {
-                return new GongsiKehuColdewObject(id, code, name, this._crmManager);
+                return new GongsiKehuColdewObject(id, code, name, index, this._crmManager);
             }
             else if (code == LittleOrangeObjectConstCode.Object_Ziranren)
             {
-                return new ZiranrenColdewObject(id, code, name, this._crmManager);
+                return new ZiranrenColdewObject(id, code, name, index, this._crmManager);
             }
-            return base.Create(id, code, type, name, isSystem);
+            return base.Create(id, code, type, name, isSystem, index);
         }
     }
 }

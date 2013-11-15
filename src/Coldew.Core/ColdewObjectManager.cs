@@ -21,12 +21,24 @@ namespace Coldew.Core
 
         public ColdewObject Create(ColdewObjectCreateInfo createInfo)
         {
+            if (createInfo.Index == 0)
+            {
+                if (this._objects.Count == 0)
+                {
+                    createInfo.Index = 1;
+                }
+                else
+                {
+                    createInfo.Index = this._objects.Max(x => x.Index);
+                }
+            }
             ColdewObjectModel model = new ColdewObjectModel
             {
                 Code = createInfo.Code,
                 Name = createInfo.Name,
                 Type = (int)createInfo.Type,
-                IsSystem = createInfo.IsSystem
+                IsSystem = createInfo.IsSystem,
+                Index = createInfo.Index
             };
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
@@ -39,14 +51,14 @@ namespace Coldew.Core
 
         private ColdewObject Create(ColdewObjectModel model)
         {
-            ColdewObject form = this.Create(model.ID, model.Code, (ColdewObjectType)model.Type, model.Name, model.IsSystem);
+            ColdewObject form = this.Create(model.ID, model.Code, (ColdewObjectType)model.Type, model.Name, model.IsSystem, model.Index);
             this._objects.Add(form);
             return form;
         }
 
-        protected virtual ColdewObject Create(string id, string code, ColdewObjectType type, string name, bool isSystem)
+        protected virtual ColdewObject Create(string id, string code, ColdewObjectType type, string name, bool isSystem, int index)
         {
-            return new ColdewObject(id, code, name, type, isSystem, this._coldewManager);
+            return new ColdewObject(id, code, name, type, isSystem, index, this._coldewManager);
         }
 
         public ColdewObject GetObjectById(string objectId)
@@ -84,6 +96,7 @@ namespace Coldew.Core
             {
                 this.Create(model);
             }
+            this._objects = this._objects.OrderBy(x => x.Index).ToList();
             foreach (ColdewObject form in this._objects)
             {
                 form.Load();

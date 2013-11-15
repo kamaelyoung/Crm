@@ -24,8 +24,8 @@
     </fieldset>
     <fieldset>
         <legend>备注信息</legend>
-            @crmInput.Input(objectInfo.GetField("suihuoFudai"))
-            @crmInput.Input(objectInfo.GetField("beizhu"))
+            @crmInput.Input(objectInfo.GetField("suihuoFudai"), "class='input-xxlarge'")
+            @crmInput.Input(objectInfo.GetField("beizhu"), "class='input-xxlarge'")
     </fieldset>
     <div class="control-group">
         <div class="controls">
@@ -53,7 +53,7 @@ var chanpinGrid = $("#chanpinGrid").datagrid({
 			{title: "生产企业", width: 150, field:"shengchanQiye"},
 			{title: "单位", width: 60, field:"danwei"},
 			{title: "总数量", width: 60, field:"zongshuliang"},
-			{title: "开票单价", width: 80, field:"kaipiaoDanjia"},
+			{title: "出库单价", width: 80, field:"chukuDanjia"},
 			{title: "总金额", width: 80, field:"zongjine"},
 			{title: "件数", width: 60, field:"jianshu"}
 		],

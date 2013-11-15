@@ -16,9 +16,9 @@
         <a id="btnCreate" href="@this.Url.Action("Create", new { objectId = Request["objectId"], viewId = this.ViewBag.viewId })" class="btn"><i class="icon-plus"></i>创建</a>
         }
         <button id="btnSearch" class="btn"><i class="icon-search"></i>查询</button>
-        <button id="btnEdit" disabled="disabled" class="btn"><i class="icon-edit"></i>编辑</button> 
-        <button id="btnDelete" disabled="disabled" data-loading-text="删除中..." class="btn"><i class="icon-trash"></i>删除</button> 
-        <button id="btnFavorite" disabled="disabled" data-loading-text="收藏中..." class="btn"><i class="icon-star"></i>收藏</button> 
+        <button id="btnEdit" style="display: none" class="btn"><i class="icon-edit"></i>编辑</button> 
+        <button id="btnDelete" style="display: none" data-loading-text="删除中..." class="btn"><i class="icon-trash"></i>删除</button> 
+        <button id="btnFavorite" style="display: none" data-loading-text="收藏中..." class="btn"><i class="icon-star"></i>收藏</button> 
         <button id="btnRefresh" class="btn"><i class="icon-refresh"></i>刷新</button> 
         @if (this.ViewBag.canSettingView)
         {
@@ -50,14 +50,10 @@
 		singleSelect: false,
 		showNumberRow: true,
         selectedRow: function(){
-            var rows = metadataGrid.datagrid("getSelectedRows");
-            $("#btnDelete, #btnFavorite").prop("disabled", false);
-            $("#btnEdit").prop("disabled", rows.length != 1);
+            refreshToolbar();
         },
         unselectedRow: function(){
-            var rows = metadataGrid.datagrid("getSelectedRows");
-            $("#btnDelete, #btnFavorite").prop("disabled", rows.length == 0);
-            $("#btnEdit").prop("disabled", rows.length != 1);
+            refreshToolbar();
         },
         sort: function(sender, args){
             var pageInfo = pager.pager("option").pageInfo;
@@ -70,10 +66,42 @@
         loadMetadataGrid(_searchInfo, args.start);
     }});
 
+    function refreshToolbar(){
+        var rows = metadataGrid.datagrid("getSelectedRows");
+        $("#btnDelete, #btnFavorite").prop("disabled", false);
+        if(rows.length > 0){
+            if(rows.length == 1 && rows[0].datarow("option", "data").canModify){
+                $("#btnEdit").show();
+            }
+            else{
+                $("#btnEdit").hide();
+            }
+            
+            var hasCannotDeleteRow = false;
+            $.each(rows, function(i, row){
+                if(!row.datarow("option", "data").canDelete){
+                    hasCannotDeleteRow = true;
+                    return false;
+                }
+            })
+            if(hasCannotDeleteRow){
+                $("#btnDelete").hide();
+            }
+            else{
+                $("#btnDelete").show();
+            }
+
+            $("#btnFavorite").show();   
+        }
+        else{
+            $("#btnEdit, #btnDelete, #btnFavorite").hide();
+        }
+    }
+
     var _searchInfo;
     function loadMetadataGrid(searchInfo, start, cb, orderBy){
         _searchInfo = searchInfo;
-        var args = {objectId: objectId, start: start, size: 20, orderBy: orderBy};
+        var args = {objectId: objectId, viewId: viewId, start: start, size: 20, orderBy: orderBy};
         if(_searchInfo){
             var searchInfoJson = $.toJSON(_searchInfo);
             args.searchInfoJson = searchInfoJson;
@@ -85,7 +113,7 @@
             if(model.result == 0){
                 $("#metadataGrid").datagrid("option", "data", model.data.list);
                 $("#pager").pager("option", "pageInfo", {start: start, size: 20, count: model.data.count})
-                $("#btnDelete, #btnFavorite").prop("disabled", true);
+                refreshToolbar();
             }
             else{
                 alert(model.message)
@@ -123,7 +151,7 @@
         if(_searchInfo){
             searchInfoJson = $.toJSON(_searchInfo);
         }
-        $.get("@this.Url.Action("Export")", {objectId: objectId, searchInfoJson: searchInfoJson}, function(model){
+        $.get("@this.Url.Action("Export")", {objectId: objectId, viewId: viewId, searchInfoJson: searchInfoJson}, function(model){
             $("#btnExport").button("reset");
             if(model.result == 0){
                 open("@this.Url.Action("DownloadExportFile", new {objectId = Request["objectId"]})" + "&fileName=" + model.data);

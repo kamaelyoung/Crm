@@ -11,21 +11,40 @@ namespace Coldew.Core
 {
     public class MetadataFavoriteManager
     {
-        MetadataManager _metadataManager;
+        ColdewObject _cobject;
         OrganizationManagement _orgManger;
         Dictionary<User, List<Metadata>> _userFavoriteDic;
         Dictionary<Metadata, Metadata> _bindedEventDic;
         ReaderWriterLock _lock;
 
-        public MetadataFavoriteManager(MetadataManager metadataManager, OrganizationManagement orgManger)
+        public MetadataFavoriteManager(ColdewObject cobject)
         {
-            this._metadataManager = metadataManager;
-            this._orgManger = orgManger;
+            this._cobject = cobject;
+            this._orgManger = _cobject.ColdewManager.OrgManager;
             this._userFavoriteDic = new Dictionary<User, List<Metadata>>();
             this._bindedEventDic = new Dictionary<Metadata, Metadata>();
             this._lock = new ReaderWriterLock();
+        }
 
-            this.Load();
+        public bool IsFavorite(User user, Metadata metadata)
+        {
+            this._lock.AcquireReaderLock(0);
+            try
+            {
+                if (!this._userFavoriteDic.ContainsKey(user))
+                {
+                    return false;
+                }
+                if (this._userFavoriteDic[user].Contains(metadata))
+                {
+                    return true;
+                }
+                return false;
+            }
+            finally
+            {
+                this._lock.ReleaseReaderLock();
+            }
         }
 
         public void Favorite(User user, Metadata metadata)
@@ -41,7 +60,7 @@ namespace Coldew.Core
                 {
                     return;
                 }
-                MetadataFavoriteModel model = new MetadataFavoriteModel { MetadataId = metadata.ID, UserId = user.ID, FormId = this._metadataManager.ColdewObject.ID };
+                MetadataFavoriteModel model = new MetadataFavoriteModel { MetadataId = metadata.ID, UserId = user.ID, FormId = this._cobject.ID };
                 NHibernateHelper.CurrentSession.Save(model);
                 NHibernateHelper.CurrentSession.Flush();
 
@@ -152,12 +171,12 @@ namespace Coldew.Core
             }
         }
 
-        private void Load()
+        internal void Load()
         {
-            IList<MetadataFavoriteModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataFavoriteModel>().Where(x => x.FormId == this._metadataManager.ColdewObject.ID).List();
+            IList<MetadataFavoriteModel> models = NHibernateHelper.CurrentSession.QueryOver<MetadataFavoriteModel>().Where(x => x.FormId == this._cobject.ID).List();
             foreach (MetadataFavoriteModel model in models)
             {
-                Metadata metadata = this._metadataManager.GetById(model.MetadataId);
+                Metadata metadata = this._cobject.MetadataManager.GetById(model.MetadataId);
                 User user = this._orgManger.UserManager.GetUserById(model.UserId);
 
                 if (!this._userFavoriteDic.ContainsKey(user))

@@ -15,12 +15,12 @@ namespace Coldew.Core
             this._coldewManager = coldewManager;
         }
 
-        public GridViewInfo Create(string name, string objectId, string creatorAccount, bool isShared, string searchExpressionJson, List<GridViewColumnSetupInfo> columns)
+        public GridViewInfo Create(string name, string objectId, string creatorAccount, bool isShared, string searchExpressionJson, List<GridViewColumnSetupInfo> columns, string orderFieldCode)
         {
             User creator = this._coldewManager.OrgManager.UserManager.GetUserByAccount(creatorAccount);
             ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
             int index = form.GridViewManager.MaxIndex();
-            GridView view = form.GridViewManager.Create(GridViewType.Customized, "", name, creator, isShared, false, index, searchExpressionJson, columns);
+            GridView view = form.GridViewManager.Create(GridViewType.Standard, "", name, creator, isShared, false, index, searchExpressionJson, columns, orderFieldCode);
             return view.Map();
         }
 

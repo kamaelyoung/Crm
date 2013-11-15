@@ -10,5 +10,6 @@
         <property name="Type" type="int" column="object_type"></property>
         <property name="Name" type="string" column="object_name"></property>
         <property name="IsSystem" type="bool" column="object_isSystem"></property>
+        <property name="Index" type="int" column="object_index"></property>
     </class>
 </hibernate-mapping>

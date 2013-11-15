@@ -14,6 +14,7 @@
     <div class="control-group">
     <div class="controls">
         <button id="btnSave" type="submit" class="btn btn-primary" data-loading-text="保存中...">保存</button>
+        <button id="btnCancel" type="button" class="btn">取消</button>
     </div>
     </div>
 </form>
@@ -50,4 +51,8 @@ $("#editMetadataForm").validate({
     }
 })
 .setFormValue(metadataInfo);
+
+$("#btnCancel").click(function(){
+    location = returnUrl;
+});
 </script>

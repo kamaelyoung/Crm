@@ -10,6 +10,9 @@ namespace Coldew.Website.Models
     {
         public string name;
         public bool isShared;
+        public string orderFieldCode;
+        public string orderDirection;
+        public string OrderBy { get { return this.orderFieldCode + " " + this.orderDirection; } }
         public List<GridViweColumnSetupModel> columns;
         public JObject search;
     }

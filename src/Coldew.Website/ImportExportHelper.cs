@@ -258,8 +258,14 @@ namespace Coldew.Website
             int i = 0;
             foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)
             {
-                row.CreateCell(i).SetCellValue(filed.Name);
-                i++;
+                if (filed.Type != FieldType.CreatedTime &&
+                filed.Type != FieldType.CreatedUser &&
+                filed.Type != FieldType.ModifiedTime &&
+                filed.Type != FieldType.ModifiedUser)
+                {
+                    row.CreateCell(i).SetCellValue(filed.Name);
+                    i++;
+                }
             }
 
             string tempPath = controller.Server.MapPath(string.Format("~/Temp/{0}.xls", Guid.NewGuid().ToString()));
@@ -299,9 +305,12 @@ namespace Coldew.Website
                     JObject importModel = new JObject();
                     foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)
                     {
-                        if (customerRow[filed.Name] != null)
+                        if (customerTable.Columns.Contains(filed.Name))
                         {
-                            importModel.Add(filed.Code, customerRow[filed.Name].ToString());
+                            if (customerRow[filed.Name] != null)
+                            {
+                                importModel.Add(filed.Code, customerRow[filed.Name].ToString());
+                            }
                         }
                     }
                     importModels.Add(importModel);
@@ -321,7 +330,11 @@ namespace Coldew.Website
 
             List<DataGridColumnModel> columns = new List<DataGridColumnModel>();
             columns.Add(new DataGridColumnModel { field = "importMessage", title = "导入结果", width = 80 });
-            columns.AddRange(fields.Select(x => new DataGridColumnModel { field = x.Code, title = x.Name, width = 80 }));
+            columns.AddRange(fields.Where(x => x.Type != FieldType.CreatedTime && 
+                x.Type != FieldType.CreatedUser && 
+                x.Type != FieldType.ModifiedTime && 
+                x.Type != FieldType.ModifiedUser)
+                .Select(x => new DataGridColumnModel { field = x.Code, title = x.Name, width = 80 }));
             return columns;
         }
 

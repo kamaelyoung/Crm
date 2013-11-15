@@ -389,5 +389,15 @@ namespace Coldew.Core.Organization
                 this._lock.ReleaseReaderLock();
             }
         }
+
+        internal void Load()
+        {
+            this.UserManager.Load();
+            this.PositionManager.Load();
+            this.UserPositionManager.Load();
+            this.GroupManager.Load();
+            this.DepartmentManager.Load();
+            this.FunctionManager.Load();
+        }
     }
 }

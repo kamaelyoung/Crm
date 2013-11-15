@@ -28,5 +28,7 @@ namespace Coldew.Data
         public virtual string ColumnsJson { set; get; }
 
         public virtual string SearchExpression { set; get; }
+
+        public virtual string OrderFieldCode { set; get; }
     }
 }

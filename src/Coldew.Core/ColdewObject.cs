@@ -25,17 +25,19 @@ namespace Coldew.Core
         ReaderWriterLock _lock;
         private List<Field> _fields;
 
-        public ColdewObject(string id, string code, string name, ColdewObjectType type, bool isSystem, ColdewManager coldewManager)
+        public ColdewObject(string id, string code, string name, ColdewObjectType type, bool isSystem, int index, ColdewManager coldewManager)
         {
             this.ID = id;
             this.Name = name;
             this.Code = code;
             this.Type = type;
             this.IsSystem = isSystem;
+            this.Index = index;
             this._fields = new List<Field>();
             this._lock = new ReaderWriterLock();
             this.ColdewManager = coldewManager;
             this.MetadataManager = this.CreateMetadataManager(coldewManager);
+            this.FavoriteManager = new MetadataFavoriteManager(this);
             this.GridViewManager = this.CreateGridViewManager(coldewManager);
             this.FormManager = this.CreateFormManager(coldewManager);
             this.DataService = this.CreateDataService();
@@ -77,9 +79,13 @@ namespace Coldew.Core
 
         public bool IsSystem { set; get; }
 
+        public int Index { set; get; }
+
         public ColdewObjectType Type { set; get; }
 
         public MetadataManager MetadataManager { private set; get; }
+
+        public MetadataFavoriteManager FavoriteManager { private set; get; }
 
         public GridViewManager GridViewManager { private set; get; }
 
@@ -399,8 +405,12 @@ namespace Coldew.Core
                 this._fields.Add(field);
             }
             this.MetadataManager.Load();
+            this.FavoriteManager.Load();
             this.GridViewManager.Load();
             this.FormManager.Load();
+            this.MetadataPermission.EntityManager.Load();
+            this.MetadataPermission.StrategyManager.Load();
+            this.ObjectPermission.Load();
         }
 
     }

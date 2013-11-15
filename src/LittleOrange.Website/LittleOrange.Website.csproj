@@ -136,9 +136,6 @@
     <Content Include="Views\Metadata\CreateGridView.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Metadata\Customized.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Metadata\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +152,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Metadata\EditGridView.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Metadata\Favorite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Metadata\GridViewManage.cshtml" />
@@ -306,7 +300,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>5341</DevelopmentServerPort>
+          <DevelopmentServerPort>4039</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

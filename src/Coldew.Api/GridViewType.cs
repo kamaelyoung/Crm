@@ -7,8 +7,7 @@ namespace Coldew.Api
 {
     public enum GridViewType
     {
-        Manage,
-        Favorite,
-        Customized
+        Standard,
+        Favorite
     }
 }

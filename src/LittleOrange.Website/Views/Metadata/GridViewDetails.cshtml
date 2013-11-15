@@ -15,6 +15,26 @@
                 <label class="radio"><input type="radio" name="isShared" value="true"/>是</label>
             </div>
         </div>
+        <div class="control-group">
+            <label class="control-label" >默认排序列</label>
+            <div class="controls">
+                <select name="orderFieldCode">
+                    @foreach (ViewSetupFieldModel field in this.ViewBag.fields)
+                    {
+                        <option value="@field.code">@field.name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" >排序方式</label>
+            <div class="controls">
+                <select name="orderDirection">
+                    <option value="desc">"倒序"</option>
+                    <option value="asc">"正序"</option>
+                </select>
+            </div>
+        </div>
     </div>
     <div class="control-group">
         <label class="control-label" >字段</label>

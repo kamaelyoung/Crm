@@ -16,15 +16,19 @@ namespace Coldew.Core
     public class GridViewManager
     {
         protected Dictionary<string, GridView> _gridViewDicById;
+        protected List<GridView> _gridViews;
         protected OrganizationManagement _orgManager;
         protected ColdewObject _coldewObject;
         protected ReaderWriterLock _lock;
+        FavoriteSearcher _favoriteSearcher;
 
         public GridViewManager(OrganizationManagement orgManager, ColdewObject coldewObject)
         {
             this._orgManager = orgManager;
             this._coldewObject = coldewObject;
             this._gridViewDicById = new Dictionary<string, GridView>();
+            this._favoriteSearcher = new FavoriteSearcher(coldewObject.FavoriteManager);
+            this._gridViews = new List<GridView>();
             this._lock = new ReaderWriterLock();
         }
 
@@ -41,8 +45,8 @@ namespace Coldew.Core
             }
         }
 
-        public GridView Create(GridViewType type, string code, string name, User user, bool isShared, bool isSystem, int index, 
-            string searchExpressionJson, List<GridViewColumnSetupInfo> setupColumns)
+        public GridView Create(GridViewType type, string code, string name, User user, bool isShared, bool isSystem, int index,
+            string searchExpressionJson, List<GridViewColumnSetupInfo> setupColumns, string orderFieldCode)
         {
             var columnModels = setupColumns.Select(x => new GridViewColumnModel { FieldCode = x.FieldCode, Width = x.Width});
             string columnJson = JsonConvert.SerializeObject(columnModels);
@@ -57,7 +61,8 @@ namespace Coldew.Core
                 IsShared = isShared,
                 SearchExpression = searchExpressionJson,
                 Code = code,
-                Index = index
+                Index = index,
+                OrderFieldCode = orderFieldCode
             };
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();
@@ -71,6 +76,7 @@ namespace Coldew.Core
         private void Index(GridView view)
         {
             this._gridViewDicById.Add(view.ID, view);
+            this._gridViews.Add(view);
         }
 
         private void BindEvent(GridView view)
@@ -139,8 +145,18 @@ namespace Coldew.Core
             User creator = this._orgManager.UserManager.GetUserByAccount(model.CreatorAccount);
             List<GridViewColumnModel> columnModels = JsonConvert.DeserializeObject<List<GridViewColumnModel>>(model.ColumnsJson);
             List<GridViewColumn> columns = columnModels.Select(x => new GridViewColumn(this._coldewObject.GetFieldByCode(x.FieldCode), x.Width)).ToList();
-            GridView view = new GridView(model.ID, model.Code, model.Name, (GridViewType)model.Type, creator, model.IsShared, model.IsSystem,
-                    model.Index, columns, MetadataExpressionSearcher.Parse(model.SearchExpression, this._coldewObject), this._coldewObject);
+            GridViewType viewType = (GridViewType)model.Type;
+            GridView view = null;
+            if (viewType == GridViewType.Favorite)
+            {
+                view = new GridView(model.ID, model.Code, model.Name, (GridViewType)model.Type, creator, model.IsShared, model.IsSystem,
+                    model.Index, columns, this._favoriteSearcher, model.OrderFieldCode, this._coldewObject);
+            }
+            else
+            {
+                view = new GridView(model.ID, model.Code, model.Name, (GridViewType)model.Type, creator, model.IsShared, model.IsSystem,
+                       model.Index, columns, MetadataExpressionSearcher.Parse(model.SearchExpression, this._coldewObject), model.OrderFieldCode, this._coldewObject);   
+            }
             return view;
         }
 
@@ -153,6 +169,7 @@ namespace Coldew.Core
                 this.BindEvent(view);
                 this.Index(view);
             }
+            this._gridViews = this._gridViews.OrderBy(x => x.Index).ToList();
         }
     }
 }

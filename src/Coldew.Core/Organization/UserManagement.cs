@@ -17,11 +17,6 @@ namespace Coldew.Core.Organization
     public class UserManagement 
     {
 
-        static UserManagement()
-        {
-            
-        }
-
         public UserManagement(OrganizationManagement orgMnger)
         {
             this._orgMdl = orgMnger;
@@ -44,7 +39,6 @@ namespace Coldew.Core.Organization
         {
             get
             {
-                this.Load();
                 return this._users;
                 
             }
@@ -308,7 +302,7 @@ namespace Coldew.Core.Organization
             }
         }
 
-        protected virtual void Load()
+        internal virtual void Load()
         {
             if (!_loaded)
             {

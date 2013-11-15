@@ -78,6 +78,7 @@
     <Compile Include="Workflow\LiuchengMobanModel.cs" />
     <Compile Include="MetadataModel.cs" />
     <Compile Include="ObjectPermissionModel.cs" />
+    <Compile Include="Workflow\RenwuNotifyModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FieldModel.hbm.xml" />
@@ -151,6 +152,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ObjectPermissionModel.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Workflow\RenwuNotifyModel.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

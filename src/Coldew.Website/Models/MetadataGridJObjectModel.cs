@@ -11,15 +11,17 @@ namespace Coldew.Website.Models
 {
     public class MetadataGridJObjectModel : JObject
     {
-        public MetadataGridJObjectModel(string objectId, MetadataInfo info, Dictionary<string, MetadataInfo> myFavorites, MetadataController controller)
+        public MetadataGridJObjectModel(string objectId, UserMetadataInfo info, MetadataController controller)
         {
             this.Add("id", info.ID);
+            this.Add("canModify", info.PermissionValue.HasFlag(MetadataPermissionValue.Modify));
+            this.Add("canDelete", info.PermissionValue.HasFlag(MetadataPermissionValue.Delete));
             foreach (PropertyInfo propertyInfo in info.Propertys)
             {
                 if (propertyInfo.Code == ColdewObjectCode.FIELD_NAME_NAME)
                 {
                     string favoritedIcon = "";
-                    if (myFavorites.ContainsKey(info.ID))
+                    if (info.Favorited)
                     {
                         favoritedIcon = "<i class='icon-star'></i>";
                     }
@@ -29,24 +31,6 @@ namespace Coldew.Website.Models
                     }
                     string editUrl = controller.Url.Action("Details", new { metadataId = info.ID, objectId = objectId});
                     string editLink = favoritedIcon + string.Format("<a href='{0}' target='_blank'>{1}</a>", editUrl, propertyInfo.ShowValue);
-                    this.Add(propertyInfo.Code, editLink);
-                }
-                else
-                {
-                    this.Add(propertyInfo.Code, propertyInfo.ShowValue);
-                }
-            }
-        }
-
-        public MetadataGridJObjectModel(string objectId, MetadataInfo info, MetadataController controller)
-        {
-            this.Add("id", info.ID);
-            foreach (PropertyInfo propertyInfo in info.Propertys)
-            {
-                if (propertyInfo.Code == ColdewObjectCode.FIELD_NAME_NAME)
-                {
-                    string editUrl = controller.Url.Action("Details", new { metadataId = info.ID, objectId = objectId});
-                    string editLink = string.Format("<a href='{0}' target='_blank'>{1}</a>", editUrl, propertyInfo.ShowValue);
                     this.Add(propertyInfo.Code, editLink);
                 }
                 else

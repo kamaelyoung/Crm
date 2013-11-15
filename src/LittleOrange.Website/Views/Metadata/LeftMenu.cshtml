@@ -12,18 +12,7 @@
     foreach(GridViewInfo viewInfo in gridViews)
     {
         LeftMenuModel menuModel = new LeftMenuModel();
-        if(viewInfo.Type == GridViewType.Manage)
-        {
-            menuModel.actionUrl = this.Url.Action("Index", new { viewId = viewInfo.ID, objectId = coldewObject.ID });
-        }
-        else if (viewInfo.Type == GridViewType.Favorite)
-        {
-            menuModel.actionUrl = this.Url.Action("Favorite", new { viewId = viewInfo.ID, objectId = coldewObject.ID });
-        }
-        else if (viewInfo.Type == GridViewType.Customized)
-        {
-            menuModel.actionUrl = this.Url.Action("Customized", new { viewId = viewInfo.ID, objectId = coldewObject.ID });
-        }
+        menuModel.actionUrl = this.Url.Action("Index", new { viewId = viewInfo.ID, objectId = coldewObject.ID });
         menuModel.name = viewInfo.Name;
         menuModel.active = viewInfo.ID == this.ViewBag.viewId;
         menuModels.Add(menuModel);

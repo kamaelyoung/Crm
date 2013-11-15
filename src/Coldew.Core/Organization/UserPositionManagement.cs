@@ -20,7 +20,6 @@ namespace Coldew.Core.Organization
         {
             get
             {
-                this.Load();
                 return _userPositions;
             }
         }
@@ -219,7 +218,7 @@ namespace Coldew.Core.Organization
             return this._UserPositions.Where(x => x.Position.ID == positionId).ToList().AsReadOnly();
         }
 
-        protected virtual void Load()
+        internal virtual void Load()
         {
             if (!this._loaded)
             {

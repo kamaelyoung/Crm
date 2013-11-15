@@ -88,6 +88,7 @@
     <Compile Include="Organization\Member.cs" />
     <Compile Include="Permission\ObjectPermissionManager.cs" />
     <Compile Include="Search\DateRecentlySearchExpression.cs" />
+    <Compile Include="Search\FavoriteSearcher.cs" />
     <Compile Include="Search\MetadataExpressionSearcher.cs" />
     <Compile Include="Search\OperationUserExpression.cs" />
     <Compile Include="UI\Button.cs" />
@@ -185,9 +186,13 @@
     <Compile Include="Workflow\JianglaiZhipaiManager.cs" />
     <Compile Include="Workflow\Liucheng.cs" />
     <Compile Include="Workflow\LiuchengFuwu.cs" />
+    <Compile Include="Workflow\LiuchengManager.cs" />
     <Compile Include="Workflow\LiuchengMoban.cs" />
     <Compile Include="Workflow\LiuchengMobanManager.cs" />
     <Compile Include="Workflow\Liuchengtu.cs" />
+    <Compile Include="Workflow\RenwuEmailNotifyService.cs" />
+    <Compile Include="Workflow\RenwuNotify.cs" />
+    <Compile Include="Workflow\RenwuNotifyManager.cs" />
     <Compile Include="Workflow\Zhipai.cs" />
     <Compile Include="Workflow\ZhipaiManager.cs" />
     <Compile Include="Workflow\Renwu.cs" />

@@ -22,8 +22,6 @@ namespace Coldew.Core.Workflow
             this._mobanList = new List<LiuchengMoban>();
             this._objectManager = objectManager;
             this._yinqing = yinqing;
-
-            this.Load();
         }
 
         public LiuchengMoban Create(string code, string name, ColdewObject cobject, string transferUrl, string remark)
@@ -97,74 +95,7 @@ namespace Coldew.Core.Workflow
             return moban;
         }
 
-        public Renwu GetRenwu(int renwuId)
-        {
-            foreach (LiuchengMoban liuchengMoban in this._mobanList)
-            {
-                foreach (Liucheng liucheng in liuchengMoban.LiuchengList)
-                {
-                    foreach (Xingdong renwu in liucheng.XingdongList)
-                    {
-                        Renwu xingdong = renwu.RenwuList.Find(x => x.Id == renwuId);
-                        if (xingdong != null)
-                        {
-                            return xingdong;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        public Renwu GetRenwu(string renwuId)
-        {
-            foreach (LiuchengMoban liuchengMoban in this._mobanList)
-            {
-                foreach (Liucheng liucheng in liuchengMoban.LiuchengList)
-                {
-                    foreach (Xingdong renwu in liucheng.XingdongList)
-                    {
-                        Renwu xingdong = renwu.RenwuList.Find(x => x.Guid == renwuId);
-                        if (xingdong != null)
-                        {
-                            return xingdong;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        public Liucheng GetLiucheng(string id)
-        {
-            foreach (LiuchengMoban liuchengMoban in this._mobanList)
-            {
-                Liucheng liucheng = liuchengMoban.GetLiucheng(id);
-                if (liucheng != null)
-                {
-                    return liucheng;
-                }
-            }
-            return null;
-        }
-
-        public Xingdong GetXingdong(string guid)
-        {
-            foreach (LiuchengMoban liuchengMoban in this._mobanList)
-            {
-                foreach (Liucheng liucheng in liuchengMoban.LiuchengList)
-                {
-                    Xingdong renwu = liucheng.GetXingdong(guid);
-                    if (renwu != null)
-                    {
-                        return renwu;
-                    }
-                }
-            }
-            return null;
-        }
-
-        private void Load()
+        internal void Load()
         {
             IList<LiuchengMobanModel> models = NHibernateHelper.CurrentSession.QueryOver<LiuchengMobanModel>().List();
             foreach (LiuchengMobanModel model in models)

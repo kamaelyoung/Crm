@@ -20,32 +20,13 @@ namespace Coldew.Website.Controllers
     public class MetadataController : BaseController
     {
 
-        public ActionResult Index(string objectId)
+        public ActionResult Index(string objectId, string viewId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
-            this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
-
-            List<GridViewInfo> views = WebHelper.GridViewService.GetGridViews(objectId, WebHelper.CurrentUserAccount);
-            GridViewInfo viewInfo = views.Find(x => x.Type == GridViewType.Manage);
-
-            List<DataGridColumnModel> columns = viewInfo.Columns.Select(x => new DataGridColumnModel(x)).ToList();
-            this.ViewBag.columnsJson = JsonConvert.SerializeObject(columns);
-            this.ViewBag.viewId = viewInfo.ID;
-            this.ViewBag.Title = viewInfo.Name;
-            this.ViewBag.canSettingView = viewInfo.Creator.Account == this.CurrentUser.Account;
-            return View();
-        }
-
-        public ActionResult SelectDialog()
-        {
-            return this.PartialView();
-        }
-
-        public ActionResult Favorite(string objectId, string viewId)
-        {
+            if (string.IsNullOrEmpty(viewId))
+            {
+                List<GridViewInfo> views = WebHelper.GridViewService.GetGridViews(objectId, WebHelper.CurrentUserAccount);
+                return this.RedirectToAction("Index", new { objectId = objectId, viewId = views[0].ID });
+            }
             ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
             this.ViewBag.coldewObject = coldewObject;
 
@@ -62,22 +43,9 @@ namespace Coldew.Website.Controllers
             return View();
         }
 
-        public ActionResult Favorites(string objectId, int start, int size, string orderBy)
+        public ActionResult SelectDialog()
         {
-            ControllerResultModel resultModel = new ControllerResultModel();
-            try
-            {
-                List<MetadataInfo> favorites = WebHelper.MetadataService.GetFavorites(objectId, WebHelper.CurrentUserAccount, orderBy);
-                List<MetadataGridJObjectModel> models = favorites.Skip(start).Take(size).Select(x => new MetadataGridJObjectModel(objectId, x, this)).ToList();
-                resultModel.data = new DatagridModel { count = favorites.Count, list = models };
-            }
-            catch (Exception ex)
-            {
-                resultModel.result = ControllerResult.Error;
-                resultModel.message = ex.Message;
-                WebHelper.Logger.Error(ex.Message, ex);
-            }
-            return Json(resultModel, JsonRequestBehavior.AllowGet);
+            return this.PartialView();
         }
 
         [HttpPost]
@@ -87,25 +55,7 @@ namespace Coldew.Website.Controllers
             try
             {
                 List<string> metadataIds = JsonConvert.DeserializeObject<List<string>>(metadataIdsJson);
-                WebHelper.MetadataService.Favorite(objectId, WebHelper.CurrentUserAccount, metadataIds);
-            }
-            catch (Exception ex)
-            {
-                resultModel.result = ControllerResult.Error;
-                resultModel.message = ex.Message;
-                WebHelper.Logger.Error(ex.Message, ex);
-            }
-            return Json(resultModel, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult CancelFavorite(string objectId, string metadataIdsJson)
-        {
-            ControllerResultModel resultModel = new ControllerResultModel();
-            try
-            {
-                List<string> metadataIds = JsonConvert.DeserializeObject<List<string>>(metadataIdsJson);
-                WebHelper.MetadataService.CancelFavorite(objectId, WebHelper.CurrentUserAccount, metadataIds);
+                WebHelper.MetadataService.ToggleFavorite(objectId, WebHelper.CurrentUserAccount, metadataIds);
             }
             catch (Exception ex)
             {
@@ -167,15 +117,18 @@ namespace Coldew.Website.Controllers
                 ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
                 foreach (JObject model in importModels)
                 {
-                    JObject propertys = new JObject();
+                    JObject propertysObject = new JObject();
                     List<FieldInfo> fieldInfos = coldewObject.Fields.ToList();
                     foreach (FieldInfo filed in fieldInfos)
                     {
-                        propertys.Add(filed.Code, model[filed.Code].ToString());
+                        if (model[filed.Code] != null)
+                        {
+                            propertysObject.Add(filed.Code, model[filed.Code]);
+                        }
                     }
                     try
                     {
-                        WebHelper.MetadataService.Create(objectId, WebHelper.CurrentUserAccount, JsonConvert.SerializeObject(propertys));
+                        WebHelper.MetadataService.Create(objectId, WebHelper.CurrentUserAccount, JsonConvert.SerializeObject(propertysObject));
 
                         model["importResult"] = true;
                         model["importMessage"] = "导入成功";
@@ -338,23 +291,22 @@ namespace Coldew.Website.Controllers
             return Json(resultModel, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Metadatas(string objectId, string searchInfoJson, int start, int size, string orderBy)
+        public ActionResult Metadatas(string objectId, string viewId, string searchInfoJson, int start, int size, string orderBy)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
                 int totalCount;
-                List<MetadataInfo> metadataInfos = null;
+                List<UserMetadataInfo> metadataInfos = null;
                 if (string.IsNullOrEmpty(searchInfoJson))
                 {
-                    metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, WebHelper.CurrentUserAccount, start, size, orderBy, out totalCount);
+                    metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, viewId, WebHelper.CurrentUserAccount, start, size, orderBy, out totalCount);
                 }
                 else
                 {
-                    metadataInfos = WebHelper.MetadataService.Search(objectId, WebHelper.CurrentUserAccount, searchInfoJson, start, size, orderBy, out  totalCount);
+                    metadataInfos = WebHelper.MetadataService.Search(objectId, viewId, WebHelper.CurrentUserAccount, searchInfoJson, start, size, orderBy, out  totalCount);
                 }
-                List<MetadataInfo> favorites = WebHelper.MetadataService.GetFavorites(objectId, WebHelper.CurrentUserAccount, "");
-                List<MetadataGridJObjectModel> models = metadataInfos.Select(x => new MetadataGridJObjectModel(objectId, x, favorites.ToDictionary(f => f.ID), this)).ToList();
+                List<MetadataGridJObjectModel> models = metadataInfos.Select(x => new MetadataGridJObjectModel(objectId, x, this)).ToList();
                 resultModel.data = new DatagridModel { count = totalCount, list = models };
             }
             catch (Exception ex)
@@ -372,7 +324,7 @@ namespace Coldew.Website.Controllers
             try
             {
                 int totalCount = 0;
-                List<MetadataInfo> metadataInfos = null;
+                List<UserMetadataInfo> metadataInfos = null;
                 if (string.IsNullOrEmpty(keyword))
                 {
                     metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, WebHelper.CurrentUserAccount, start, size, orderBy, out totalCount);
@@ -393,7 +345,7 @@ namespace Coldew.Website.Controllers
             return Json(resultModel, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Export(string objectId, string searchInfoJson, string orderBy)
+        public ActionResult Export(string objectId, string viewId, string searchInfoJson, string orderBy)
         {
             ControllerResultModel resultModel = new ControllerResultModel();
             try
@@ -401,50 +353,12 @@ namespace Coldew.Website.Controllers
                 List<MetadataInfo> metadataInfos = null;
                 if (string.IsNullOrEmpty(searchInfoJson))
                 {
-                    metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, WebHelper.CurrentUserAccount, orderBy);
+                    metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, viewId, WebHelper.CurrentUserAccount, orderBy);
                 }
                 else
                 {
-                    metadataInfos = WebHelper.MetadataService.Search(objectId, WebHelper.CurrentUserAccount, searchInfoJson, orderBy);
+                    metadataInfos = WebHelper.MetadataService.Search(objectId, viewId, WebHelper.CurrentUserAccount, searchInfoJson, orderBy);
                 }
-                List<JObject> models = metadataInfos.Select(x => new MetadataGridJObjectModel(x) as JObject).ToList();
-                string tempPath = ImportExportHelper.Export(models, objectId);
-                resultModel.data = System.IO.Path.GetFileName(tempPath);
-            }
-            catch (Exception ex)
-            {
-                resultModel.result = ControllerResult.Error;
-                resultModel.message = ex.Message;
-                WebHelper.Logger.Error(ex.Message, ex);
-            }
-            return Json(resultModel, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult ExportFavorite(string objectId, string orderBy)
-        {
-            ControllerResultModel resultModel = new ControllerResultModel();
-            try
-            {
-                List<MetadataInfo> metadataInfos = WebHelper.MetadataService.GetFavorites(objectId, WebHelper.CurrentUserAccount, orderBy);
-                List<JObject> models = metadataInfos.Select(x => new MetadataGridJObjectModel(x) as JObject).ToList();
-                string tempPath = ImportExportHelper.Export(models, objectId);
-                resultModel.data = System.IO.Path.GetFileName(tempPath);
-            }
-            catch (Exception ex)
-            {
-                resultModel.result = ControllerResult.Error;
-                resultModel.message = ex.Message;
-                WebHelper.Logger.Error(ex.Message, ex);
-            }
-            return Json(resultModel, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult ExportCustomized(string objectId, string viewId)
-        {
-            ControllerResultModel resultModel = new ControllerResultModel();
-            try
-            {
-                List<MetadataInfo> metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, viewId, WebHelper.CurrentUserAccount);
                 List<JObject> models = metadataInfos.Select(x => new MetadataGridJObjectModel(x) as JObject).ToList();
                 string tempPath = ImportExportHelper.Export(models, objectId);
                 resultModel.data = System.IO.Path.GetFileName(tempPath);
@@ -515,7 +429,7 @@ namespace Coldew.Website.Controllers
                 GridViewCreateModel model = JsonConvert.DeserializeObject<GridViewCreateModel>(json);
                 List<GridViewColumnSetupInfo> columns = model.columns.Select(x => new GridViewColumnSetupInfo(x.fieldCode, x.width)).ToList();
                 string searchJson = JsonConvert.SerializeObject(model.search);
-                WebHelper.GridViewService.Create(model.name, objectId, WebHelper.CurrentUserAccount, model.isShared, searchJson, columns);
+                WebHelper.GridViewService.Create(model.name, objectId, WebHelper.CurrentUserAccount, model.isShared, searchJson, columns, model.OrderBy);
             }
             catch (Exception ex)
             {
@@ -561,44 +475,6 @@ namespace Coldew.Website.Controllers
                 List<GridViewColumnSetupInfo> columns = model.columns.Select(x => new GridViewColumnSetupInfo(x.fieldCode, x.width)).ToList();
                 string searchJson = JsonConvert.SerializeObject(model.search);
                 WebHelper.GridViewService.Modify(model.id, model.name, model.isShared, searchJson, columns);
-            }
-            catch (Exception ex)
-            {
-                resultModel.result = ControllerResult.Error;
-                resultModel.message = ex.Message;
-                WebHelper.Logger.Error(ex.Message, ex);
-            }
-            return Json(resultModel, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Customized(string objectId, string viewId)
-        {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
-            this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
-
-            GridViewInfo viewInfo = WebHelper.GridViewService.GetGridView(viewId);
-
-            List<DataGridColumnModel> columns = viewInfo.Columns.Select(x => new DataGridColumnModel(x)).ToList();
-            this.ViewBag.columnsJson = JsonConvert.SerializeObject(columns);
-            this.ViewBag.viewId = viewInfo.ID;
-            this.ViewBag.Title = viewInfo.Name;
-            this.ViewBag.canSettingView = viewInfo.Creator.Account == this.CurrentUser.Account;
-            return View();
-        }
-
-        public ActionResult CustomizedMetadatas(string objectId, string viewId, int start, int size, string orderBy)
-        {
-            ControllerResultModel resultModel = new ControllerResultModel();
-            try
-            {
-                int totalCount;
-                List<MetadataInfo> metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, viewId, WebHelper.CurrentUserAccount, start, size, orderBy, out totalCount);
-                List<MetadataInfo> favorites = WebHelper.MetadataService.GetFavorites(objectId, WebHelper.CurrentUserAccount, "");
-                List<MetadataGridJObjectModel> models = metadataInfos.Select(x => new MetadataGridJObjectModel(objectId, x, favorites.ToDictionary(f => f.ID), this)).ToList();
-                resultModel.data = new DatagridModel { count = totalCount, list = models };
             }
             catch (Exception ex)
             {

@@ -16,5 +16,6 @@
         <property name="Index" type="int" column="view_index"></property>
         <property name="ColumnsJson" type="String" length="20000" column="view_columnsJson"></property>
         <property name="SearchExpression" type="String" length="20000" column="view_searchExpression"></property>
+        <property name="OrderFieldCode" type="String" column="view_orderFieldCode"></property>
     </class>
 </hibernate-mapping>

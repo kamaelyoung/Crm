@@ -15,8 +15,8 @@ namespace Coldew.Core
     public class GridView
     {
         ReaderWriterLock _lock;
-        public GridView(string id, string code, string name, GridViewType type, User creator, bool isShared, bool isSystem, int index, List<GridViewColumn> columns, 
-            MetadataSearcher Searcher, ColdewObject cobject)
+        public GridView(string id, string code, string name, GridViewType type, User creator, bool isShared, bool isSystem, int index, List<GridViewColumn> columns,
+            MetadataSearcher Searcher, string orderFieldCode, ColdewObject cobject)
         {
             this.ID = id;
             this.Code = code;
@@ -29,6 +29,7 @@ namespace Coldew.Core
             this.Searcher = Searcher;
             this.ColdewObject = cobject;
             this.Columns = columns;
+            this.OrderFieldCode = orderFieldCode;
             if (this.Columns == null)
             {
                 this.Columns = new List<GridViewColumn>();
@@ -59,6 +60,8 @@ namespace Coldew.Core
         public int Index { private set; get; }
 
         public MetadataSearcher Searcher { private set; get; }
+
+        public string OrderFieldCode { private set; get; }
 
         private List<GridViewColumn> Columns { set; get; }
 

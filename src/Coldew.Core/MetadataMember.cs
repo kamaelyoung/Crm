@@ -10,13 +10,13 @@ namespace Coldew.Core
     {
         public abstract bool Contains(Metadata metadata, User user);
         public abstract string Serialize();
-        public static MetadataMember Create(string memberStr, OrganizationManagement orgManager)
+        public static MetadataMember Create(string memberStr, ColdewObject cobject)
         {
             MetadataMember metadataMember = null;
             string[] memberStrArray = memberStr.Split(':');
             if (memberStrArray[0] == "org")
             {
-                Member member = orgManager.GetMember(memberStrArray[1]);
+                Member member = cobject.ColdewManager.OrgManager.GetMember(memberStrArray[1]);
                 if (member != null)
                 {
                     metadataMember = new MetadataOrgMember(member);
@@ -24,7 +24,11 @@ namespace Coldew.Core
             }
             else
             {
-                metadataMember = new MetadataFieldMember(memberStrArray[1]);
+                Field field = cobject.GetFieldByCode(memberStrArray[1]);
+                if (field != null)
+                {
+                    metadataMember = new MetadataFieldMember(field);
+                }
             }
             return metadataMember;
         }

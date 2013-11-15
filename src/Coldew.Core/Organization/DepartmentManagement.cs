@@ -24,7 +24,6 @@ namespace Coldew.Core.Organization
         {
             get
             {
-                this.Load();
                 return _departments;
             }
         }
@@ -237,7 +236,7 @@ namespace Coldew.Core.Organization
             }
         }
 
-        protected virtual void Load()
+        internal virtual void Load()
         {
             if (!this._loaded)
             {

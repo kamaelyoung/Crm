@@ -23,8 +23,6 @@ namespace Coldew.Core.Permission
             this._permissions = new List<MetadataEntityPermission>();
             this._orgManager = cobject.ColdewManager.OrgManager;
             this._lock = new ReaderWriterLock();
-
-            this.Load();
         }
 
         public MetadataPermissionValue GetPermission(User user, Metadata metadata)
@@ -92,7 +90,7 @@ namespace Coldew.Core.Permission
 
         private MetadataEntityPermission Create(MetadataEntityPermissionModel model)
         {
-            MetadataMember metadataMember = MetadataMember.Create(model.Member, this._orgManager);
+            MetadataMember metadataMember = MetadataMember.Create(model.Member, this._cobject);
             if (metadataMember != null)
             {
                 MetadataEntityPermission permission = new MetadataEntityPermission(model.ID, model.MetadataId, metadataMember, (MetadataPermissionValue)model.Value);
