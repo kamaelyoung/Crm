@@ -9,7 +9,7 @@
         <property name="RenwuId" type="String" column="renwu_id"></property>
         <property name="UserAccount" type="String" column="user_account"></property>
         <property name="NotifyTime" type="DateTime" column="notify_time"></property>
-        <property name="Subject" type="String" column="notify_subject"></property>
-        <property name="Body" type="String" column="notify_body"></property>
+        <property name="Subject" type="String" length="20000" column="notify_subject"></property>
+        <property name="Body" type="String" length="20000" column="notify_body"></property>
     </class>
 </hibernate-mapping>

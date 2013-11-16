@@ -7,7 +7,7 @@ using System.Threading;
 using Coldew.Core.Workflow;
 using Coldew.Core.Organization;
 
-namespace Coldew.Api.Workflow
+namespace Coldew.Core.Workflow
 {
     public class RenwuEmailNotifyService
     {
@@ -29,7 +29,11 @@ namespace Coldew.Api.Workflow
 
         private void _Start()
         {
-            Thread.Sleep(1000 * 60);
+#if DEBUG
+            Thread.Sleep(1000 * 10);
+#else
+                Thread.Sleep(1000 * 60);
+#endif
             while (true)
             {
                 try
@@ -50,11 +54,17 @@ namespace Coldew.Api.Workflow
                             {
                                 string subject = this.InterpreterTaskTemplate(renwu, SUBJECT_TEMPLATE);
                                 string body = this.InterpreterTaskTemplate(renwu, CONTENT_TEMPLATE);
-                                List<User> notifiedUsers = new List<User>();
-                                notifiedUsers.Add(renwu.Chuliren);
-                                this._coldewManager.MailSender.Send(notifiedUsers.Select(x => x.Email).ToList(), null, subject, body, false, null);
+                                List<string> notifiedUserEmails = new List<string>();
+                                if(!string.IsNullOrEmpty(renwu.Chuliren.Email))
+                                {
+                                    notifiedUserEmails.Add(renwu.Chuliren.Email);
+                                }
 
-                                this._coldewManager.LiuchengYinqing.RenwuNotifyManager.Create(renwu.Guid, renwu.Chuliren.Account, DateTime.Now, subject, body);
+                                if (notifiedUserEmails.Count > 0)
+                                {
+                                    this._coldewManager.MailSender.Send(notifiedUserEmails, null, subject, body, true, null);
+                                    this._coldewManager.LiuchengYinqing.RenwuNotifyManager.Create(renwu.Guid, renwu.Chuliren.Account, subject, body);
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -68,9 +78,9 @@ namespace Coldew.Api.Workflow
                     this._coldewManager.Logger.Error(ex.Message, ex);
                 }
 #if DEBUG
-                Thread.Sleep(1000 * 60);
+                Thread.Sleep(1000 * 20);
 #else
-                Thread.Sleep(1000 * 60 * 30);
+                Thread.Sleep(1000 * 60);
 #endif
             }
         }
@@ -82,7 +92,7 @@ namespace Coldew.Api.Workflow
                 .Replace("${processName}", renwu.Xingdong.liucheng.Mingcheng)
                 .Replace("${summary}", renwu.Xingdong.Zhaiyao)
                 .Replace("${taskLink}", string.Format("{0}?renwuId={1}&liuchengId={2}&uid={3}",
-                renwu.Xingdong.liucheng.Moban.TransferUrl, renwu.Xingdong.liucheng.Id, renwu.Chuliren.ID));
+                renwu.Xingdong.liucheng.Moban.TransferUrl, renwu.Guid, renwu.Xingdong.liucheng.Guid, renwu.Chuliren.ID));
         }
     }
 }

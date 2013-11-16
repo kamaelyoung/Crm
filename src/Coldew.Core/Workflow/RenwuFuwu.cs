@@ -29,7 +29,11 @@ namespace Coldew.Core.Workflow
         {
             Liucheng liucheng = this._yinqing.LiuchengManager.GetLiucheng(liuchengId);
             Renwu renwu = liucheng.GetRenwu(renwuId);
-            return renwu.Map();
+            if (renwu != null)
+            {
+                return renwu.Map();
+            }
+            return null;
         }
 
         public List<RenwuXinxi> GetChulizhongdeRenwu(string chulirenZhanghao, string mobanId, DateTime? kaishiShijian, DateTime? jieshuShijian, string zhaiyao, int start, int size, out int count)
@@ -46,7 +50,7 @@ namespace Coldew.Core.Workflow
 
         public List<RenwuXinxi> GetGuidangdeRenwu(string chulirenZhanghao, string mobanId, DateTime? wanchengKaishiShijian, DateTime? wanchengJieshuShijian, string zhaiyao, int start, int size, out int count)
         {
-            return this._yinqing.LiuchengManager.GetWanchengdeRenwu(chulirenZhanghao, mobanId, wanchengKaishiShijian, wanchengJieshuShijian, zhaiyao, start, size, out count)
+            return this._yinqing.LiuchengManager.GetGuidangdeRenwu(chulirenZhanghao, mobanId, wanchengKaishiShijian, wanchengJieshuShijian, zhaiyao, start, size, out count)
                 .Select(x => x.Map()).ToList();
         }
 

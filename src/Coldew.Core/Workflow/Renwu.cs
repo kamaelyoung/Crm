@@ -13,13 +13,12 @@ namespace Coldew.Core.Workflow
     {
         LiuchengYinqing _yingqing;
 
-        public Renwu(int id, string guid, User yongyouren, User chuliren, User shijiChuliren, 
-            DateTime? chuliShijian, RenwuZhuangtai zhuangtai, RenwuChuliJieguo? chuliJieguo, string chuliShuoming, Xingdong xingdong)
+        public Renwu(int id, string guid, User yongyouren, User chuliren, DateTime? chuliShijian, RenwuZhuangtai zhuangtai, 
+            RenwuChuliJieguo? chuliJieguo, string chuliShuoming, Xingdong xingdong)
         {
             this.Id = id;
             this.Guid = guid;
             this.Chuliren = chuliren;
-            this.ShijiChuliren = shijiChuliren;
             this.Zhuangtai = zhuangtai;
             this.ChuliShijian = chuliShijian;
             this.ChuliShuoming = chuliShuoming;
@@ -53,8 +52,6 @@ namespace Coldew.Core.Workflow
 
         public User Chuliren { private set; get; }
 
-        public User ShijiChuliren { private set; get; }
-
         public RenwuZhuangtai Zhuangtai { private set; get; }
 
         public DateTime? ChuliShijian { private set; get; }
@@ -73,7 +70,11 @@ namespace Coldew.Core.Workflow
             {
                 if (this.Zhuangtai == RenwuZhuangtai.Wanchengle)
                 {
-                    throw new RenwuChongfuChuliException(this.ShijiChuliren.Name, this.ChuliShijian.Value);
+                    throw new RenwuChongfuChuliException(this.Chuliren.Name, this.ChuliShijian.Value);
+                }
+                if (!this.NengChuli(chuliren))
+                {
+                    throw new GongzuoliuException("无权限处理该任务，该任务处理人为：" + this.Chuliren.Name);
                 }
                 RenwuModel model = NHibernateHelper.CurrentSession.Get<RenwuModel>(this.Id);
                 model.ChuliShijian = DateTime.Now;
@@ -84,7 +85,6 @@ namespace Coldew.Core.Workflow
                 NHibernateHelper.CurrentSession.Flush();
 
                 this.ChuliShijian = DateTime.Now;
-                this.ShijiChuliren = chuliren;
                 this.ChuliShuoming = shuoming;
                 this.Zhuangtai = RenwuZhuangtai.Wanchengle;
 

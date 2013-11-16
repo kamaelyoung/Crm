@@ -23,10 +23,8 @@ namespace Coldew.Core
 
         public ColdewObjectType Type { set; get; }
 
-        public bool IsSystem { set; get; }
-
         public string NameFieldName { set; get; }
 
-        public int Index { set; get; }
+        public bool IsSystem { set; get; }
     }
 }

@@ -10,6 +10,7 @@ using Coldew.Core;
 using Newtonsoft.Json;
 using Coldew.Api.Exceptions;
 using Coldew.Core.Search;
+using Coldew.Api.UI;
 
 namespace Coldew.Core
 {
@@ -32,37 +33,32 @@ namespace Coldew.Core
             this._lock = new ReaderWriterLock();
         }
 
-        public int MaxIndex()
+        private int MaxIndex()
         {
-            this._lock.AcquireReaderLock();
-            try
+            if (this._gridViewDicById.Count == 0)
             {
-                return this._gridViewDicById.Values.Max(x => x.Index);
+                return 1;
             }
-            finally
-            {
-                this._lock.ReleaseReaderLock();
-            }
+            return this._gridViewDicById.Values.Max(x => x.Index) + 1;
         }
 
-        public GridView Create(GridViewType type, string code, string name, User user, bool isShared, bool isSystem, int index,
-            string searchExpressionJson, List<GridViewColumnSetupInfo> setupColumns, string orderFieldCode)
+        public GridView Create(GridViewCreateInfo createInfo)
         {
-            var columnModels = setupColumns.Select(x => new GridViewColumnModel { FieldCode = x.FieldCode, Width = x.Width});
+            var columnModels = createInfo.SetupColumns.Select(x => new GridViewColumnModel { FieldCode = x.FieldCode, Width = x.Width });
             string columnJson = JsonConvert.SerializeObject(columnModels);
             GridViewModel model = new GridViewModel
             {
-                CreatorAccount = user.Account,
-                IsSystem = isSystem,
+                CreatorAccount = createInfo.CreatedUserAccount,
+                IsSystem = createInfo.IsSystem,
                 ObjectId = this._coldewObject.ID,
-                Name = name,
-                Type = (int)type,
+                Name = createInfo.Name,
+                Type = (int)createInfo.Type,
                 ColumnsJson = columnJson,
-                IsShared = isShared,
-                SearchExpression = searchExpressionJson,
-                Code = code,
-                Index = index,
-                OrderFieldCode = orderFieldCode
+                IsShared = createInfo.IsShared,
+                SearchExpression = createInfo.SearchExpression,
+                Code = createInfo.Code,
+                Index = this.MaxIndex(),
+                OrderFieldCode = createInfo.OrderBy
             };
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();

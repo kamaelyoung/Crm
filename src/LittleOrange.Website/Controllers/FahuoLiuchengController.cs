@@ -26,6 +26,12 @@ namespace LittleOrange.Website.Controllers
                 return this.RedirectToAction("Faqi", new { mobanId = mobanId });
             }
             RenwuXinxi renwu = WebHelper.RenwuFuwu.GetRenwu(liuchengId, renwuId);
+            if (renwu == null)
+            {
+                this.ViewBag.error = "找不到该任务，或者该任务已经被取消！";
+                return View("Error");
+            }
+
             if (renwu.Zhuangtai == RenwuZhuangtai.Wanchengle)
             {
                 return this.RedirectToAction("Mingxi", new { renwuId = renwuId, liuchengId = liuchengId });

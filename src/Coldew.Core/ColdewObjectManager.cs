@@ -19,26 +19,24 @@ namespace Coldew.Core
             this._objects = new List<ColdewObject>();
         }
 
+        private int MaxIndex()
+        {
+            if (this._objects.Count == 0)
+            {
+                return 1;
+            }
+            return this._objects.Max(x => x.Index) + 1;
+        }
+
         public ColdewObject Create(ColdewObjectCreateInfo createInfo)
         {
-            if (createInfo.Index == 0)
-            {
-                if (this._objects.Count == 0)
-                {
-                    createInfo.Index = 1;
-                }
-                else
-                {
-                    createInfo.Index = this._objects.Max(x => x.Index);
-                }
-            }
             ColdewObjectModel model = new ColdewObjectModel
             {
                 Code = createInfo.Code,
                 Name = createInfo.Name,
                 Type = (int)createInfo.Type,
                 IsSystem = createInfo.IsSystem,
-                Index = createInfo.Index
+                Index = this.MaxIndex()
             };
             model.ID = NHibernateHelper.CurrentSession.Save(model).ToString();
             NHibernateHelper.CurrentSession.Flush();

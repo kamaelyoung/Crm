@@ -44,7 +44,7 @@ namespace Coldew.Core.Workflow
         {
             this.HuaJiedian(renwu.Name, 
                 renwu.RenwuList.Where(x => x.Zhuangtai == RenwuZhuangtai.Chulizhong).Select(x => x.Chuliren ).ToList(),
-                renwu.RenwuList.Where(x => x.Zhuangtai == RenwuZhuangtai.Wanchengle).Select(x => x.ShijiChuliren).ToList(),
+                renwu.RenwuList.Where(x => x.Zhuangtai == RenwuZhuangtai.Wanchengle).Select(x => x.Chuliren).ToList(),
                 image);
         }
 

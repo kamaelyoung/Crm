@@ -204,10 +204,6 @@ namespace Coldew.Core.Workflow
                             {
                                 return true;
                             }
-                            if (renwu.ShijiChuliren != null && renwu.ShijiChuliren.Equals(chuliren))
-                            {
-                                return true;
-                            }
                             return false;
                         });
                     });
@@ -251,10 +247,6 @@ namespace Coldew.Core.Workflow
                                 return false;
                             }
                             if (renwu.Chuliren.Equals(chuliren))
-                            {
-                                return true;
-                            }
-                            if (renwu.ShijiChuliren != null && renwu.ShijiChuliren.Equals(chuliren))
                             {
                                 return true;
                             }

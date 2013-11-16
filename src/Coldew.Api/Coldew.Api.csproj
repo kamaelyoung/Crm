@@ -62,6 +62,7 @@
     <Compile Include="GridViewType.cs" />
     <Compile Include="IColdewConfigService.cs" />
     <Compile Include="IColdewObjectService.cs" />
+    <Compile Include="UI\GridViewCreateInfo.cs" />
     <Compile Include="UI\IFormService.cs" />
     <Compile Include="IGridViewService.cs" />
     <Compile Include="IMetadataService.cs" />

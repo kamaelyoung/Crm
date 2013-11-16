@@ -95,7 +95,6 @@ namespace Coldew.Core.Workflow
 
         private Renwu ChuangjianRenwu(RenwuModel model)
         {
-            User shijiChuliren = this.liucheng.Yinqing.GetYonghu(model.ShijiChuliren);
             User yongyouren = this.liucheng.Yinqing.GetYonghu(model.Yongyouren);
             User chuliren = this.liucheng.Yinqing.GetYonghu(model.Chuliren);
             RenwuChuliJieguo? chuliJieguo = null;
@@ -103,7 +102,7 @@ namespace Coldew.Core.Workflow
             {
                 chuliJieguo = (RenwuChuliJieguo)model.ChuliJieguo.Value;
             }
-            Renwu renwu = new Renwu(model.Id, model.Guid, yongyouren, chuliren, shijiChuliren,
+            Renwu renwu = new Renwu(model.Id, model.Guid, yongyouren, chuliren, 
                 model.ChuliShijian, (RenwuZhuangtai)model.Zhuangtai, chuliJieguo, model.ChuliShuoming, this);
             List<Renwu> renwuList = this.RenwuList;
             renwuList.Add(renwu);

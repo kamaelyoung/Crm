@@ -146,8 +146,8 @@ namespace LittleOrange.Core
             viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = zhuyinChanpinField.Code, Width = 100 });
             viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = yixiangChanpinField.Code, Width = 100 });
 
-            GridView manageView = cobject.GridViewManager.Create(GridViewType.Standard, "", "自然人客户管理", this._admin, true, true, 1, "", viewColumns, cobject.CreatedTimeField.Code);
-            GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏自然人客户", this._admin, true, true, 2, "", viewColumns, cobject.CreatedTimeField.Code);
+            GridView manageView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "", "自然人客户管理", true, true, "", viewColumns, cobject.CreatedTimeField.Code, this._admin.Account));
+            GridView favoriteView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Favorite, "", "收藏自然人客户", true, true, "", viewColumns, cobject.CreatedTimeField.Code, this._admin.Account));
 
             List<GridViewColumnSetupInfo> huifangColumns = new List<GridViewColumnSetupInfo>();
             huifangColumns.Add(new GridViewColumnSetupInfo { FieldCode = yewuyuanField.Code, Width = 50 });
@@ -162,8 +162,8 @@ namespace LittleOrange.Core
             huifangColumns.Add(new GridViewColumnSetupInfo { FieldCode = zhuyinChanpinField.Code, Width = 100 });
             huifangColumns.Add(new GridViewColumnSetupInfo { FieldCode = yixiangChanpinField.Code, Width = 100 });
 
-            cobject.GridViewManager.Create(GridViewType.Standard, "jihuaHuifang", "计划回访客户", this._admin, true, false, 1, null, huifangColumns, xiaciHuifangRiqiField.Code + " desc");
-            cobject.GridViewManager.Create(GridViewType.Standard, "huifangde", "客户回访", this._admin, true, false, 1, null, huifangColumns, huifangRiqiField.Code + " desc");
+            cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "jihuaHuifang", "计划回访客户", true, false, null, huifangColumns, xiaciHuifangRiqiField.Code + " desc", this._admin.Account));
+            cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "huifangde", "客户回访", true, false, null, huifangColumns, huifangRiqiField.Code + " desc", this._admin.Account));
 
             cobject.ObjectPermission.Create(this._coldewManager.OrgManager.Everyone, ObjectPermissionValue.Create | ObjectPermissionValue.View);
             cobject.ObjectPermission.Create(this.kehuAdminGroup, ObjectPermissionValue.All);
@@ -244,8 +244,8 @@ namespace LittleOrange.Core
             viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = yunyiFangsiField.Code, Width = 100 });
             viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = yixiangChanpinField.Code, Width = 100 });
 
-            GridView manageView = cobject.GridViewManager.Create(GridViewType.Standard, "", "公司客户管理", this._admin, true, true, 1, "", viewColumns, cobject.CreatedTimeField.Code);
-            GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏公司客户", this._admin, true, true, 2, "", viewColumns, cobject.CreatedTimeField.Code);
+            GridView manageView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "", "公司客户管理", true, true, "", viewColumns, cobject.CreatedTimeField.Code, "admin"));
+            GridView favoriteView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Favorite, "", "收藏公司客户", true, true, "", viewColumns, cobject.CreatedTimeField.Code, "admin"));
 
             List<GridViewColumnSetupInfo> huifangColumns = new List<GridViewColumnSetupInfo>();
             huifangColumns.Add(new GridViewColumnSetupInfo { FieldCode = yewuyuanField.Code, Width = 50 });
@@ -258,8 +258,8 @@ namespace LittleOrange.Core
             huifangColumns.Add(new GridViewColumnSetupInfo { FieldCode = yunyiFangsiField.Code, Width = 100 });
             huifangColumns.Add(new GridViewColumnSetupInfo { FieldCode = yixiangChanpinField.Code, Width = 100 });
 
-            cobject.GridViewManager.Create(GridViewType.Standard, "jihuaHuifang", "计划回访客户", this._admin, true, false, 1, null, huifangColumns, xiaciHuifangRiqiField.Code + " desc");
-            cobject.GridViewManager.Create(GridViewType.Standard, "huifangde", "客户回访", this._admin, true, false, 1, null, huifangColumns, huifangRiqiField.Code + " desc");
+            cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "jihuaHuifang", "计划回访客户", true, false, null, huifangColumns, xiaciHuifangRiqiField.Code + " desc", "admin"));
+            cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "huifangde", "客户回访", true, false, null, huifangColumns, huifangRiqiField.Code + " desc", "admin"));
 
             cobject.ObjectPermission.Create(this._coldewManager.OrgManager.Everyone, ObjectPermissionValue.Create | ObjectPermissionValue.View);
             cobject.ObjectPermission.Create(this.kehuAdminGroup, ObjectPermissionValue.All);
@@ -325,8 +325,8 @@ namespace LittleOrange.Core
             viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = huikuanJineField.Code, Width = 80 });
             viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = huikuanJineField.Code, Width = 80 });
 
-            GridView manageView = cobject.GridViewManager.Create(GridViewType.Standard, "", "发货管理", this._admin, true, true, 1, "", viewColumns, cobject.CreatedTimeField.Code);
-            GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏发货", this._admin, true, true, 2, "", viewColumns, cobject.CreatedTimeField.Code);
+            GridView manageView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "", "发货管理", true, true, "", viewColumns, cobject.CreatedTimeField.Code, "admin"));
+            GridView favoriteView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Favorite, "", "收藏发货", true, true, "", viewColumns, cobject.CreatedTimeField.Code, "admin"));
 
             cobject.ObjectPermission.Create(this.kehuAdminGroup, ObjectPermissionValue.View | ObjectPermissionValue.Export | ObjectPermissionValue.PermissionSetting);
             cobject.MetadataPermission.StrategyManager.Create(new MetadataFieldMember(yewuyuanField), MetadataPermissionValue.View, null);
@@ -360,8 +360,8 @@ namespace LittleOrange.Core
                 viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = field.Code, Width = 80 });
             }
 
-            GridView manageView = cobject.GridViewManager.Create(GridViewType.Standard, "", "发货流程管理", this._admin, true, true, 1, "", viewColumns, cobject.CreatedTimeField.Code + " desc");
-            GridView favoriteView = cobject.GridViewManager.Create(GridViewType.Favorite, "", "收藏发货流程", this._admin, true, true, 2, "", viewColumns, cobject.CreatedTimeField.Code + " desc");
+            GridView manageView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "", "发货流程管理", true, true, "", viewColumns, cobject.CreatedTimeField.Code + " desc", "admin"));
+            GridView favoriteView = cobject.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Favorite, "", "收藏发货流程", true, true, "", viewColumns, cobject.CreatedTimeField.Code + " desc", "admin"));
 
             this._coldewManager.LiuchengYinqing.LiuchengMobanManager.Create("FahuoLiucheng", "发货流程", cobject, "~/FahuoLiucheng", "");
 

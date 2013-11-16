@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Coldew.Api;
 using Coldew.Core.Organization;
+using Coldew.Api.UI;
 
 namespace Coldew.Core
 {
@@ -19,8 +20,7 @@ namespace Coldew.Core
         {
             User creator = this._coldewManager.OrgManager.UserManager.GetUserByAccount(creatorAccount);
             ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
-            int index = form.GridViewManager.MaxIndex();
-            GridView view = form.GridViewManager.Create(GridViewType.Standard, "", name, creator, isShared, false, index, searchExpressionJson, columns, orderFieldCode);
+            GridView view = form.GridViewManager.Create(new GridViewCreateInfo(GridViewType.Standard, "", name, isShared, false, searchExpressionJson, columns, orderFieldCode, creatorAccount));
             return view.Map();
         }
 
