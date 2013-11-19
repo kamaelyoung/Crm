@@ -49,6 +49,13 @@ namespace Coldew.NnitTest
             Assert.IsFalse(cobject.ObjectPermission.HasValue(this.User1, ObjectPermissionValue.View));
             cobject.ObjectPermission.Create(this.User1, ObjectPermissionValue.View);
             Assert.IsTrue(cobject.ObjectPermission.HasValue(this.User1, ObjectPermissionValue.View));
+
+            //field permission
+            Assert.IsTrue(cobject.FieldPermission.HasValue(this.User1, FieldPermissionValue.View, salesUsersField));
+            Assert.IsTrue(cobject.FieldPermission.HasValue(this.Admin, FieldPermissionValue.View, salesUsersField));
+            cobject.FieldPermission.Create(salesUsersField.Code, this.Admin, FieldPermissionValue.All);
+            Assert.IsFalse(cobject.FieldPermission.HasValue(this.User1, FieldPermissionValue.View, salesUsersField));
+            Assert.IsTrue(cobject.FieldPermission.HasValue(this.Admin, FieldPermissionValue.View, salesUsersField));
         }
     }
 }

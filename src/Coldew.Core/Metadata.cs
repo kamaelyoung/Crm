@@ -216,25 +216,15 @@ namespace Coldew.Core
             return false;
         }
 
-        public virtual UserMetadataInfo Map(User user)
-        {
-            return new UserMetadataInfo()
-            {
-                ID = this.ID,
-                Name = this.Name,
-                PermissionValue = this.ColdewObject.MetadataPermission.GetValue(user, this),
-                Propertys = this._propertys.Values.Select(x => x.Map()).ToList(),
-                Favorited = this.ColdewObject.FavoriteManager.IsFavorite(user, this)
-            };
-        }
-
-        public virtual MetadataInfo Map()
+        public virtual MetadataInfo Map(User user)
         {
             return new MetadataInfo()
             {
                 ID = this.ID,
                 Name = this.Name,
-                Propertys = this._propertys.Values.Select(x => x.Map()).ToList()
+                PermissionValue = this.ColdewObject.MetadataPermission.GetValue(user, this),
+                Propertys = this._propertys.Values.Select(x => x.Map(user)).ToList(),
+                Favorited = this.ColdewObject.FavoriteManager.IsFavorite(user, this)
             };
         }
     }

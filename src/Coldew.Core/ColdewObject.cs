@@ -43,6 +43,7 @@ namespace Coldew.Core
             this.DataService = this.CreateDataService();
             this.ObjectPermission = new ObjectPermissionManager(this);
             this.MetadataPermission = new MetadataPermissionManager(this);
+            this.FieldPermission = new FieldPermissionManager(this);
         }
 
         public ColdewManager ColdewManager { private set; get; }
@@ -70,6 +71,8 @@ namespace Coldew.Core
         public virtual ObjectPermissionManager ObjectPermission { private set; get; }
 
         public virtual MetadataPermissionManager MetadataPermission { private set; get; }
+
+        public virtual FieldPermissionManager FieldPermission { private set; get; }
 
         public string ID { set; get; }
 
@@ -363,6 +366,19 @@ namespace Coldew.Core
             }
         }
 
+        public ColdewObjectInfo Map(User user)
+        {
+            return new ColdewObjectInfo
+            {
+                ID = this.ID,
+                Name = this.Name,
+                Code = this.Code,
+                Type = this.Type,
+                PermissionValue = this.ObjectPermission.GetPermission(user),
+                Fields = this._fields.Select(x => x.Map()).ToList()
+            };
+        }
+
         public ColdewObjectInfo Map()
         {
             return new ColdewObjectInfo
@@ -411,6 +427,7 @@ namespace Coldew.Core
             this.MetadataPermission.EntityManager.Load();
             this.MetadataPermission.StrategyManager.Load();
             this.ObjectPermission.Load();
+            this.FieldPermission.Load();
         }
 
     }

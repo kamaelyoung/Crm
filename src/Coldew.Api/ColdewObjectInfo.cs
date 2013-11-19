@@ -18,6 +18,8 @@ namespace Coldew.Api
 
         public List<FieldInfo> Fields { set; get; }
 
+        public ObjectPermissionValue PermissionValue { set; get; }
+
         public FieldInfo GetField(string code)
         {
             return this.Fields.Find(x => x.Code == code);

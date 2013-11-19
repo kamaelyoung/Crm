@@ -46,7 +46,7 @@ namespace LittleOrange.Website.Controllers
         [HttpGet]
         public ActionResult Faqi()
         {
-            ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("FahuoLiucheng");
+            ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode(this.CurrentUser.Account, "FahuoLiucheng");
             this.ViewBag.objectInfo = objectInfo;
 
             return View();
@@ -58,7 +58,7 @@ namespace LittleOrange.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("FahuoLiucheng");
+                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode(this.CurrentUser.Account, "FahuoLiucheng");
 
                 MetadataInfo biaodan = WebHelper.MetadataService.Create(objectInfo.ID, this.CurrentUser.Account, biaodanJson);
 
@@ -81,16 +81,17 @@ namespace LittleOrange.Website.Controllers
         [HttpGet]
         public ActionResult Shenhe(string renwuId, string liuchengId)
         {
-            ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("FahuoLiucheng");
+            ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode(this.CurrentUser.Account, "FahuoLiucheng");
             this.ViewBag.objectInfo = objectInfo;
 
             LiuchengXinxi liucheng = WebHelper.LiuchengFuwu.GetLiucheng(liuchengId);
             List<RenwuXinxi> renwuXinxi = WebHelper.RenwuFuwu.GetLiuchengRenwu(liuchengId);
             this.ViewBag.renwuModelsJson = JsonConvert.SerializeObject(renwuXinxi.Select(x => new RenwuModel(x, this, this.CurrentUser)).ToList());
 
-            this.ViewBag.biaodan = liucheng.Biaodan;
+            MetadataInfo biaodan = WebHelper.MetadataService.GetMetadataById(this.CurrentUser.Account, objectInfo.ID, liucheng.BiaodanId);
+            this.ViewBag.biaodan = biaodan;
 
-            MetadataEditModel model = new MetadataEditModel(liucheng.Biaodan);
+            MetadataEditModel model = new MetadataEditModel(biaodan);
             this.ViewBag.biaodanJson = JsonConvert.SerializeObject(model);
 
             return View();
@@ -104,7 +105,7 @@ namespace LittleOrange.Website.Controllers
             {
                 LiuchengXinxi liucheng = WebHelper.LiuchengFuwu.GetLiucheng(liuchengId);
 
-                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("FahuoLiucheng");
+                ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode(this.CurrentUser.Account, "FahuoLiucheng");
 
                 RenwuXinxi renwuXinxi = WebHelper.RenwuFuwu.GetRenwu(liuchengId, renwuId);
                 WebHelper.RenwuFuwu.WanchengRenwu(liuchengId, this.CurrentUser.Account, renwuId, wanchengShuoming);
@@ -112,25 +113,25 @@ namespace LittleOrange.Website.Controllers
                 WebHelper.RenwuFuwu.WanchengXingdong(liuchengId, renwuXinxi.Xingdong.Guid);
                 WebHelper.LiuchengFuwu.Wancheng(liuchengId);
 
-                ColdewObjectInfo dingdanZhongbiaoObject = WebHelper.ColdewObjectService.GetFormByCode("dingdanZhongbiao");
-
-                JArray chanpinList = JsonConvert.DeserializeObject<JArray>(liucheng.Biaodan.GetProperty("chanpinList").EditValue);
+                ColdewObjectInfo dingdanZhongbiaoObject = WebHelper.ColdewObjectService.GetFormByCode(this.CurrentUser.Account, "dingdanZhongbiao");
+                MetadataInfo biaodan = WebHelper.MetadataService.GetMetadataById(this.CurrentUser.Account, objectInfo.ID, liucheng.BiaodanId);
+                JArray chanpinList = JsonConvert.DeserializeObject<JArray>(biaodan.GetProperty("chanpinList").EditValue);
                 foreach (JObject chanpin in chanpinList)
                 {
                     JObject dingdanPropertys = new JObject();
                     dingdanPropertys.Add("yewuyuan", liucheng.Faqiren.Account);
 
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("shengfen"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("diqu"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("fahuoRiqi"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("huikuanRiqi"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("huikuanJine"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("huikuanLeixing"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("huikuanDanwei"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("daokuanDanwei"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("kaipiaoDanwei"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("shouhuoDizhi"));
-                    this.AddPropertyToJObject(dingdanPropertys, liucheng.Biaodan.GetProperty("shouhuoren"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("shengfen"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("diqu"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("fahuoRiqi"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("huikuanRiqi"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("huikuanJine"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("huikuanLeixing"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("huikuanDanwei"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("daokuanDanwei"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("kaipiaoDanwei"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("shouhuoDizhi"));
+                    this.AddPropertyToJObject(dingdanPropertys, biaodan.GetProperty("shouhuoren"));
 
                     foreach (JProperty property in chanpin.Properties())
                     {
@@ -157,7 +158,7 @@ namespace LittleOrange.Website.Controllers
         [HttpGet]
         public ActionResult Mingxi(string liuchengId)
         {
-            ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode("FahuoLiucheng");
+            ColdewObjectInfo objectInfo = WebHelper.ColdewObjectService.GetFormByCode(this.CurrentUser.Account, "FahuoLiucheng");
             this.ViewBag.objectInfo = objectInfo;
 
             LiuchengXinxi liucheng = WebHelper.LiuchengFuwu.GetLiucheng(liuchengId);
@@ -165,16 +166,17 @@ namespace LittleOrange.Website.Controllers
             List<RenwuXinxi> renwuXinxi = WebHelper.RenwuFuwu.GetLiuchengRenwu(liuchengId);
             this.ViewBag.renwuModelsJson = JsonConvert.SerializeObject(renwuXinxi.Select(x => new RenwuModel(x, this, this.CurrentUser)).ToList());
 
-            MetadataEditModel model = new MetadataEditModel(liucheng.Biaodan);
+            MetadataInfo biaodan = WebHelper.MetadataService.GetMetadataById(this.CurrentUser.Account, objectInfo.ID, liucheng.BiaodanId);
+            MetadataEditModel model = new MetadataEditModel(biaodan);
             this.ViewBag.biaodanJson = JsonConvert.SerializeObject(model);
 
-            return View(liucheng.Biaodan);
+            return View(biaodan);
         }
 
         [HttpGet]
         public ActionResult Details(string metadataId, string objectId)
         {
-            MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(objectId, metadataId);
+            MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(this.CurrentUser.Account, objectId, metadataId);
             string liuchengId = metadataInfo.GetProperty("liuchengId").EditValue;
             return this.RedirectToAction("Mingxi", new { liuchengId = liuchengId });
         }

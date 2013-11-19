@@ -245,7 +245,7 @@ namespace Coldew.Website
 			return dt;
 		}
 
-        public static string GetImportTemplate(string objectId, Controller controller)
+        public static string GetImportTemplate(string userAccount, string objectId, Controller controller)
         {
             string path = controller.Server.MapPath("~/Template.xls");
             FileStream stream = System.IO.File.OpenRead(path);
@@ -254,7 +254,7 @@ namespace Coldew.Website
 
             HSSFRow row = sheet.CreateRow(0);
 
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(userAccount, objectId);
             int i = 0;
             foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)
             {
@@ -283,7 +283,7 @@ namespace Coldew.Website
             return tempPath;
         }
 
-        public static string GetUploadImportFileJsonFile(string objectId, Controller controller)
+        public static string GetUploadImportFileJsonFile(string userAccount, string objectId, Controller controller)
         {
             HttpPostedFileBase importFile = controller.Request.Files["importFile"];
             string tempPath = controller.Server.MapPath("~/Temp");
@@ -299,7 +299,7 @@ namespace Coldew.Website
             List<JObject> importModels = new List<JObject>();
             if (customerTable != null)
             {
-                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(userAccount, objectId);
                 foreach (DataRow customerRow in customerTable.Rows)
                 {
                     JObject importModel = new JObject();
@@ -323,9 +323,9 @@ namespace Coldew.Website
             return jsonFilePath;
         }
 
-        public static List<DataGridColumnModel> GetImportColumns(string objectId)
+        public static List<DataGridColumnModel> GetImportColumns(string userAccount, string objectId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(userAccount, objectId);
             List<Coldew.Api.FieldInfo> fields = coldewObject.Fields.ToList();
 
             List<DataGridColumnModel> columns = new List<DataGridColumnModel>();
@@ -338,14 +338,14 @@ namespace Coldew.Website
             return columns;
         }
 
-        public static string Export(List<JObject> models, string objectId)
+        public static string Export(string userAccount, List<JObject> models, string objectId)
         {
             string path = HttpContext.Current.Server.MapPath("~/Template.xls");
             FileStream stream = System.IO.File.OpenRead(path);
             HSSFWorkbook workbook = new HSSFWorkbook(stream);
             HSSFSheet sheet = workbook.GetSheetAt(0);
 
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(userAccount, objectId);
             HSSFRow nameRow = sheet.CreateRow(0);
             int nameCellIndex = 0;
             foreach (Coldew.Api.FieldInfo filed in coldewObject.Fields)

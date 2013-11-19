@@ -78,6 +78,7 @@
     <Compile Include="MetadataFieldMember.cs" />
     <Compile Include="MetadataMember.cs" />
     <Compile Include="MetadataOrgMember.cs" />
+    <Compile Include="Permission\FieldPermission.cs" />
     <Compile Include="Permission\MetadataEntityPermission.cs" />
     <Compile Include="Permission\MetadataEntityPermissionManager.cs" />
     <Compile Include="Permission\MetadataPermissionStrategy.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="NameField.cs" />
     <Compile Include="Organization\Member.cs" />
     <Compile Include="Permission\ObjectPermissionManager.cs" />
+    <Compile Include="Permission\FieldPermissionManager.cs" />
     <Compile Include="Search\DateRecentlySearchExpression.cs" />
     <Compile Include="Search\FavoriteSearcher.cs" />
     <Compile Include="Search\MetadataExpressionSearcher.cs" />

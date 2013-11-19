@@ -16,13 +16,13 @@ namespace LittleOrange.ConsoleApplication
                 IApplicationContext ctx = ContextRegistry.GetContext();
 
                 Console.Out.WriteLine("Server listening...");
-
-                Console.ReadLine();
             }
             catch(Exception ex)
             {
                 Console.Write(ex.ToString());
             }
+
+            Console.ReadLine();
         }
     }
 }

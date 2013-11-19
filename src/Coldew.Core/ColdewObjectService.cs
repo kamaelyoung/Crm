@@ -16,22 +16,24 @@ namespace Coldew.Core
             this._coldewManager = crmManager;
         }
 
-        public ColdewObjectInfo GetFormById(string objectId)
+        public ColdewObjectInfo GetFormById(string userAccount, string objectId)
         {
+            User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
             ColdewObject form = this._coldewManager.ObjectManager.GetObjectById(objectId);
             if (form != null)
             {
-                return form.Map();
+                return form.Map(user);
             }
             return null;
         }
 
-        public ColdewObjectInfo GetFormByCode(string objectCode)
+        public ColdewObjectInfo GetFormByCode(string userAccount, string objectCode)
         {
+            User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
             ColdewObject form = this._coldewManager.ObjectManager.GetObjectByCode(objectCode);
             if (form != null)
             {
-                return form.Map();
+                return form.Map(user);
             }
             return null;
         }
@@ -42,19 +44,7 @@ namespace Coldew.Core
             List<ColdewObject> objects = this._coldewManager.ObjectManager.GetObjects();
             return objects.Where(x => {
                 return x.ObjectPermission.HasValue(user, ObjectPermissionValue.View);
-            }).Select(x => x.Map()).ToList();
-        }
-
-        public ObjectPermissionValue GetobjectPermissionValue(string objectId, string account)
-        {
-            User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
-            ColdewObject cobject = this._coldewManager.ObjectManager.GetObjectById(objectId);
-            if (cobject != null)
-            {
-                ObjectPermissionValue permValue = cobject.ObjectPermission.GetPermission(user);
-                return permValue;
-            }
-            return ObjectPermissionValue.None;
+            }).Select(x => x.Map(user)).ToList();
         }
 
         public FieldInfo CreateStringField(string objectId, string name, string code, bool required, string defaultValue)

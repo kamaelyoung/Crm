@@ -16,7 +16,7 @@ namespace Coldew.Core.Workflow
     public class Liucheng
     {
         public Liucheng(int id, string guid, string mingcheng, User faqiren, DateTime faqiShijian, 
-            DateTime? jieshuShijian, LiuchengZhuangtai zhuangtai, bool jinjide, string zhaiyao, Metadata biaodan, LiuchengYinqing yinqing)
+            DateTime? jieshuShijian, LiuchengZhuangtai zhuangtai, bool jinjide, string zhaiyao, string biaodanId, LiuchengYinqing yinqing)
         {
             this.Id = id;
             this.Guid = guid;
@@ -28,7 +28,7 @@ namespace Coldew.Core.Workflow
             this.Zhaiyao = zhaiyao;
             this.Jinjide = jinjide;
             this._xingdongList = new List<Xingdong>();
-            this.Biaodan = biaodan;
+            this.BiaodanId = biaodanId;
             this.Yinqing = yinqing;
         }
 
@@ -44,7 +44,7 @@ namespace Coldew.Core.Workflow
 
         public string Mingcheng { private set; get; }
 
-        public Metadata Biaodan { private set; get; }
+        public string BiaodanId { private set; get; }
 
         public User Faqiren { private set; get; }
 
@@ -198,7 +198,7 @@ namespace Coldew.Core.Workflow
                 Zhuangtai = this.Zhuangtai,
                 Guid = this.Guid,
                 Zhaiyao = this.Zhaiyao,
-                Biaodan = this.Biaodan.Map()
+                BiaodanId = this.BiaodanId
             };
         }
     }

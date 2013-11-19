@@ -85,7 +85,6 @@
     <Compile Include="ColdewSearchInput.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Controllers\Workflow\LiuchengGuanliController.cs" />
-    <Compile Include="ExtendHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

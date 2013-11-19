@@ -24,14 +24,12 @@ namespace Coldew.Website.Controllers
         {
             if (string.IsNullOrEmpty(viewId))
             {
-                List<GridViewInfo> views = WebHelper.GridViewService.GetGridViews(objectId, WebHelper.CurrentUserAccount);
+                List<GridViewInfo> views = WebHelper.GridViewService.GetGridViews(objectId, this.CurrentUser.Account);
                 return this.RedirectToAction("Index", new { objectId = objectId, viewId = views[0].ID });
             }
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             GridViewInfo viewInfo = WebHelper.GridViewService.GetGridView(viewId);
 
@@ -68,11 +66,9 @@ namespace Coldew.Website.Controllers
 
         public ActionResult ImportFirst(string objectId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             this.ViewBag.Title = "导入" + coldewObject.Name;
             return View();
@@ -80,27 +76,25 @@ namespace Coldew.Website.Controllers
 
         public ActionResult DownloadImportTemplate(string objectId)
         {
-            string tempPath = ImportExportHelper.GetImportTemplate(objectId, this);
+            string tempPath = ImportExportHelper.GetImportTemplate(this.CurrentUser.Account, objectId, this);
             return File(tempPath, "application/octet-stream", "Import Template.xls");
         }
 
         [HttpPost]
         public ActionResult UploadImportFile(string objectId)
         {
-            string jsonFilePath = ImportExportHelper.GetUploadImportFileJsonFile(objectId, this);
+            string jsonFilePath = ImportExportHelper.GetUploadImportFileJsonFile(this.CurrentUser.Account, objectId, this);
             return Redirect(this.Url.Action("ImportSecond", new { tempFileName = Path.GetFileName(jsonFilePath), objectId = objectId }));
         }
 
         public ActionResult ImportSecond(string objectId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             this.ViewBag.Title = "导入" + coldewObject.Name;
-            List<DataGridColumnModel> columns = ImportExportHelper.GetImportColumns(objectId);
+            List<DataGridColumnModel> columns = ImportExportHelper.GetImportColumns(this.CurrentUser.Account, objectId);
             this.ViewBag.columnsJson = JsonConvert.SerializeObject(columns);
 
             return View();
@@ -114,7 +108,7 @@ namespace Coldew.Website.Controllers
             {
                 string tempFilePath = Path.Combine(Server.MapPath("~/Temp"), tempFileName);
                 List<JObject> importModels = JsonConvert.DeserializeObject<List<JObject>>(System.IO.File.ReadAllText(tempFilePath));
-                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
                 foreach (JObject model in importModels)
                 {
                     JObject propertysObject = new JObject();
@@ -177,11 +171,9 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult Create(string objectId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             FormInfo formInfo = WebHelper.FormService.GetForm(objectId, FormConstCode.CreateFormCode);
             this.ViewBag.formInfo = formInfo;
@@ -209,13 +201,11 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult Edit(string objectId, string metadataId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
-
-            MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(objectId, metadataId);
+            MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(this.CurrentUser.Account, objectId, metadataId);
             MetadataEditModel editModel = new MetadataEditModel(metadataInfo);
             this.ViewBag.metadataInfoJson = JsonConvert.SerializeObject(editModel);
 
@@ -245,11 +235,9 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult Details(string objectId, string metadataId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             FormInfo formInfo = WebHelper.FormService.GetForm(objectId, FormConstCode.DetailsFormCode);
             if (formInfo != null)
@@ -259,11 +247,11 @@ namespace Coldew.Website.Controllers
                 Dictionary<RelatedObjectInfo, List<MetadataInfo>> relateds = new Dictionary<RelatedObjectInfo, List<MetadataInfo>>();
                 foreach (RelatedObjectInfo relatedObject in formInfo.Relateds)
                 {
-                    List<MetadataInfo> relatedList = WebHelper.MetadataService.GetRelatedMetadatas(relatedObject.Object.ID, objectId, metadataId, "");
+                    List<MetadataInfo> relatedList = WebHelper.MetadataService.GetRelatedMetadatas(this.CurrentUser.Account, relatedObject.Object.ID, objectId, metadataId, "");
                     relateds.Add(relatedObject, relatedList);
                 }
                 this.ViewBag.relateds = relateds;
-                MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(objectId, metadataId);
+                MetadataInfo metadataInfo = WebHelper.MetadataService.GetMetadataById(this.CurrentUser.Account, objectId, metadataId);
                 this.ViewBag.metadataInfo = metadataInfo;
                 return View();
             }
@@ -297,7 +285,7 @@ namespace Coldew.Website.Controllers
             try
             {
                 int totalCount;
-                List<UserMetadataInfo> metadataInfos = null;
+                List<MetadataInfo> metadataInfos = null;
                 if (string.IsNullOrEmpty(searchInfoJson))
                 {
                     metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, viewId, WebHelper.CurrentUserAccount, start, size, orderBy, out totalCount);
@@ -324,7 +312,7 @@ namespace Coldew.Website.Controllers
             try
             {
                 int totalCount = 0;
-                List<UserMetadataInfo> metadataInfos = null;
+                List<MetadataInfo> metadataInfos = null;
                 if (string.IsNullOrEmpty(keyword))
                 {
                     metadataInfos = WebHelper.MetadataService.GetMetadatas(objectId, WebHelper.CurrentUserAccount, start, size, orderBy, out totalCount);
@@ -360,7 +348,7 @@ namespace Coldew.Website.Controllers
                     metadataInfos = WebHelper.MetadataService.Search(objectId, viewId, WebHelper.CurrentUserAccount, searchInfoJson, orderBy);
                 }
                 List<JObject> models = metadataInfos.Select(x => new MetadataGridJObjectModel(x) as JObject).ToList();
-                string tempPath = ImportExportHelper.Export(models, objectId);
+                string tempPath = ImportExportHelper.Export(this.CurrentUser.Account, models, objectId);
                 resultModel.data = System.IO.Path.GetFileName(tempPath);
             }
             catch (Exception ex)
@@ -380,11 +368,9 @@ namespace Coldew.Website.Controllers
 
         public ActionResult GridViewManage(string objectId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
             return View();
         }
 
@@ -408,11 +394,9 @@ namespace Coldew.Website.Controllers
 
         public ActionResult CreateGridView(string objectId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             List<ViewSetupFieldModel> fields = new List<ViewSetupFieldModel>();
             fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel(x, false, 80)));
@@ -442,11 +426,9 @@ namespace Coldew.Website.Controllers
 
         public ActionResult EditGridView(string objectId, string viewId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             List<ViewSetupFieldModel> fields = new List<ViewSetupFieldModel>();
             fields.AddRange(coldewObject.Fields.Select(x => new ViewSetupFieldModel(x, false, 80)));
@@ -488,11 +470,9 @@ namespace Coldew.Website.Controllers
         [HttpGet]
         public ActionResult ViewSetup(string viewId, string objectId)
         {
-            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.coldewObject = coldewObject;
-
-            ObjectPermissionValue objectPermValue = WebHelper.ColdewObjectService.GetobjectPermissionValue(objectId, this.CurrentUser.Account);
-            this.ViewBag.objectPermValue = objectPermValue;
+            this.ViewBag.objectPermValue = coldewObject.PermissionValue;
 
             this.ViewBag.viewId = viewId;
             this.ViewBag.objectId = objectId;

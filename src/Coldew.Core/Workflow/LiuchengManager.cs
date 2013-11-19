@@ -92,10 +92,8 @@ namespace Coldew.Core.Workflow
 
         internal Liucheng ChuangjianLiucheng(LiuchengModel model)
         {
-            LiuchengMoban moban = this._yinqing.LiuchengMobanManager.GetMobanById(model.MobanId);
-            Metadata biaodan = moban.ColdewObject.MetadataManager.GetById(model.BiaodanId);
             Liucheng liucheng = new Liucheng(model.Id, model.Guid, model.Mingcheng, this._userManager.GetUserByAccount(model.Faqiren),
-                model.FaqiShijian, model.JieshuShijian, (LiuchengZhuangtai)model.Zhuangtai, model.Jinjide, model.Zhaiyao, biaodan, this._yinqing);
+                model.FaqiShijian, model.JieshuShijian, (LiuchengZhuangtai)model.Zhuangtai, model.Jinjide, model.Zhaiyao, model.BiaodanId, this._yinqing);
             liucheng.Shanchuhou += new TEventHanlder<Liucheng>(Liucheng_Shanchuhou);
             List<Liucheng> shiliList = this._shiliList.ToList();
             liucheng.Moban = this._yinqing.LiuchengMobanManager.GetMobanById(model.MobanId);

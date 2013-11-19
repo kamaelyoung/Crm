@@ -11,14 +11,14 @@ namespace Coldew.Website.Models
 {
     public class MetadataGridJObjectModel : JObject
     {
-        public MetadataGridJObjectModel(string objectId, UserMetadataInfo info, MetadataController controller)
+        public MetadataGridJObjectModel(string objectId, MetadataInfo info, MetadataController controller)
         {
             this.Add("id", info.ID);
             this.Add("canModify", info.PermissionValue.HasFlag(MetadataPermissionValue.Modify));
             this.Add("canDelete", info.PermissionValue.HasFlag(MetadataPermissionValue.Delete));
             foreach (PropertyInfo propertyInfo in info.Propertys)
             {
-                if (propertyInfo.Code == ColdewObjectCode.FIELD_NAME_NAME)
+                if (propertyInfo.FieldType == FieldType.Name)
                 {
                     string favoritedIcon = "";
                     if (info.Favorited)

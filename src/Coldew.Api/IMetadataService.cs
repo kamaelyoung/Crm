@@ -7,11 +7,11 @@ namespace Coldew.Api
 {
     public interface IMetadataService
     {
-        List<UserMetadataInfo> GetMetadatas(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
+        List<MetadataInfo> GetMetadatas(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
 
         List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, string orderBy);
 
-        List<UserMetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
+        List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, int skipCount, int takeCount, string orderBy, out int totalCount);
 
         MetadataInfo Create(string objectId, string opUserAccount, string propertyJson);
 
@@ -21,14 +21,14 @@ namespace Coldew.Api
 
         void ToggleFavorite(string objectId, string opUserAccount, List<string> metadataIds);
 
-        MetadataInfo GetMetadataById(string objectId, string id);
+        MetadataInfo GetMetadataById(string userAccount, string objectId, string id);
 
-        List<UserMetadataInfo> Search(string objectId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount);
+        List<MetadataInfo> Search(string objectId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount);
 
-        List<UserMetadataInfo> Search(string objectId, string gridViewId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount);
+        List<MetadataInfo> Search(string objectId, string gridViewId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount);
 
         List<MetadataInfo> Search(string objectId, string gridViewId, string account, string serachExpressionJson, string orderBy);
 
-        List<MetadataInfo> GetRelatedMetadatas(string relatedObjectId, string objectId, string metadataId, string orderBy);
+        List<MetadataInfo> GetRelatedMetadatas(string userAccount, string relatedObjectId, string objectId, string metadataId, string orderBy);
     }
 }

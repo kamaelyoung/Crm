@@ -7,13 +7,11 @@ namespace Coldew.Api
 {
     public interface IColdewObjectService
     {
-        ColdewObjectInfo GetFormById(string objectId);
+        ColdewObjectInfo GetFormById(string userAccount, string objectId);
 
-        ColdewObjectInfo GetFormByCode(string objectCode);
+        ColdewObjectInfo GetFormByCode(string userAccount, string objectCode);
 
         List<ColdewObjectInfo> GetForms(string userAccount);
-
-        ObjectPermissionValue GetobjectPermissionValue(string objectId, string account);
 
         FieldInfo GetField(int fieldId);
 

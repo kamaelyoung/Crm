@@ -25,7 +25,7 @@ namespace Coldew.Api.Workflow
 
         public LiuchengZhuangtai Zhuangtai { set; get; }
 
-        public MetadataInfo Biaodan{ set; get; }
+        public string BiaodanId{ set; get; }
 
         public string Zhaiyao { set; get; }
     }

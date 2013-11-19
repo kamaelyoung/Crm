@@ -18,7 +18,7 @@ namespace Coldew.Core
             this._coldewManager = coldewManager;
         }
 
-        public List<UserMetadataInfo> GetMetadatas(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount)
+        public List<MetadataInfo> GetMetadatas(string objectId, string account, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
             ColdewObject cobject = this._coldewManager.ObjectManager.GetObjectById(objectId);
@@ -44,11 +44,11 @@ namespace Coldew.Core
                 searchers.Add(view.Searcher);
             }
             return cobject.MetadataManager.Search(user, searchers, orderBy)
-                .Select(x => x.Map())
+                .Select(x => x.Map(user))
                 .ToList();
         }
 
-        public List<UserMetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, int skipCount, int takeCount, string orderBy, out int totalCount)
+        public List<MetadataInfo> GetMetadatas(string objectId, string gridViewId, string account, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
             ColdewObject cobject = this._coldewManager.ObjectManager.GetObjectById(objectId);
@@ -75,7 +75,7 @@ namespace Coldew.Core
             User opUser = this._coldewManager.OrgManager.UserManager.GetUserByAccount(opUserAccount);
 
             Metadata metadata = cobject.MetadataManager.Create(opUser, JsonConvert.DeserializeObject<JObject>(propertyJson));
-            return metadata.Map();
+            return metadata.Map(opUser);
         }
 
         public void Modify(string objectId, string opUserAccount, string metadataId, string propertyJson)
@@ -124,25 +124,27 @@ namespace Coldew.Core
             }
         }
 
-        public MetadataInfo GetMetadataById(string objectId, string id)
+        public MetadataInfo GetMetadataById(string userAccount, string objectId, string id)
         {
+            User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
             ColdewObject cobject = this._coldewManager.ObjectManager.GetObjectById(objectId);
             Metadata metadata = cobject.MetadataManager.GetById(id);
             if (metadata != null)
             {
-                return metadata.Map();
+                return metadata.Map(user);
             }
             return null;
         }
 
-        public List<MetadataInfo> GetRelatedMetadatas(string relatedObjectId, string objectId, string metadataId, string orderBy)
+        public List<MetadataInfo> GetRelatedMetadatas(string userAccount, string relatedObjectId, string objectId, string metadataId, string orderBy)
         {
+            User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(userAccount);
             ColdewObject relatedObject = this._coldewManager.ObjectManager.GetObjectById(relatedObjectId);
             ColdewObject cObject = this._coldewManager.ObjectManager.GetObjectById(objectId);
-            return relatedObject.MetadataManager.GetRelatedList(cObject, metadataId, orderBy).Select(x => x.Map()).ToList();
+            return relatedObject.MetadataManager.GetRelatedList(cObject, metadataId, orderBy).Select(x => x.Map(user)).ToList();
         }
 
-        public List<UserMetadataInfo> Search(string objectId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount)
+        public List<MetadataInfo> Search(string objectId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             ColdewObject cobject = this._coldewManager.ObjectManager.GetObjectById(objectId);
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
@@ -154,7 +156,7 @@ namespace Coldew.Core
             return customers.Select(x => x.Map(user)).ToList();
         }
 
-        public List<UserMetadataInfo> Search(string objectId, string gridViewId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount)
+        public List<MetadataInfo> Search(string objectId, string gridViewId, string account, string serachExpressionJson, int skipCount, int takeCount, string orderBy, out int totalCount)
         {
             ColdewObject cobject = this._coldewManager.ObjectManager.GetObjectById(objectId);
             User user = this._coldewManager.OrgManager.UserManager.GetUserByAccount(account);
@@ -193,7 +195,7 @@ namespace Coldew.Core
                 searchers.Add(view.Searcher);
             }
             List<Metadata> customers = cobject.MetadataManager.Search(user, searchers, orderBy);
-            return customers.Select(x => x.Map()).ToList();
+            return customers.Select(x => x.Map(user)).ToList();
         }
     }
 }

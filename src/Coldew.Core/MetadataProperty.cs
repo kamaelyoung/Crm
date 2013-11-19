@@ -19,14 +19,29 @@ namespace Coldew.Core
 
         public MetadataValue Value { private set; get; }
 
-        public PropertyInfo Map()
+        public PropertyInfo Map(User user)
         {
+            FieldPermissionValue permissionValue = this.Field.ColdewObject.FieldPermission.GetPermission(user, this.Field);
+            dynamic showValue = "";
+            dynamic editValue = "";
+            if (permissionValue.HasFlag(FieldPermissionValue.View))
+            {
+                showValue = this.Value.ShowValue;
+                editValue = this.Value.EditValue;
+            }
+            else
+            {
+                showValue = "*****";
+                editValue = "*****";
+            }
+
             return new PropertyInfo
             {
                 Code = this.Field.Code,
-                Type = this.Field.Type,
-                ShowValue = this.Value.ShowValue,
-                EditValue = this.Value.EditValue
+                FieldType = this.Field.Type,
+                ShowValue = showValue,
+                EditValue = editValue,
+                PermissionValue = permissionValue
             };
         }
     }

@@ -80,7 +80,7 @@ namespace Coldew.Website.Controllers
 
         public ActionResult Extend(string objectId)
         {
-            ColdewObjectInfo formInfo = WebHelper.ColdewObjectService.GetFormById(objectId);
+            ColdewObjectInfo formInfo = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
             this.ViewBag.objectId = objectId;
             this.ViewBag.Title = formInfo.Name + "扩展";
 
@@ -92,7 +92,7 @@ namespace Coldew.Website.Controllers
             ControllerResultModel resultModel = new ControllerResultModel();
             try
             {
-                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(objectId);
+                ColdewObjectInfo coldewObject = WebHelper.ColdewObjectService.GetFormById(this.CurrentUser.Account, objectId);
 
                 resultModel.data = coldewObject.Fields.Select(x => new FieldGridModel(x, this, objectId));
             }

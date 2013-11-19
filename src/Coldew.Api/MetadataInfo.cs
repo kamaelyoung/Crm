@@ -16,6 +16,10 @@ namespace Coldew.Api
             get;
         }
 
+        public bool Favorited { set; get; }
+
+        public MetadataPermissionValue PermissionValue { set; get; }
+
         public List<PropertyInfo> Propertys { set; get; }
 
         public PropertyInfo GetProperty(string code)

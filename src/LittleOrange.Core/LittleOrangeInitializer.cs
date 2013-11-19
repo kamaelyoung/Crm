@@ -272,7 +272,7 @@ namespace LittleOrange.Core
         {
             this._coldewManager.Logger.Info("init fahuo");
             ColdewObject cobject = this._coldewManager.ObjectManager.Create(new ColdewObjectCreateInfo("订单总表", "dingdanZhongbiao", ColdewObjectType.Standard, true, "产品名称"));
-            Field yewuyuanField = cobject.CreateStringField(new FieldCreateBaseInfo("yewuyuan", "业务员", "", true, true), "");
+            Field yewuyuanField = cobject.CreateUserListField(new FieldCreateBaseInfo("yewuyuan", "业务员", "", true, true), true);
             Field shengfenField = cobject.CreateStringField(new FieldCreateBaseInfo("shengfen", "省份", "", false, true), "");
             Field diquField = cobject.CreateStringField(new FieldCreateBaseInfo("diqu", "地区", "", false, true), "");
             Field fahuoRiqiField = cobject.CreateDateField(new FieldCreateBaseInfo("fahuoRiqi", "发货日期", "", false, true), true);
@@ -331,6 +331,8 @@ namespace LittleOrange.Core
             cobject.ObjectPermission.Create(this.kehuAdminGroup, ObjectPermissionValue.View | ObjectPermissionValue.Export | ObjectPermissionValue.PermissionSetting);
             cobject.MetadataPermission.StrategyManager.Create(new MetadataFieldMember(yewuyuanField), MetadataPermissionValue.View, null);
             cobject.MetadataPermission.StrategyManager.Create(new MetadataOrgMember(this.kehuAdminGroup), MetadataPermissionValue.View | MetadataPermissionValue.Modify, null);
+            cobject.FieldPermission.Create(chengbenjiaField.Code, this.kehuAdminGroup, FieldPermissionValue.All);
+            cobject.FieldPermission.Create(xiaoshoujiaField.Code, this.kehuAdminGroup, FieldPermissionValue.All);
         }
 
         private void InitFahuoLiucheng()
@@ -357,6 +359,11 @@ namespace LittleOrange.Core
             List<GridViewColumnSetupInfo> viewColumns = new List<GridViewColumnSetupInfo>();
             foreach (Field field in cobject.GetFields().Take(8))
             {
+                if (field == cobject.CreatedUserField ||
+                    field == cobject.CreatedTimeField )
+                {
+                    continue;
+                }
                 viewColumns.Add(new GridViewColumnSetupInfo { FieldCode = field.Code, Width = 80 });
             }
 

@@ -17,11 +17,11 @@ namespace Crm.Website.Models
             foreach (PropertyInfo propertyInfo in customerInfo.Propertys)
             {
                 JToken token = null;
-                if (propertyInfo.Type == FieldType.UserList || propertyInfo.Type == FieldType.CheckboxList)
+                if (propertyInfo.FieldType == FieldType.UserList || propertyInfo.FieldType == FieldType.CheckboxList)
                 {
                     token = new JArray(propertyInfo.EditValue);
                 }
-                else if (propertyInfo.Type == FieldType.Json)
+                else if (propertyInfo.FieldType == FieldType.Json)
                 {
                     token = JsonConvert.DeserializeObject(propertyInfo.EditValue);
                 }
